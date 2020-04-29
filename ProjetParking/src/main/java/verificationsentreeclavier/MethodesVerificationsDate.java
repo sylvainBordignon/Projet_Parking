@@ -21,7 +21,7 @@ public class MethodesVerificationsDate {
 	    }
 	  
 	  public boolean estValideHeureMinute(String dateUtilisateur) {
-		  
+
 	        DateFormat sdf = new SimpleDateFormat("HH:mm");
 	        sdf.setLenient(false);
 	        try {
