@@ -5,10 +5,6 @@ import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
 
-	/**
-	 * Changer les sc.nextLine en SC.nextLine pour gérer simplement et pas avoir
-	 * erreur si caract�re. g�r�r les v�hicules
-	 */
 	private static String messageErreur = "Erreur dans la saisie, entrez un num�ro correspondant à un choix du menu.",
 			messageRetourAccueil = "Retour à l'accueil...",
 			messageFermetureAppli = "Fermeture de l'application mobile...",
@@ -17,11 +13,41 @@ public class InterfaceClient {
 			messageChoixHeure = "Veuillez choisir une heure de début (Format : HH:MM)",
 			messageChoixDuree = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)";
 
+	private static Scanner sc = new Scanner(System.in);
+	
+	public static void accesInterfaceClient() {
+		System.out.println("Bonjour, bienvenue sur l'application mobile.");
+		boolean fermetureAppli = false;
+		while(!fermetureAppli) {
+			System.out.println(messageQueFaire);
+			System.out.println("1 - S'inscrire\n2 - Se connecter en tant que client\n3 - Quitter l'application mobile");
+			String choixAppli = sc.nextLine();
+			switch(choixAppli) {
+			case "1":
+				//module pour l'inscription
+				break;
+			case "2":
+				//pour se connecter
+				System.out.println("Veuillez saisir votre adresse mail :");
+				String mail = sc.nextLine();
+				//si mail bon
+				interfaceClient();
+				//sinon erreur veuillez réessayer
+				break;
+			case "3":
+				fermetureAppli = true;
+				System.out.println(messageFermetureAppli);
+				break;
+			default :
+				System.out.println(messageErreur);
+			}
+			
+		}
+	}
+	
 	public static void interfaceClient() {
 		boolean fin = false;
-		System.out.println("Bonjour, bienvenue sur l'application mobile.");
-		while (!fin) {
-			Scanner sc = new Scanner(System.in);
+		while (!fin) {		
 			System.out.println(messageQueFaire);
 			System.out.println("1 - Consulter mon profil");
 			System.out.println("2 - Gérer mes réservations");
@@ -29,7 +55,7 @@ public class InterfaceClient {
 			System.out.println("4 - Gérer mes véhicules");
 			System.out.println("5 - Consulter la disponibilité des places du parking");
 			System.out.println("6 - Consulter mes factures");
-			System.out.println("7 - Quitter l'application");
+			System.out.println("7 - Se déconnecter");
 			System.out.print("Choix : ");
 			String choixMenu = sc.nextLine();
 			switch (choixMenu) {
@@ -38,7 +64,7 @@ public class InterfaceClient {
 				while (!finProfil) {
 					System.out.println("Affichage des informations du profil... A RAJOUTER");
 					System.out.println(messageQueFaire
-							+ "\n1 - Modifier mon profil\n2 - Retourner à l'accueil de l'application\n3 - Quitter l'application");
+							+ "\n1 - Modifier mon profil\n2 - Retourner à l'accueil de l'application\n3 - Se déconnecter");
 					System.out.print("Choix : ");
 					String choixProfil = sc.nextLine();
 					switch (choixProfil) {
@@ -87,7 +113,7 @@ public class InterfaceClient {
 					}
 					System.out.println("3 - Ajouter une nouvelle réservation");
 					System.out.println("4 - Retourner à l'accueil de l'application");
-					System.out.println("5 - Quitter l'application");
+					System.out.println("5 - Se déconnecter");
 					String choixReservation = sc.nextLine();
 					switch (choixReservation) {
 					case "1":
@@ -152,7 +178,7 @@ public class InterfaceClient {
 					// si reservation existante :
 					System.out.println("2 - Supprimer une réservation permanente");
 
-					System.out.println("3 - Retour à l'accuei?\n4 - Quitter l'application");
+					System.out.println("3 - Retour à l'accuei?\n4 - Se déconnecter");
 					String choixPermanent = sc.nextLine();
 					switch (choixPermanent) {
 					case "1":
@@ -163,7 +189,7 @@ public class InterfaceClient {
 
 						// si deja 3 r�servations, proposer une fusion ou suppression
 						System.out.println("Vous possédez déjà 3 réservations.\n" + messageQueFaire
-								+ "\n1 - Fusionner deux réservations\n2 - Supprimer une réservation\n3 - Revenir au menu précédant\n4 - Retour à l'accueil\n5 - Quitter l'application");
+								+ "\n1 - Fusionner deux réservations\n2 - Supprimer une réservation\n3 - Revenir au menu précédant\n4 - Retour à l'accueil\n5 - Se déconnecter");
 						String choixReservPlein = sc.nextLine();
 						switch (choixReservPlein) {
 						case "1":
@@ -216,7 +242,7 @@ public class InterfaceClient {
 					System.out.println("Liste de vos véhicules : ");
 					// lister plaques des v�hicules
 					System.out.println(messageQueFaire
-							+ "\n1 - Ajouter un véhicule\n2 - Supprimer un véhicule\n3 - Retour à l'accuei?\n4 - Quitter l'application");
+							+ "\n1 - Ajouter un véhicule\n2 - Supprimer un véhicule\n3 - Retour à l'accuei?\n4 - Se déconnecter");
 					String choixVehicule = sc.nextLine();
 					switch (choixVehicule) {
 					case "1":
@@ -259,7 +285,7 @@ public class InterfaceClient {
 				boolean finFacture = false;
 				while (!finFacture) {
 					System.out.println(
-							"Quelles factures voulez-vous consulter ?\n1 - Les factures du mois-ci\n2 - Toutes les factures\n3 - Retour à l'accueil\n4 - Quitter l'application");
+							"Quelles factures voulez-vous consulter ?\n1 - Les factures du mois-ci\n2 - Toutes les factures\n3 - Retour à l'accueil\n4 - Se déconnecter");
 					String choixFacture = sc.nextLine();
 					switch (choixFacture) {
 					case "1":
@@ -295,7 +321,6 @@ public class InterfaceClient {
 	
 	public static void entrerDateReservation() {
 		MethodesVerificationsDate verifDate = new MethodesVerificationsDate();
-		Scanner sc = new Scanner(System.in);
 		boolean valide = false;
 		String dateReserv, heureReserv, dureeReserv;
 		while (!valide) {
