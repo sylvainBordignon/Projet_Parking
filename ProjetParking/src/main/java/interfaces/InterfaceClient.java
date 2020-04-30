@@ -1,3 +1,4 @@
+package interfaces;
 import java.util.Scanner;
 
 import verificationsentreeclavier.MethodesVerificationsDate;
@@ -25,10 +26,10 @@ public class InterfaceClient {
 			System.out.println("1 - Consulter mon profil");
 			System.out.println("2 - Gérer mes réservations");
 			System.out.println("3 - Gérer mes réservations permanentes");
-			System.out.println("3 - Gérer mes véhicules");
-			System.out.println("4 - Consulter la disponibilité des places du parking");
-			System.out.println("5 - Consulter mes factures");
-			System.out.println("6 - Quitter l'application");
+			System.out.println("4 - Gérer mes véhicules");
+			System.out.println("5 - Consulter la disponibilité des places du parking");
+			System.out.println("6 - Consulter mes factures");
+			System.out.println("7 - Quitter l'application");
 			System.out.print("Choix : ");
 			String choixMenu = sc.nextLine();
 			switch (choixMenu) {
