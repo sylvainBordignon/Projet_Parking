@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ConnexionBDD.Connexion;
+import pojo.Client;
 
 public class GerantMysql {
 	Connection conn;
@@ -89,10 +90,25 @@ public class GerantMysql {
 		}
 	}
 	
+	public Client visualierInfoClient(int id) {
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("SELECT * FROM client where id = ?");
+			preparedStmt.setInt(1, id);
+			ResultSet res = preparedStmt.executeQuery();
+			res.next();
+			return new Client(res.getInt("id"), res.getString("numero_mobile"), res.getString("nom"), res.getString("prenom"), res.getString("adresse"), res.getString("mail"), res.getString("RIB"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		GerantMysql gerantmysql = GerantMysql.getInstance();
 		System.out.println("tarif normal : "+gerantmysql.selectionnerTarifNormal());
 		System.out.println("tarif depassement : "+gerantmysql.selectionnerTarifDepassement());
 		System.out.println("tarif prolongation : "+gerantmysql.selectionnerTarifProlongationAttente());
+		System.out.println("Client : "+gerantmysql.visualierInfoClient(3));
 	}
 }
