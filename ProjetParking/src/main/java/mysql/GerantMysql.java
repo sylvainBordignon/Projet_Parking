@@ -74,8 +74,8 @@ public class GerantMysql {
 		}
 	}
 	
-	public float selectionnerNbPlaceSurreservation() {
-		return selectionnerUnTarif("nb_places_surréservation");
+	public int selectionnerNbPlaceSurreservation() {
+		return (int)selectionnerUnTarif("nb_places_surréservation");
 	}
 	
 	public void modifierNbPlaceSurreservation(float montant) {
@@ -103,13 +103,5 @@ public class GerantMysql {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	public static void main(String[] args) {
-		GerantMysql gerantmysql = GerantMysql.getInstance();
-		System.out.println("tarif normal : "+gerantmysql.selectionnerTarifNormal());
-		System.out.println("tarif depassement : "+gerantmysql.selectionnerTarifDepassement());
-		System.out.println("tarif prolongation : "+gerantmysql.selectionnerTarifProlongationAttente());
-		System.out.println("Client : "+gerantmysql.visualierInfoClient(3));
 	}
 }
