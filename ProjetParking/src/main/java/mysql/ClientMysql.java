@@ -19,12 +19,10 @@ Connection conn ;
 		super();
 		this.conn = conn;
 	}
-
 	public static ClientMysql getInstance(){
 		if(clientmysql==null)clientmysql=new ClientMysql(Connexion.getInstance());
 		return clientmysql;
 	}
-	
 	public int create(Client obj) {
 		int id=-1;	
 		try {
@@ -50,4 +48,31 @@ Connection conn ;
 		}
 		return id;
 	}
+	
+	public boolean update(Client obj) {
+
+		String sql = "UPDATE Client SET nom = ?, prenom = ?,adresse = ?,numero_mobile = ?,mail = ?,RIB = ? WHERE id= ?";
+		
+		try {
+			PreparedStatement up = this.conn.prepareStatement(sql);
+			 up.setString(1, obj.getNom());
+			 up.setString(2, obj.getPrenom());
+			 up.setString(3, obj.getAdresse());
+			 up.setString(4, obj.getNumeroMobile());
+			 up.setString(5, obj.getMail());
+			 up.setString(6, obj.getIBAN());
+			 up.setInt(7, obj.getId());
+			 
+			 up.executeUpdate();
+		return true;			 
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+	
+	
 }

@@ -1,6 +1,8 @@
 package interfaces;
 import java.util.Scanner;
 
+import methodes.MethodesClient;
+import pojo.Client;
 import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
@@ -14,6 +16,7 @@ public class InterfaceClient {
 			messageChoixDuree = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)";
 
 	private static Scanner sc = new Scanner(System.in);
+	
 	
 	public static void accesInterfaceClient() {
 		System.out.println("Bonjour, bienvenue sur l'application mobile.");
@@ -46,6 +49,7 @@ public class InterfaceClient {
 	}
 	
 	public static void interfaceClient() {
+		MethodesClient methodesclient = new MethodesClient();
 		boolean fin = false;
 		while (!fin) {		
 			System.out.println(messageQueFaire);
@@ -69,7 +73,8 @@ public class InterfaceClient {
 					String choixProfil = sc.nextLine();
 					switch (choixProfil) {
 					case "1":
-						System.out.println("Modification des informations du profil... A RAJOUTER");
+						Client client = new Client(8,"0645678778","Bordignon","Sylvain","5 impasse de la peupleraie","sylvain@gmail.com","FR000000000000000012");
+						methodesclient.modifierClient(client);
 						// ...
 						System.out.println("Validation des modifications effectuées.");
 						break;
