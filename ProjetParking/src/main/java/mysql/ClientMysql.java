@@ -35,9 +35,9 @@ public class ClientMysql {
 			 ins.setString(1, obj.getNom());
 			 ins.setString(2, obj.getPrenom());
 			 ins.setString(3, obj.getAdresse());
-			 ins.setInt(4, obj.getNumeroMobile());
+			 ins.setString(4, obj.getNumeroMobile());
 			 ins.setString(5, obj.getMail());
-			 ins.setString(6, obj.getRib());
+			 ins.setString(6, obj.getIBAN());
 			 ins.executeUpdate();
 			 ResultSet res=ins.getGeneratedKeys();
 			 if(res.next()){

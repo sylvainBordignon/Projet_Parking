@@ -3,6 +3,7 @@ package interfaces;
 import java.util.Scanner;
 
 import mysql.GerantMysql;
+import pojo.Client;
 import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceGerant {
@@ -37,6 +38,14 @@ public class InterfaceGerant {
 						sc.next();
 					}
 					numeroClient = sc.nextInt();
+					System.out.println("Information du client :");
+					Client c = GerantMysql.getInstance().visualierInfoClient(numeroClient);
+					if (c == null) {
+						System.out.println("Ce numéro de client n'est associé à aucun client.");
+					} else {
+						System.out.println(c);
+					}
+					numeroClient = -1;
 				} while (numeroClient != -1);
 				break;
 			case 2:
@@ -58,7 +67,7 @@ public class InterfaceGerant {
 						do {
 							float tarifNormal = GerantMysql.getInstance().selectionnerTarifNormal();
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Valeur actuelle des frais de stationnement :"+tarifNormal+"\n"
+									+ "Valeur actuelle des frais de stationnement :" + tarifNormal + "\n"
 									+ "Veuillez saisir la nouvelle valeur ...");
 
 							while (!sc.hasNextFloat()) {
@@ -67,7 +76,7 @@ public class InterfaceGerant {
 							}
 							valeurFraisStationementPendantReservation = sc.nextFloat();
 							GerantMysql.getInstance().modifierTarifNormal(valeurFraisStationementPendantReservation);
-							System.out.println("Nouveau tarif : "+valeurFraisStationementPendantReservation);
+							System.out.println("Nouveau tarif : " + valeurFraisStationementPendantReservation);
 							valeurFraisStationementPendantReservation = -1;
 						} while (valeurFraisStationementPendantReservation != -1);
 						break;
@@ -76,15 +85,16 @@ public class InterfaceGerant {
 						do {
 							float tarifDepassement = GerantMysql.getInstance().selectionnerTarifDepassement();
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Valeur actuelle des frais de dépassement de stationnement : "+tarifDepassement+" \n"
-									+ "Veuillez saisir la nouvelle valeur ...");
+									+ "Valeur actuelle des frais de dépassement de stationnement : " + tarifDepassement
+									+ " \n" + "Veuillez saisir la nouvelle valeur ...");
 							while (!sc.hasNextFloat()) {
 								System.out.println("Veuillez rentrer un nombre ! ");
 								sc.next();
 							}
 							valeurFraisStationementDepassementPeriode = sc.nextFloat();
-							GerantMysql.getInstance().modifierTarifDepassement(valeurFraisStationementDepassementPeriode);
-							System.out.println("Nouveau tarif : "+valeurFraisStationementDepassementPeriode);
+							GerantMysql.getInstance()
+									.modifierTarifDepassement(valeurFraisStationementDepassementPeriode);
+							System.out.println("Nouveau tarif : " + valeurFraisStationementDepassementPeriode);
 							valeurFraisStationementDepassementPeriode = -1;
 						} while (valeurFraisStationementDepassementPeriode != -1);
 						break;
@@ -93,7 +103,7 @@ public class InterfaceGerant {
 						do {
 							float tarifProlongation = GerantMysql.getInstance().selectionnerTarifProlongationAttente();
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Valeur actuelle de la prolongation d'attente : "+tarifProlongation+" \n"
+									+ "Valeur actuelle de la prolongation d'attente : " + tarifProlongation + " \n"
 									+ "Veuillez saisir la nouvelle valeur ...");
 							while (!sc.hasNextFloat()) {
 								System.out.println("Veuillez rentrer un nombre ! ");
@@ -101,7 +111,7 @@ public class InterfaceGerant {
 							}
 							valeurProlongationAttente = sc.nextFloat();
 							GerantMysql.getInstance().modifierTarifProlongationAttente(valeurProlongationAttente);
-							System.out.println("Nouveau tarif : "+valeurProlongationAttente);
+							System.out.println("Nouveau tarif : " + valeurProlongationAttente);
 							valeurProlongationAttente = -1;
 						} while (valeurProlongationAttente != -1);
 						break;
@@ -115,17 +125,17 @@ public class InterfaceGerant {
 			case 3:
 				int nbPlaceSurreservation = (int) GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
 				do {
-					
+
 					System.out.println(
 							"Veuillez saisir le nouveau nombre de place en surréservation (Saisissez -1 pour revenir en arrière) "
-									+ "Nombre actuel : "+nbPlaceSurreservation);
+									+ "Nombre actuel : " + nbPlaceSurreservation);
 					while (!sc.hasNextInt()) {
 						System.out.println("Veuillez rentrer un nombre ! ");
 						sc.next();
 					}
 					nbPlaceSurreservation = sc.nextInt();
 					GerantMysql.getInstance().modifierNbPlaceSurreservation(nbPlaceSurreservation);
-					System.out.println("Nouvelle valeur : "+nbPlaceSurreservation);
+					System.out.println("Nouvelle valeur : " + nbPlaceSurreservation);
 					nbPlaceSurreservation = -1;
 				} while (nbPlaceSurreservation != -1);
 				break;
