@@ -73,6 +73,8 @@ public class InterfaceClient {
 					String choixProfil = sc.nextLine();
 					switch (choixProfil) {
 					case "1":
+					//	Client client = new Client(8,"0645678778","Bordignon","Sylvain","5 impasse de la peupleraie","sylvain@gmail.com","FR000000000000000012");
+					//	methodesclient.modifierClient(client);
 						Client client = new Client(8,"0645678778","Bordignon","Sylvain","5 impasse de la peupleraie","sylvain@gmail.com","FR000000000000000012");
 						methodesclient.modifierClient(client);
 						// ...
