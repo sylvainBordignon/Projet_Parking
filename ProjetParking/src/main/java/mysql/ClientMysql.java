@@ -4,23 +4,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import ConnexionBDD.Connexion;
 import pojo.Client;
 
 
 public class ClientMysql {
-Connection conn ;
+	Connection conn ;
 	
 	private static ClientMysql clientmysql;
-	
 	
 	public ClientMysql(Connection conn) {
 		super();
 		this.conn = conn;
 	}
 	public static ClientMysql getInstance(){
-		if(clientmysql==null)clientmysql=new ClientMysql(Connexion.getInstance());
+		if(clientmysql==null)
+			clientmysql=new ClientMysql(Connexion.getInstance());
 		return clientmysql;
 	}
 	public int create(Client obj) {
@@ -48,7 +50,7 @@ Connection conn ;
 		}
 		return id;
 	}
-	
+
 	public boolean update(Client obj) {
 
 		String sql = "UPDATE Client SET nom = ?, prenom = ?,adresse = ?,numero_mobile = ?,mail = ?,RIB = ? WHERE id= ?";
@@ -72,7 +74,71 @@ Connection conn ;
 		}
 	}
 	
+	public List<String> selectionnerListeVehicules(int numClient) {
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("SELECT num_plaque_immatricule FROM association where id_client=?");
+			preparedStmt.setInt(1, numClient);
+			ResultSet res = preparedStmt.executeQuery();
+			ArrayList<String> listePlaques = new ArrayList<>();
+			while(res.next())
+			{
+			   listePlaques.add(res.getString("num_plaque_immatricule"));
+			}
+			return listePlaques;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}
 	
+	public boolean supprimerVehicule(String immatriculation, int numClient) {
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("SELECT num_plaque_immatricule FROM association where id_client=? and num_plaque_immatricule=?");
+			preparedStmt.setInt(1, numClient);
+			preparedStmt.setString(2, immatriculation);
+			ResultSet res = preparedStmt.executeQuery();
+			if(res.next()) {
+				PreparedStatement preparedStmt2 = conn
+						.prepareStatement("DELETE FROM association where id_client=? and num_plaque_immatricule=?");
+				preparedStmt2.setInt(1, numClient);
+				preparedStmt2.setString(2, immatriculation);
+				preparedStmt2.executeUpdate();
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
+	public void ajouterVehicule(String immatriculation, int numClient) {
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("INSERT INTO association (num_plaque_immatricule,id_client) VALUES (?,?)");
+			preparedStmt.setString(1, immatriculation);
+			preparedStmt.setInt(2, numClient);
+			preparedStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	public static void main(String[] args) {
+		ClientMysql clientmysql = ClientMysql.getInstance();
+		ArrayList<String> listeVehicules=(ArrayList<String>) clientmysql.selectionnerListeVehicules(5);
+		System.out.println(listeVehicules.size());
+		for(int i=0; i<listeVehicules.size(); i++) {
+			System.out.println("Véhicule "+ (i+1)+ " :" + listeVehicules.get(i));
+		}
+		clientmysql.supprimerVehicule("YO-542-YO", 5);
+		listeVehicules=(ArrayList<String>) clientmysql.selectionnerListeVehicules(5);
+		System.out.println(listeVehicules.size());
+		for(int i=0; i<listeVehicules.size(); i++) {
+			System.out.println("Véhicule "+ (i+1)+ " :" + listeVehicules.get(i));
+		}
+		
+	}
+
 }
