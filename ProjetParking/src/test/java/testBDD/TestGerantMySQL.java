@@ -1,13 +1,10 @@
 package testBDD;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import mysql.GerantMysql;
-import pojo.Client;
 
 public class TestGerantMySQL {
 	
@@ -51,18 +48,5 @@ public class TestGerantMySQL {
         gerant.modifierTarifProlongationAttente(tarifBase);
     }
     
-    @Test
-    public void testVisualiserClient() {
-    	GerantMysql gerant = GerantMysql.getInstance();
-    	//Client c = new Client(5,"0633333333", "Dupont","Francois","3 rue de francois dupont","francoisdupont@email.fr","FR3333333333333333333333333");
-    	Client test = gerant.visualierInfoClient(5);
-        assertTrue(test.getNom().equals("Dupont"));
-    }
-    
-    @Test
-    public void testVisualiserClientNonExistant() {
-    	GerantMysql gerant = GerantMysql.getInstance();
-    	Client test = gerant.visualierInfoClient(999);
-        assertNull(test);
-    }
+
 }

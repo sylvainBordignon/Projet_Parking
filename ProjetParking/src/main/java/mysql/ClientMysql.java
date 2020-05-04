@@ -125,6 +125,21 @@ public class ClientMysql {
 		}
 	}
 	
+	public Client visualierInfoClient(int id) {
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("SELECT * FROM client where id = ?");
+			preparedStmt.setInt(1, id);
+			ResultSet res = preparedStmt.executeQuery();
+			if(res.next()) {
+				return new Client(res.getInt("id"), res.getString("numero_mobile"), res.getString("nom"), res.getString("prenom"), res.getString("adresse"), res.getString("mail"), res.getString("RIB"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		ClientMysql clientmysql = ClientMysql.getInstance();
 		ArrayList<String> listeVehicules=(ArrayList<String>) clientmysql.selectionnerListeVehicules(5);

@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.Scanner;
 
+import mysql.ClientMysql;
 import mysql.GerantMysql;
 import pojo.Client;
 import verificationsentreeclavier.MethodesVerificationsDate;
@@ -39,7 +40,7 @@ public class InterfaceGerant {
 					}
 					numeroClient = sc.nextInt();
 					System.out.println("Information du client :");
-					Client c = GerantMysql.getInstance().visualierInfoClient(numeroClient);
+					Client c = ClientMysql.getInstance().visualierInfoClient(numeroClient);
 					if (c == null) {
 						System.out.println("Ce numéro de client n'est associé à aucun client.");
 					} else {

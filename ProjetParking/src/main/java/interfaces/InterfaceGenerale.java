@@ -15,7 +15,7 @@ public class InterfaceGenerale {
 				InterfaceBorne.lancerInterfaceBorne();
 				break;
 			case "2":
-				InterfaceClient.interfaceClient();
+				InterfaceClient.accesInterfaceClient();
 				break;
 			case "3":
 				InterfaceGerant.lancerInterfaceGerant();
