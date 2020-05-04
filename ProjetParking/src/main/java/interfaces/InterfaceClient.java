@@ -1,7 +1,9 @@
 package interfaces;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import methodes.MethodesClient;
+import mysql.ClientMysql;
 import pojo.Client;
 import verificationsentreeclavier.MethodesVerificationsDate;
 
@@ -16,7 +18,6 @@ public class InterfaceClient {
 			messageChoixDuree = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)";
 
 	private static Scanner sc = new Scanner(System.in);
-	
 	
 	public static void accesInterfaceClient() {
 		System.out.println("Bonjour, bienvenue sur l'application mobile.");
@@ -245,19 +246,33 @@ public class InterfaceClient {
 				boolean finVehicule = false;
 				while (!finVehicule) {
 					System.out.println("Liste de vos véhicules : ");
-					// lister plaques des v�hicules
+					ArrayList<String> listeVehicules=(ArrayList<String>) ClientMysql.getInstance().selectionnerListeVehicules(5);//5 est un num random, il faut avoir le num client
+					for(int i=0; i<listeVehicules.size();i++) {
+						System.out.println(listeVehicules.get(i));
+					}
 					System.out.println(messageQueFaire
 							+ "\n1 - Ajouter un véhicule\n2 - Supprimer un véhicule\n3 - Retour à l'accuei?\n4 - Se déconnecter");
 					String choixVehicule = sc.nextLine();
 					switch (choixVehicule) {
 					case "1":
+						System.out.println("Veuillez entrez le numéro de plaque d'immatriculation du nouveau véhicule :");
 						String plaqueVehicule = sc.nextLine();
-						// Ajout dans la BDD
+						if(plaqueVehicule.matches("^([A-Z]){2}-([0-9]){3}-([A-Z]){2}")) {
+							ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, 5);// Ajout dans la BDD; 5 est un num random, il faut avoir le num client
+							System.out.println("Véhicule ajouté.");
+						}
+						else
+							System.out.println("Veuillez entrer un numéro d'immatriculation valide (Ex: AA-000-AA)");
 						break;
 					case "2":
 						System.out.println("Veuillez entrez le numéro correspondant à la plaque d'immatriculation :");
 						String supprPlaque = sc.nextLine();
-						// Suppression dans la BDD
+						if(ClientMysql.getInstance().supprimerVehicule(supprPlaque, 5)) {
+							// Suppression dans la BDD; 5 est un num random, il faut avoir le num client
+							System.out.println("Véhicule supprimé.");
+						}
+						else
+							System.out.println("Véhicule inconnu.");
 						break;
 					case "3":
 						finVehicule = true;
@@ -322,7 +337,6 @@ public class InterfaceClient {
 			}
 		}
 	}
-	
 	
 	public static void entrerDateReservation() {
 		MethodesVerificationsDate verifDate = new MethodesVerificationsDate();
