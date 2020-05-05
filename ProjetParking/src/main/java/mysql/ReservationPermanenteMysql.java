@@ -62,6 +62,32 @@ public class ReservationPermanenteMysql {
 		}
 		return null;
 	}
+	
+	public boolean ajoutReservationPermanenteAuto(ReservationPermanente reserv) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement(
+					"INSERT into reservationpermanente (id_client, type, heure_debut, duree, jour_semaine, jour_mois) values (?,?,?,?,?,?)");
+			preparedStmt.setInt(1, reserv.getIdClient());
+			preparedStmt.setString(2, reserv.getType());
+			preparedStmt.setTime(3, reserv.getHeureDebut());
+			preparedStmt.setInt(4, reserv.getDuree());
+			if (reserv.getJourSemaine() == null) {
+				preparedStmt.setNull(5, 0);
+			} else {
+				preparedStmt.setInt(5, reserv.getJourSemaine());
+			}
+			if (reserv.getJourMois() == null) {
+				preparedStmt.setNull(6, 0);
+			} else {
+				preparedStmt.setInt(6, reserv.getJourMois());
+			}
+			preparedStmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	public boolean ajoutReservationPermanente(ReservationPermanente reserv) {
 		try {

@@ -12,6 +12,30 @@ public class ReservationPermanente {
 	
 	private Time heureDebut;
 	
+	public ReservationPermanente(int idCli, String type, Time heureDebut, int duree) {
+		setIdClient(idCli);
+		setType(type);
+		setHeureDebut(heureDebut);
+		setDuree(duree);
+	}
+	
+	public ReservationPermanente(int idCli, String type, Time heureDebut, int duree, int jourSemaine) {
+		setIdClient(idCli);
+		setType(type);
+		setHeureDebut(heureDebut);
+		setDuree(duree);
+		setJourSemaine(jourSemaine);
+	}
+	
+	public ReservationPermanente(int idCli, String type, Time heureDebut, int duree, Integer jourSemaine, Integer jourMois) {
+		setIdClient(idCli);
+		setType(type);
+		setHeureDebut(heureDebut);
+		setDuree(duree);
+		setJourSemaine(jourSemaine);
+		setJourMois(jourMois);
+	}
+	
 	public ReservationPermanente(int id, int idCli, String type, Time heureDebut, int duree, Integer jourSemaine, Integer jourMois) {
 		setId(id);
 		setIdClient(idCli);
