@@ -1,6 +1,8 @@
 package interfaces;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 import methodes.MethodesClient;
@@ -359,7 +361,7 @@ public class InterfaceClient {
 	public static void entrerDateReservation() {
 		MethodesVerificationsDate verifDate = new MethodesVerificationsDate();
 		boolean valide = false;
-		String dateReserv, heureReserv, dureeReserv;
+		String dateReserv = null, heureReserv, dureeReserv;
 		while (!valide) {
 			System.out.println(MESSAGE_CHOIX_DATE);
 			dateReserv = sc.nextLine();
@@ -370,23 +372,50 @@ public class InterfaceClient {
 		}
 		valide = false;
 		while (!valide) {
+
 			System.out.println(MESSAGE_CHOIX_HEURE);
 			heureReserv = sc.nextLine();
 			valide = verifDate.estValideDate(heureReserv);
 			if (!valide) {
 				System.out.println("Erreur dans le format, veuillez reéssayer.");
 			}
+
+			// si dateUtilisateur = dateAujourd'hui alors on vérifie si l'heure d'arrivée n'est pas déjà passé.
+			  
+	        DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	        String date = sdf.format(new Date());
+	        
+	        if (date.equals(dateReserv) ==true){
+	        	System.out.println(MESSAGE_CHOIX_HEURE);	
+	        	heureReserv = sc.nextLine();
+				valide = verifDate.estValideHeureMinuteMemeJour(heureReserv);
+				if (!valide) {
+					System.out.println("Erreur dans le format, veuillez reéssayer.");
+				}	
+	        	
+	        }else {
+	    		System.out.println(MESSAGE_CHOIX_HEURE);
+				heureReserv = sc.nextLine();
+				valide = verifDate.estValideHeureMinute(heureReserv);
+				if (!valide) {
+					System.out.println("Erreur dans le format, veuillez reéssayer.");
+				}	
+	        	  	
+	        }
+
 		}
 		System.out.println(MESSAGE_CHOIX_DUREE);
 		valide = false;
 		while (!valide) {
 			dureeReserv = sc.nextLine();
-			valide = verifDate.estValideDate(dureeReserv);
+			valide = verifDate.estValideHeureMinute(dureeReserv);
 			if (!valide) {
 				System.out.println("Erreur dans le format, veuillez reéssayer.");
 			}
 		}
 	}
+	
+	
 
 	public static void main(String[] args) {
 		InterfaceClient.interfaceClient();
