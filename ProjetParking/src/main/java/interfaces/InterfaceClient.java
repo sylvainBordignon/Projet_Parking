@@ -404,7 +404,7 @@ public class InterfaceClient {
 	        }
 
 		}
-		System.out.println(MESSAGE_CHOIX_DUREE);
+		System.out.println(MESSAGE_CHOIX_HEURE);
 		valide = false;
 		while (!valide) {
 			dureeReserv = sc.nextLine();
@@ -413,10 +413,10 @@ public class InterfaceClient {
 				System.out.println("Erreur dans le format, veuillez reéssayer.");
 			}
 		}
+		
+		
 	}
 	
-	
-
 	public static void main(String[] args) {
 		InterfaceClient.interfaceClient();
 	}
