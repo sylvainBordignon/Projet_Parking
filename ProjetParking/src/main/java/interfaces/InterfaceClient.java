@@ -413,8 +413,7 @@ public class InterfaceClient {
 				System.out.println("Erreur dans le format, veuillez reéssayer.");
 			}
 		}
-		
-		
+			
 	}
 	
 	public static void main(String[] args) {
