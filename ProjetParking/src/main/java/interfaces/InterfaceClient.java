@@ -1,5 +1,8 @@
 package interfaces;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 import methodes.MethodesClient;
@@ -15,7 +18,7 @@ public class InterfaceClient {
 			messageQueFaire = "Que souhaitez-vous faire ?",
 			messageChoixDate = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			messageChoixHeure = "Veuillez choisir une heure de début (Format : HH:MM)",
-			messageChoixDuree = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)";
+			messageChoixDuree = "Veuillez choisir une durée de réservation ( Format : HH:MM) ";
 
 	private static Scanner sc = new Scanner(System.in);
 	
@@ -343,7 +346,7 @@ public class InterfaceClient {
 	public static void entrerDateReservation() {
 		MethodesVerificationsDate verifDate = new MethodesVerificationsDate();
 		boolean valide = false;
-		String dateReserv, heureReserv, dureeReserv;
+		String dateReserv = null, heureReserv, dureeReserv;
 		while (!valide) {
 			System.out.println(messageChoixDate);
 			dateReserv = sc.nextLine();
@@ -354,23 +357,42 @@ public class InterfaceClient {
 		}
 		valide = false;
 		while (!valide) {
-			System.out.println(messageChoixHeure);
-			heureReserv = sc.nextLine();
-			valide = verifDate.estValideDate(heureReserv);
-			if (!valide) {
-				System.out.println("Erreur dans le format, veuillez reéssayer.");
-			}
+			// si dateUtilisateur = dateAujourd'hui alors on vérifie si l'heure d'arrivée n'est pas déjà passé.
+			  
+	        DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	        String date = sdf.format(new Date());
+	        
+	        if (date.equals(dateReserv) ==true){
+	        	System.out.println(messageChoixHeure);	
+	        	heureReserv = sc.nextLine();
+				valide = verifDate.estValideHeureMinuteMemeJour(heureReserv);
+				if (!valide) {
+					System.out.println("Erreur dans le format, veuillez reéssayer.");
+				}	
+	        	
+	        }else {
+	    		System.out.println(messageChoixHeure);
+				heureReserv = sc.nextLine();
+				valide = verifDate.estValideHeureMinute(heureReserv);
+				if (!valide) {
+					System.out.println("Erreur dans le format, veuillez reéssayer.");
+				}	
+	        	  	
+	        }
+	        
 		}
 		System.out.println(messageChoixDuree);
 		valide = false;
 		while (!valide) {
 			dureeReserv = sc.nextLine();
-			valide = verifDate.estValideDate(dureeReserv);
+			valide = verifDate.estValideHeureMinute(dureeReserv);
 			if (!valide) {
 				System.out.println("Erreur dans le format, veuillez reéssayer.");
 			}
 		}
 	}
+	
+	
 
 	public static void main(String[] args) {
 		InterfaceClient.interfaceClient();
