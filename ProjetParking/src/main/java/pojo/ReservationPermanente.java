@@ -6,7 +6,7 @@ public class ReservationPermanente {
 	
 	private int id, idClient, duree;
 	
-	private Integer jourSemaine, jourMois;
+	private Integer jourSemaine = null, jourMois = null;
 	
 	private String type;
 	
@@ -34,6 +34,15 @@ public class ReservationPermanente {
 		setDuree(duree);
 		setJourSemaine(jourSemaine);
 		setJourMois(jourMois);
+	}
+	
+	public ReservationPermanente(int id, int idCli, String type, Time heureDebut, int duree, Integer jourSemaine) {
+		setId(id);
+		setIdClient(idCli);
+		setType(type);
+		setHeureDebut(heureDebut);
+		setDuree(duree);
+		setJourSemaine(jourSemaine);
 	}
 	
 	public ReservationPermanente(int id, int idCli, String type, Time heureDebut, int duree, Integer jourSemaine, Integer jourMois) {
@@ -91,7 +100,8 @@ public class ReservationPermanente {
 	}
 
 	public void setJourSemaine(Integer jourSemaine) {
-		this.jourSemaine = jourSemaine;
+		if(jourSemaine != 0)
+			this.jourSemaine = jourSemaine;
 	}
 
 	public Integer getJourMois() {
@@ -99,6 +109,13 @@ public class ReservationPermanente {
 	}
 
 	public void setJourMois(Integer jourMois) {
-		this.jourMois = jourMois;
+		if(jourMois != 0)
+			this.jourMois = jourMois;
+	}
+
+	@Override
+	public String toString() {
+		return "ReservationPermanente [id=" + id + ", idClient=" + idClient + ", duree=" + duree + ", jourSemaine="
+				+ jourSemaine + ", jourMois=" + jourMois + ", type=" + type + ", heureDebut=" + heureDebut + "]";
 	}
 }
