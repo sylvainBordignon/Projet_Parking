@@ -1,11 +1,14 @@
 package interfaces;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import methodes.MethodesClient;
 import mysql.ClientMysql;
+import mysql.ReservationPermanenteMysql;
 import pojo.Client;
+import pojo.ReservationPermanente;
 import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
@@ -17,7 +20,7 @@ public class InterfaceClient {
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
 			MESSAGE_CHOIX_DUREE = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)";
-	
+
 	private static Client client;
 
 	private static Scanner sc = new Scanner(System.in);
@@ -40,7 +43,7 @@ public class InterfaceClient {
 					System.out.println("Veuillez entrer votre numéro client : ");
 					String numCli = sc.nextLine();
 					System.out.println("Veuillez saisir votre adresse mail :");
-					String mail = sc.nextLine();			
+					String mail = sc.nextLine();
 					client = ClientMysql.getInstance().visualierInfoClient(Integer.parseInt(numCli));
 					if (client != null) {
 						if (client.getMail().equals(mail)) {
@@ -191,22 +194,32 @@ public class InterfaceClient {
 			case "3":
 				boolean finPermanent = false;
 				while (!finPermanent) {
-					// si aucunes r�servations
-					System.out.println("Vous n'avez pas de réservations permanentes.");
-					// si reservations
-					System.out.println("Liste de vos réservations permanentes : ");
-
+					List<ReservationPermanente> listeReservPerma = ReservationPermanenteMysql.getInstance()
+							.selectionnerReservationsPermanentesClient(client.getId());
+					if (listeReservPerma.isEmpty()) {
+						System.out.println("Vous n'avez pas de réservations permanentes.");
+					} else {
+						System.out.println("Liste de vos réservations permanentes : ");
+						for (int i = 0; i < listeReservPerma.size(); i++) {
+							System.out.println(i + " : " + listeReservPerma.get(i));
+						}
+					}
 					System.out.println(MESSAGE_QUE_FAIRE + "\n1 - Ajouter une réservation permanente");
-					// si reservation existante :
-					System.out.println("2 - Supprimer une réservation permanente");
+
+					if (!listeReservPerma.isEmpty()) {
+						System.out.println("2 - Supprimer une réservation permanente");
+					}
 
 					System.out.println("3 - Retour à l'accueil\n4 - Se déconnecter");
 					String choixPermanent = sc.nextLine();
 					switch (choixPermanent) {
 					case "1":
+						if(listeReservPerma.size() < 1) {
+							entrerDateReservation(); 
+						}
 						// si r�servation < 3
 						// faire fonction car x2
-						entrerDateReservation();
+						
 						// Ajout dans la BDD
 
 						// si deja 3 r�servations, proposer une fusion ou suppression
@@ -221,8 +234,19 @@ public class InterfaceClient {
 							break;
 						case "2":
 							System.out.println("Veuillez entrez le numéro correspondant à la réservation permanente :");
-							String supprPlaque = sc.nextLine();
-							// Suppression dans la BDD
+							String supprReserv = sc.nextLine();
+							try {
+								int numReserv = Integer.parseInt(supprReserv);
+								if (numReserv >= 0 && numReserv < listeReservPerma.size()) {
+									int res = ReservationPermanenteMysql.getInstance().suppressionReservationPermanente(
+											listeReservPerma.get(Integer.parseInt(supprReserv)).getId());
+									System.out.println("Votre réservation permanente à bien été supprimé.");
+								} else {
+									System.out.println("Erreur lors de la suppression, entrez un numéro correspondant à une réservation permanente.");
+								}
+							} catch (NumberFormatException e) {
+								System.out.println("Erreur, vous devez entrer un numéro.");
+							}
 							break;
 						case "3":
 							break;
@@ -241,8 +265,19 @@ public class InterfaceClient {
 						break;
 					case "2":
 						System.out.println("Veuillez entrez le numéro correspondant à la réservation permanente :");
-						String supprPlaque = sc.nextLine();
-						// Suppression dans la BDD
+						String supprReserv = sc.nextLine();
+						try {
+							int numReserv = Integer.parseInt(supprReserv);
+							if (numReserv >= 0 && numReserv < listeReservPerma.size()) {
+								int res = ReservationPermanenteMysql.getInstance().suppressionReservationPermanente(
+										listeReservPerma.get(Integer.parseInt(supprReserv)).getId());
+								System.out.println("Votre réservation permanente à bien été supprimé.");
+							} else {
+								System.out.println("Erreur lors de la suppression, entrez un numéro correspondant à une réservation permanente.");
+							}
+						} catch (NumberFormatException e) {
+							System.out.println("Erreur, vous devez entrer un numéro.");
+						}
 						break;
 					case "3":
 						finPermanent = true;
