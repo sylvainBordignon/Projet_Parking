@@ -13,6 +13,7 @@ import mysql.ClientMysql;
 import mysql.ReservationPermanenteMysql;
 import pojo.Client;
 import pojo.ReservationPermanente;
+import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
@@ -40,6 +41,8 @@ public class InterfaceClient {
 			switch (choixAppli) {
 			case "1":
 				// module pour l'inscription
+				MethodesClient.ajouterUnClient();
+				System.out.println("Vous pouvez vous connecter.");
 				break;
 			case "2":
 				// pour se connecter
@@ -75,7 +78,6 @@ public class InterfaceClient {
 	}
 
 	public static void interfaceClient() {
-		MethodesClient methodesclient = new MethodesClient();
 		boolean fin = false;
 		while (!fin) {
 			System.out.println(MESSAGE_QUE_FAIRE);
@@ -92,15 +94,15 @@ public class InterfaceClient {
 			case "1":
 				boolean finProfil = false;
 				while (!finProfil) {
-					System.out.println("Affichage des informations du profil... A RAJOUTER");
+					System.out.println("Affichage des informations du profil :"+client);
+					
 					System.out.println(MESSAGE_QUE_FAIRE
 							+ "\n1 - Modifier mon profil\n2 - Retourner à l'accueil de l'application\n3 - Se déconnecter");
 					System.out.print("Choix : ");
 					String choixProfil = sc.nextLine();
 					switch (choixProfil) {
 					case "1":
-						methodesclient.modifierClient(client);
-						// ...
+						MethodesClient.modifierClient(client);
 						System.out.println("Validation des modifications effectuées.");
 						break;
 					case "2":
@@ -118,9 +120,7 @@ public class InterfaceClient {
 				}
 				break;
 			case "2":
-				boolean finReservation = false;
-				boolean reservationEnCours = false;
-				boolean reservationAVenir = false;
+				boolean finReservation = false, reservationEnCours = false, reservationAVenir = false;
 				while (!finReservation) {
 					System.out.println("Liste des réservations : ");
 					// reservation en cours et � venir... repris et changement des booleans
@@ -210,7 +210,6 @@ public class InterfaceClient {
 						}
 					}
 					System.out.println(MESSAGE_QUE_FAIRE + "\n1 - Ajouter une réservation permanente");
-
 					if (!listeReservPerma.isEmpty()) {
 						System.out.println("2 - Supprimer une réservation permanente");
 					}
@@ -219,7 +218,6 @@ public class InterfaceClient {
 					switch (choixPermanent) {
 					case "1":
 						if (listeReservPerma.size() < 3) {
-							// ajout d'une réservation permanente
 							ajouterReservationPermanente();
 						} else {
 							System.out.println(
@@ -227,7 +225,7 @@ public class InterfaceClient {
 						}
 						break;
 					case "2":
-						System.out.println("Veuillez entrez le numéro correspondant à la réservation permanente :");
+						System.out.println("Veuillez entrez le numéro correspondant à la réservation permanente à supprimer :");
 						String supprReserv = sc.nextLine();
 						try {
 							int numReserv = Integer.parseInt(supprReserv);

@@ -8,7 +8,7 @@ import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 
 public class MethodesClient {
 
-	public void ajouterUnClient() {
+	public static void ajouterUnClient() {
 
 		MethodesVerificationsAjoutClient methodesverificationsajoutclient = new MethodesVerificationsAjoutClient();
 		String nom, prenom, adresse, mail, IBAN, mobile;
@@ -25,10 +25,10 @@ public class MethodesClient {
 
 		Client client = new Client(mobile, nom, prenom, adresse, mail, IBAN);
 		ClientMysql.getInstance().create(client);
-
+		System.out.println("Inscription terminée.");
 	}
 
-	public void modifierClient(Client client) {
+	public static void modifierClient(Client client) {
 		MethodesVerificationsAjoutClient methodesverificationsajoutclient = new MethodesVerificationsAjoutClient();
 		String nom, prenom, adresse, mail, IBAN, mobile;
 		int id;
