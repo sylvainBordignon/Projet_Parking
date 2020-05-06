@@ -264,7 +264,7 @@ public class InterfaceClient {
 				while (!finVehicule) {
 					System.out.println("Liste de vos véhicules : ");
 					ArrayList<String> listeVehicules = (ArrayList<String>) ClientMysql.getInstance()
-							.selectionnerListeVehicules(5);// 5 est un num random, il faut avoir le num client
+							.selectionnerListeVehicules(client.getId());
 					for (int i = 0; i < listeVehicules.size(); i++) {
 						System.out.println(listeVehicules.get(i));
 					}
@@ -277,9 +277,7 @@ public class InterfaceClient {
 								.println("Veuillez entrez le numéro de plaque d'immatriculation du nouveau véhicule :");
 						String plaqueVehicule = sc.nextLine();
 						if (plaqueVehicule.matches("^([A-Z]){2}-([0-9]){3}-([A-Z]){2}")) {
-							ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, 5);// Ajout dans la BDD; 5 est un
-																							// num random, il faut avoir
-																							// le num client
+							ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, client.getId());// Ajout dans la BDD
 							System.out.println("Véhicule ajouté.");
 						} else
 							System.out.println("Veuillez entrer un numéro d'immatriculation valide (Ex: AA-000-AA)");
@@ -287,8 +285,8 @@ public class InterfaceClient {
 					case "2":
 						System.out.println("Veuillez entrez le numéro correspondant à la plaque d'immatriculation :");
 						String supprPlaque = sc.nextLine();
-						if (ClientMysql.getInstance().supprimerVehicule(supprPlaque, 5)) {
-							// Suppression dans la BDD; 5 est un num random, il faut avoir le num client
+						if (ClientMysql.getInstance().supprimerVehicule(supprPlaque, client.getId())) {
+							// Suppression dans la BDD
 							System.out.println("Véhicule supprimé.");
 						} else
 							System.out.println("Véhicule inconnu.");
