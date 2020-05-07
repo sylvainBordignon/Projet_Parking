@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ReservationPermanenteMysql {
 			ResultSet res = preparedStmt.executeQuery();
 			while (res.next()) {
 				liste.add(new ReservationPermanente(res.getInt("id"), res.getInt("id_client"), res.getString("type"),
-						res.getTime("heure_debut"), res.getInt("duree"), res.getInt("jour_semaine"),
+						res.getTime("heure_debut"), res.getTime("duree"), res.getInt("jour_semaine"),
 						res.getInt("jour_mois")));
 			}
 		} catch (SQLException e) {
@@ -55,7 +56,7 @@ public class ReservationPermanenteMysql {
 			ResultSet res = preparedStmt.executeQuery();
 			if (res.next()) {
 				return new ReservationPermanente(res.getInt("id"), res.getInt("id_client"), res.getString("type"),
-						res.getTime("heure_debut"), res.getInt("duree"), res.getInt("jour_semaine"),
+						res.getTime("heure_debut"), res.getTime("duree"), res.getInt("jour_semaine"),
 						res.getInt("jour_mois"));
 			}
 			return null;
@@ -72,7 +73,7 @@ public class ReservationPermanenteMysql {
 			preparedStmt.setInt(1, reserv.getIdClient());
 			preparedStmt.setString(2, reserv.getType());
 			preparedStmt.setTime(3, reserv.getHeureDebut());
-			preparedStmt.setInt(4, reserv.getDuree());
+			preparedStmt.setTime(4, reserv.getDuree());
 			if (reserv.getJourSemaine() == null) {
 				preparedStmt.setNull(5, 0);
 			} else {
@@ -99,7 +100,7 @@ public class ReservationPermanenteMysql {
 			preparedStmt.setInt(2, reserv.getIdClient());
 			preparedStmt.setString(3, reserv.getType());
 			preparedStmt.setTime(4, reserv.getHeureDebut());
-			preparedStmt.setInt(5, reserv.getDuree());
+			preparedStmt.setTime(5, reserv.getDuree());
 			if (reserv.getJourSemaine() == null) {
 				preparedStmt.setNull(6, 0);
 			} else {
@@ -139,8 +140,8 @@ public class ReservationPermanenteMysql {
 					&& r2.getJourMois() == r1.getJourMois()) {
 				LocalTime time1 = r1.getHeureDebut().toLocalTime();
 				LocalTime time2 = r2.getHeureDebut().toLocalTime();
-				LocalTime time1fin = time1.plusMinutes(r1.getDuree());
-				LocalTime time2fin = time2.plusMinutes(r2.getDuree());
+				LocalTime time1fin = time1.plusHours(r1.getDuree().getHours()).plusMinutes(r1.getDuree().getMinutes());
+				LocalTime time2fin = time2.plusHours(r2.getDuree().getHours()).plusMinutes(r2.getDuree().getMinutes());
 				long delai1 = Duration.between(time1fin, time2).getSeconds();
 				long delai2 = Duration.between(time2fin, time1).getSeconds();
 				if ((delai1 <= Duration.ofMinutes(60).getSeconds() && delai1 > 0)
@@ -161,14 +162,14 @@ public class ReservationPermanenteMysql {
 					.prepareStatement("UPDATE reservationpermanente set heure_debut = ?, duree = ? where id = ?");
 			if (r1.getHeureDebut().before(r2.getHeureDebut())) {
 				preparedStmt.setTime(1, r1.getHeureDebut());
-				time2 = time2.plusMinutes(r2.getDuree());
-				intervalle = (int) (Duration.between(time1, time2).getSeconds() / 60);
+				time2 = time2.plusHours(r2.getDuree().getHours()).plusMinutes(r2.getDuree().getMinutes());
+				intervalle = (int) (Duration.between(time1, time2).getSeconds()/60);
 			} else {
 				preparedStmt.setTime(1, r2.getHeureDebut());
-				time1 = time1.plusMinutes(r1.getDuree());
-				intervalle = (int) (Duration.between(time2, time1).getSeconds() / 60);
+				time1 = time1.plusHours(r1.getDuree().getHours()).plusMinutes(r1.getDuree().getMinutes());
+				intervalle = (int) (Duration.between(time2, time1).getSeconds()/60);
 			}
-			preparedStmt.setInt(2, intervalle);
+			preparedStmt.setTime(2, new Time(0,intervalle,0));
 			preparedStmt.setInt(3, r1.getId());
 			preparedStmt.executeUpdate();
 			return true;

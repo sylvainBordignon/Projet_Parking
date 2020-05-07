@@ -94,8 +94,8 @@ public class InterfaceClient {
 			case "1":
 				boolean finProfil = false;
 				while (!finProfil) {
-					System.out.println("Affichage des informations du profil :"+client);
-					
+					System.out.println("Affichage des informations du profil :" + client);
+
 					System.out.println(MESSAGE_QUE_FAIRE
 							+ "\n1 - Modifier mon profil\n2 - Retourner à l'accueil de l'application\n3 - Se déconnecter");
 					System.out.print("Choix : ");
@@ -225,7 +225,8 @@ public class InterfaceClient {
 						}
 						break;
 					case "2":
-						System.out.println("Veuillez entrez le numéro correspondant à la réservation permanente à supprimer :");
+						System.out.println(
+								"Veuillez entrez le numéro correspondant à la réservation permanente à supprimer :");
 						String supprReserv = sc.nextLine();
 						try {
 							int numReserv = Integer.parseInt(supprReserv);
@@ -277,7 +278,8 @@ public class InterfaceClient {
 								.println("Veuillez entrez le numéro de plaque d'immatriculation du nouveau véhicule :");
 						String plaqueVehicule = sc.nextLine();
 						if (plaqueVehicule.matches("^([A-Z]){2}-([0-9]){3}-([A-Z]){2}")) {
-							ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, client.getId());// Ajout dans la BDD
+							ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, client.getId());// Ajout dans la
+																										// BDD
 							System.out.println("Véhicule ajouté.");
 						} else
 							System.out.println("Veuillez entrer un numéro d'immatriculation valide (Ex: AA-000-AA)");
@@ -426,16 +428,21 @@ public class InterfaceClient {
 				String heureDebut = sc.nextLine();
 				MethodesVerificationsDate methodesDate = new MethodesVerificationsDate();
 				if (methodesDate.estValideHeureMinute(heureDebut)) {
-					System.out.println((MESSAGE_CHOIX_DUREE));
+					System.out.println((MESSAGE_CHOIX_HEURE));
 					String duree = sc.nextLine();
-					try {
-						String[] tab = heureDebut.split(":");
-						reservation = new ReservationPermanente(client.getId(), "journalière",
-								new Time(Integer.parseInt(tab[0]), Integer.parseInt(tab[1]), 0),
-								Integer.parseInt(duree));
-						donnees = true;
-					} catch (Exception e) {
-						System.out.println("Erreur dans le format des champs entrés, veuillez réessayer.");
+					if (methodesDate.estValideHeureMinute(duree)) {
+						try {
+							String[] tabDebut = heureDebut.split(":");
+							String[] tabDuree = duree.split(":");
+							reservation = new ReservationPermanente(client.getId(), "journalière",
+									new Time(Integer.parseInt(tabDebut[0]), Integer.parseInt(tabDebut[1]), 0),
+									new Time(Integer.parseInt(tabDuree[0]), Integer.parseInt(tabDuree[1]), 0));
+							donnees = true;
+						} catch (Exception e) {
+							System.out.println("Erreur dans le format des champs entrés, veuillez réessayer.");
+						}
+					} else {
+						System.out.println("Mauvais format de la durée.");
 					}
 				} else {
 					System.out.println("Mauvais format de l'heure ou doit être entre 0 et 24 heures.");
