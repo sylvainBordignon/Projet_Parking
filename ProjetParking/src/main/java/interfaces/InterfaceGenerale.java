@@ -25,12 +25,8 @@ public class InterfaceGenerale {
 				System.out.println("Fermeture de l'API.");
 				break;
 			default:
-				System.out.println("Erreur, veuillez choisir un numéro correpondant à un des choix");
+				System.out.println("Erreur, veuillez choisir un numéro correpondant à un des choix.");
 			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		interfaceGenerale();
 	}
 }
