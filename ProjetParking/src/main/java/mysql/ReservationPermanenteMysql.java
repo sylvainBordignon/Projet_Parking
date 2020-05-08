@@ -10,7 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ConnexionBDD.Connexion;
+import connexionBDD.Connexion;
 import pojo.ReservationPermanente;
 
 public class ReservationPermanenteMysql {
