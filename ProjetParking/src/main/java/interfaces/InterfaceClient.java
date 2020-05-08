@@ -12,6 +12,7 @@ import methodes.MethodesClient;
 import mysql.ClientMysql;
 import mysql.ReservationPermanenteMysql;
 import pojo.Client;
+import pojo.Reservation;
 import pojo.ReservationPermanente;
 import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 import verificationsentreeclavier.MethodesVerificationsDate;
@@ -171,7 +172,21 @@ public class InterfaceClient {
 						if (reservationAVenir) {
 							System.out.println("Quelle réservation souhaitez-vous modifier ?");
 							String choixModifReservation = sc.nextLine();
-							// verif
+							while(ClientMysql.getInstance().obtenirReservation(Integer.parseInt(choixModifReservation))==null) {
+								System.out.println("Réservation inexistante. Veuillez reessayer.");
+								choixModifReservation = sc.nextLine();
+							}
+							Reservation reservation = ClientMysql.getInstance().obtenirReservation(Integer.parseInt(choixModifReservation));
+							System.out.println("Que voulez vous modifier? \n1 - Date de début \n2 - Duree ");
+							String quoiModifier = sc.nextLine();
+							switch (quoiModifier) {
+							case "1":
+//								System.out.println("Veuillez entrer la date de début. (dd/MM/yyyy)");
+//								String date = sc.nextLine();
+//								if(date)
+								
+							}
+							ClientMysql.getInstance().modifierReservation(reservation);
 							// puis interface modif
 						} else {
 							System.out.println(MESSAGE_ERREUR);
