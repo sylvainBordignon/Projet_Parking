@@ -44,7 +44,6 @@ public class RecherchePlaceDispoMysql {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(listeDesPlaces);
 		return listeDesPlaces;
 	}
 
@@ -59,7 +58,6 @@ public class RecherchePlaceDispoMysql {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(listeDesPlaces);
 		return listeDesPlaces;
 	}
 
@@ -96,7 +94,7 @@ public class RecherchePlaceDispoMysql {
 
 					while (res.next()) {
 						nbPlaceJournaliere = res.getInt(1);
-						System.out.println("Toute les reserv : " + nbPlaceJournaliere);
+					
 					}
 
 				} catch (SQLException e) {
@@ -119,17 +117,17 @@ public class RecherchePlaceDispoMysql {
 
 					while (res2.next()) {
 						nbPlaceJournaliere = nbPlaceJournaliere - res2.getInt(1);
-						System.out.println(" les autres  reserv : " + nbPlaceJournaliere);
+					
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				System.out.println(" Final  : " + nbPlaceJournaliere);
+				
 
 				return nbPlaceJournaliere;
 
 			} else {
-				System.out.println(heureDebutReservation);
+				
 				nbPlaceJournaliere = 0;
 				// heure debut = 13:45 ; heure fin = 18:00
 				try {
@@ -148,7 +146,7 @@ public class RecherchePlaceDispoMysql {
 					nbPlaceJournaliere = 0;
 					while (res.next()) {
 						nbPlaceJournaliere = res.getInt(1);
-						System.out.println(nbPlaceJournaliere);
+						
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -169,7 +167,6 @@ public class RecherchePlaceDispoMysql {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			System.out.println(nbPlaceJournaliere);
 			return nbPlaceJournaliere;
 		}
 	}
@@ -197,7 +194,7 @@ public class RecherchePlaceDispoMysql {
 			ResultSet res = preparedStmt.executeQuery();
 			while (res.next()) {
 				nbPlaceHebdo = res.getInt(1);
-				System.out.println(nbPlaceHebdo);
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

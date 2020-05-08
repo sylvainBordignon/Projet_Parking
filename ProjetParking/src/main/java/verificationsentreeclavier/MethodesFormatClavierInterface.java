@@ -85,4 +85,29 @@ public class MethodesFormatClavierInterface {
 		}		
 		return entree;
 	}
+	
+	public static Boolean validerUneReservation(String message) {
+		Scanner sc = new Scanner(System.in);
+		String entree = "";
+		Boolean reponse = false;
+		System.out.println("Il reste de la place, voulez-vous créer une réservation ? \n  Rentrez 'o' pour oui ou 'n' pour non ");
+		boolean fin = false;
+		while(!fin) {
+			System.out.println(message);
+			entree = sc.nextLine();
+			if( entree.compareTo("o") == 0) {
+				reponse=true;
+				fin = true;	
+			}else if(entree.compareTo("n") == 0) {
+				reponse=false;
+				fin = true;
+			}else {
+				System.out.println("Erreur, veuillez choisir une réponse correcte.");
+			}
+		}
+		return reponse;
+	}
+	
+	
+	
 }

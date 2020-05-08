@@ -352,15 +352,9 @@ public class InterfaceClient {
 				System.out.println("Consultation des disponiblités des places de parking");
 				String [] parametresClient = entrerDateReservation();
 				MethodesClient methodesclient = new MethodesClient();
+			
 				methodesclient.consulterPlacesParkingDispo(parametresClient[0],parametresClient[1],parametresClient[2]);
-				
-				// Puis check dans la BDD
-
-				// si tout est bon
-				System.out.println("Affichage du nombre de place dispo");
-				// si > 0
-				System.out.println(
-						"Souhaitez-vous réserver une place à cette date et pendant cette durée ?\n1 - Oui\n2 - Non");
+					
 				// si oui on fait la r�servation + retour accueil
 				// si non on demande si nouvelle recherche ou retour accueil
 				break;
@@ -421,7 +415,6 @@ public class InterfaceClient {
 		tab[1] = heureReserv;
 		return tab;
 	}
-
 	public static void ajouterReservationPermanente() {
 		ReservationPermanente reservation = null;
 		System.out.println(

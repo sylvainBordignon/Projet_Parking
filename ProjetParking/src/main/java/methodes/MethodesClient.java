@@ -7,6 +7,7 @@ import java.util.Scanner;
 import mysql.ClientMysql;
 import mysql.RecherchePlaceDispoMysql;
 import pojo.Client;
+import verificationsentreeclavier.MethodesFormatClavierInterface;
 import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 
 public class MethodesClient {
@@ -112,15 +113,34 @@ public class MethodesClient {
 	
 	public void	consulterPlacesParkingDispo(String dateReserv, String heureReserv,String dureeReserv){
 		MethodesCalculs methodescalculs = new MethodesCalculs();
+		MethodesFormatClavierInterface methodesformatclavierinterface = new MethodesFormatClavierInterface();
 // Conversion des date debut et fin utilisateur en formatBDD		
 String dateDebutReservation	 =	methodescalculs.conversionDateDebutReservationEnFormatBdd(dateReserv,heureReserv);
 String dateFinReservation	= methodescalculs.conversionDateFinReservationEnFormatBdd(dateDebutReservation, dureeReserv);
-
+String OUI_NON = "Veuillez rentrez 'o' pour oui ou 'n' pour non ";
 int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation, dureeReserv);
 
 		System.out.println("Recherche des places disponibles du  "+dateDebutReservation+ " au  "+dateFinReservation);		
 		if(placeClient > 0) {
-			System.out.println("Il reste de la place, voulez-vous créer une réservation ? ");	
+			boolean reponse;
+			reponse= MethodesFormatClavierInterface.validerUneReservation(OUI_NON);
+			
+			if(reponse = true) {
+			
+				System.out.println("Votre réservation a bien été prise en compte. \n"
+						+ "Récapitulatif :  \n"
+						+ "- début de la réservation : "+dateDebutReservation+" \n"
+						+"- fin de la réservation : "+dateFinReservation+"\n"
+						+ "- votre numéro de place de parking réservé : "+placeClient+
+						" \n Retour au menu ... "
+						);
+				
+			}else {
+			System.out.println("Retour au menu ...");	
+			}
+			
+			
+		
 		}else {
 		   System.out.println("Désolé il n'y a plus de place à ce créneau là !");
 		}

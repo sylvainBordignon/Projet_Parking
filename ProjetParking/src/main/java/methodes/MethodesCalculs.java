@@ -94,19 +94,17 @@ public class MethodesCalculs {
 		RecherchePlaceDispoMysql rechercheplacedispomysql = new RecherchePlaceDispoMysql(null);
 		List<Integer> listeDesPlacesDuParking = new ArrayList<Integer>();
 		listeDesPlacesDuParking = rechercheplacedispomysql.getInstance().listeDesPlacesDuParking();
-		System.out.println("Liste place parking : " + listeDesPlacesDuParking);
 		// Récupération des places occupées pour la période du client
 		List<Integer> listeDesPlacesReserve = new ArrayList<Integer>();
 		listeDesPlacesReserve = rechercheplacedispomysql.getInstance()
 				.listeDesPlacesReserveDurantPeriodeReservationClient(dateDebutReservation, dateFinReservation);
-		System.out.println("Liste place reserve : " + listeDesPlacesReserve);
-
+	
 		// place du parking dispo après la soustraction des places dans réservation
 		listeDesPlacesDuParking.removeAll(listeDesPlacesReserve);
 
 		int nombreDeReservationPermanente;
 		nombreDeReservationPermanente =	this.nombreDeReservationPermanenteTotalDurantReservationClient(dateDebutReservation, dateFinReservation, duree);
-		System.out.println("nb place permanente :"+nombreDeReservationPermanente);
+	
 		
 		if(listeDesPlacesDuParking.size() > nombreDeReservationPermanente) {
 			numeroPlace =listeDesPlacesDuParking.get(0);
@@ -114,7 +112,6 @@ public class MethodesCalculs {
 		
 		listeDesPlacesDuParking.size();
 		
-		System.out.println(numeroPlace);
 		
 		return   numeroPlace ; 
 
