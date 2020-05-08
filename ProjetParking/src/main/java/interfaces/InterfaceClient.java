@@ -416,7 +416,8 @@ public class InterfaceClient {
 			heureReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
 
 		}
-
+		String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
+        tab[2] = dureeReserv;
 		tab[1] = heureReserv;
 		return tab;
 	}
