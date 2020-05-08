@@ -114,7 +114,6 @@ public class MethodesCalculs {
 		
 		listeDesPlacesDuParking.size();
 		
-	
 		System.out.println(numeroPlace);
 		
 		return   numeroPlace ; 

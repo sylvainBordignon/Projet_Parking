@@ -114,10 +114,18 @@ public class MethodesClient {
 		MethodesCalculs methodescalculs = new MethodesCalculs();
 // Conversion des date debut et fin utilisateur en formatBDD		
 String dateDebutReservation	 =	methodescalculs.conversionDateDebutReservationEnFormatBdd(dateReserv,heureReserv);
-String dateFinReservation	= methodescalculs.conversionDateFinReservationEnFormatBdd(dateDebutReservation, dureeReserv);	
+String dateFinReservation	= methodescalculs.conversionDateFinReservationEnFormatBdd(dateDebutReservation, dureeReserv);
+
 int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation, dureeReserv);
 
-		System.out.println("Recherche des places disponibles du  "+dateDebutReservation+ " au  "+dateFinReservation);
+		System.out.println("Recherche des places disponibles du  "+dateDebutReservation+ " au  "+dateFinReservation);		
+		if(placeClient > 0) {
+			System.out.println("Il reste de la place, voulez-vous créer une réservation ? ");	
+		}else {
+		   System.out.println("Désolé il n'y a plus de place à ce créneau là !");
+		}
+		
+		
 			}
 		
 
