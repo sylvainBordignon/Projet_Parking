@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import methodes.MethodesCalculs;
 import methodes.MethodesClient;
 import mysql.ClientMysql;
 import mysql.ReservationPermanenteMysql;
@@ -17,13 +18,13 @@ import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
 
-	private static final String MESSAGE_ERREUR = "Erreur dans la saisie, entrez un num�ro correspondant à un choix du menu.",
+	private static final String MESSAGE_ERREUR = "Erreur dans la saisie, entrez un numéro correspondant à un choix du menu.",
 			MESSAGE_RETOUR_ACCUEIL = "Retour à l'accueil...",
 			MESSAGE_FERMETURE_APPLI = "Fermeture de l'application mobile...",
 			MESSAGE_QUE_FAIRE = "Que souhaitez-vous faire ?",
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
-			MESSAGE_CHOIX_DUREE = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)";
+			MESSAGE_CHOIX_DUREE = "Veuillez choisir une durée de réservation (Format : HH:MM)";
 
 	private static Client client;
 
@@ -499,11 +500,13 @@ public class InterfaceClient {
 			}
 		}
 	}
-
 	public static void entrerDateReservation() {
 		MethodesVerificationsDate verifDate = new MethodesVerificationsDate();
+		MethodesClient methodesclient = new MethodesClient();
+		MethodesCalculs methodescalculs = new MethodesCalculs();
 		boolean valide = false;
-		String dateReserv = null, heureReserv, dureeReserv;
+		String dateReserv = null, heureReserv=null, dureeReserv=null;
+		
 		while (!valide) {
 			System.out.println(MESSAGE_CHOIX_DATE);
 			dateReserv = sc.nextLine();
@@ -514,17 +517,8 @@ public class InterfaceClient {
 		}
 		valide = false;
 		while (!valide) {
-
-			System.out.println(MESSAGE_CHOIX_HEURE);
-			heureReserv = sc.nextLine();
-			valide = verifDate.estValideDate(heureReserv);
-			if (!valide) {
-				System.out.println("Erreur dans le format, veuillez reéssayer.");
-			}
-
 			// si dateUtilisateur = dateAujourd'hui alors on vérifie si l'heure d'arrivée
 			// n'est pas déjà passé.
-
 			DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			String date = sdf.format(new Date());
 
@@ -545,17 +539,18 @@ public class InterfaceClient {
 				}
 
 			}
-
 		}
 		System.out.println(MESSAGE_CHOIX_DUREE);
 		valide = false;
 		while (!valide) {
 			dureeReserv = sc.nextLine();
-			valide = verifDate.estValideHeureMinute(dureeReserv);
+			valide = verifDate.estValideFormatReservation(dureeReserv);
 			if (!valide) {
 				System.out.println("Erreur dans le format, veuillez reéssayer.");
 			}
 		}
+	methodesclient.consulterPlacesParkingDispo(dateReserv, heureReserv, dureeReserv);
+	
 	}
 
 	public static void main(String[] args) {

@@ -24,7 +24,6 @@ public class MethodesVerificationsAjoutClient {
 		}
 		return nom;
 	}
-
 	// doit comporter uniquement des lettres et une taille < à 30
 	public String verifPrenomClient() {
 		String prenom = null;

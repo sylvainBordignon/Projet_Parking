@@ -4,13 +4,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class MethodesVerificationsDate {
 
 	
 	  public boolean estValideDate(String dateUtilisateur)  {
-
-	  
+		  
 	        DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	        sdf.setLenient(false);
 	        String date = sdf.format(new Date());
@@ -53,7 +53,11 @@ public class MethodesVerificationsDate {
 			} catch (ParseException e) {
 	         return false;
 			}
-	        
+	   
+			
+			if(dateUtilisateur.length()!=5) {
+				return false;	
+				}
 			if(dateParseUtilisateur.before(dateParseDateCourante)) {
 			
 			System.out.println("Notre système ne permet seulement de visualiser les places disponibles dans le futur. ");
@@ -73,8 +77,21 @@ public class MethodesVerificationsDate {
 		} catch (ParseException e) {
 			return false;
 		}
+		if(dateUtilisateur.length()!=5) {
+		return false;	
+		}
 		System.out.println("OK");
 		return true;
 	}
+	public boolean estValideFormatReservation(String dureeReservationUtilisateur) {
+
+		if (Pattern.matches("^[0-9]{1,2}[:.,-][0-9]{1,2}?$",dureeReservationUtilisateur)) {
+			
+		return true;	
+		}
+		
+	return false;	
+	}
+	
 
 }

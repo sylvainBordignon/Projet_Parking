@@ -30,7 +30,7 @@ public class ReservationPermanenteMysql {
 	public List<ReservationPermanente> selectionnerReservationsPermanentesClient(int id) {
 		List<ReservationPermanente> liste = new ArrayList<>();
 		try {
-
+			
 			PreparedStatement preparedStmt = conn
 					.prepareStatement("SELECT * FROM reservationpermanente where id_client = ?");
 			preparedStmt.setInt(1, id);
