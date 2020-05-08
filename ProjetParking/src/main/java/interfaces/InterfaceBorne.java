@@ -2,7 +2,10 @@ package interfaces;
 
 import java.util.Scanner;
 
+import mysql.ClientMysql;
 import mysql.PlaceParkingMysql;
+import pojo.Client;
+import verificationsentreeclavier.MethodesFormatClavierInterface;
 
 public class InterfaceBorne {
 	public static final String MESSAGE_ERREUR = "Veuillez entrer une information correcte.";
@@ -18,9 +21,6 @@ public class InterfaceBorne {
 				+ "\n" + "2 - Non" + RETOUR_MENU_PRINCIPAL);
 		String reponse = InterfaceBorne.reessayer();
 		if (reponse.equals("1")) {
-//			if (PLACES_LIBRES == 0)
-//				System.out.println(MESSAGE_DEDOMMAGEMENT);
-//			else
 				InterfaceBorne.menuReservation();
 		} else if (reponse.equals("2")) {
 			InterfaceBorne.menuSansReservation();
@@ -54,17 +54,10 @@ public class InterfaceBorne {
 			else if (reponse.equals("2"))
 				InterfaceBorne.menuSansReservation();
 		}
-
 	}
 
 	private static void menuSansReservation() {
-		System.out.println("Veuillez entrer votre plaque d'immatriculation." + RETOUR_MENU_PRINCIPAL);
-		String immatriculation = in.nextLine();
-		while (immatriculation.equalsIgnoreCase("incorrect")) {// on v�rifie que le format est correct
-			System.out.println(MESSAGE_ERREUR);
-			in = new Scanner(System.in);
-			immatriculation = in.nextLine();
-		}
+		String immatriculation = MethodesFormatClavierInterface.entreePlaqueImmatriculation("Veuillez entrer votre plaque d'immatriculation." + RETOUR_MENU_PRINCIPAL);
 		if (immatriculation.equalsIgnoreCase("plaqueInconnue")) {// la plaque n'existe pas dans la base
 			System.out.println(
 					"Numéro d'immatriculation inconnu. Voulez vous reessayer?" + "\n" + "1 - Oui" + "\n" + "2 - Non");
@@ -79,14 +72,9 @@ public class InterfaceBorne {
 	}
 
 	private static void verifNumClient() {
-		System.out.println("Veuillez entrer votre numéro de client." + RETOUR_MENU_PRINCIPAL);
-		String numClient = in.nextLine();
-		while (numClient.equalsIgnoreCase("incorrect")) {// on v�rifie que le format est correct
-			System.out.println(MESSAGE_ERREUR);
-			in = new Scanner(System.in);
-			numClient = in.nextLine();
-		}
-		if (numClient.equalsIgnoreCase("numeroIconnu")) {// le num�ro n'existe pas dans la base
+		int numClient = MethodesFormatClavierInterface.entreeEntier("Veuillez entrer votre numéro de client." + RETOUR_MENU_PRINCIPAL);
+		Client client = ClientMysql.getInstance().visualierInfoClient(numClient);
+		if (client == null) {// le num�ro n'existe pas dans la base
 			System.out
 					.println("Numéro de client inconnu. Voulez vous reessayer?" + "\n" + "1 - Oui" + "\n" + "2 - Non");
 			String reponse = InterfaceBorne.reessayer();
@@ -95,7 +83,7 @@ public class InterfaceBorne {
 			else if (reponse.equals("2"))// numéro de client non reconnu
 				System.out.println("Veuillez vous diriger vers la sortie. Merci pour votre visite.");
 		} else {// le numero existe dans la base, on vérifie qu'une reservation existe
-			InterfaceBorne.verifReservationExiste(numClient);
+		//	InterfaceBorne.verifReservationExiste(numClient);
 		}
 	}
 
@@ -142,5 +130,4 @@ public class InterfaceBorne {
 	public static void main(String[] args) {
 		InterfaceBorne.lancerInterfaceBorne();
 	}
-
 }

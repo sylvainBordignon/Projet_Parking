@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ConnexionBDD.Connexion;
+import connexionBDD.Connexion;
 import pojo.Client;
 
 
@@ -26,11 +25,13 @@ public class ClientMysql {
 		super();
 		this.conn = conn;
 	}
+	
 	public static ClientMysql getInstance(){
 		if(clientmysql==null)
 			clientmysql=new ClientMysql(Connexion.getInstance());
 		return clientmysql;
 	}
+	
 	public int create(Client obj) {
 		int id=-1;	
 		try {

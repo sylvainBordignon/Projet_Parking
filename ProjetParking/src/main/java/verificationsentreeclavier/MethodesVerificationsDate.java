@@ -9,7 +9,7 @@ public class MethodesVerificationsDate {
 
 	private static final String MESSAGE_ERREUR_PASSEE = "Notre système ne permet seulement de visualiser les places disponibles dans le futur. ";
 
-	public boolean estValideDate(String dateUtilisateur) {
+	public static boolean estValideDate(String dateUtilisateur) {
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		sdf.setLenient(false);
 		String date = sdf.format(new Date());
@@ -35,7 +35,7 @@ public class MethodesVerificationsDate {
 		return true;
 	}
 
-	public boolean estValideHeureMinuteMemeJour(String dateUtilisateur) {
+	public static boolean estValideHeureMinuteMemeJour(String dateUtilisateur) {
 		DateFormat sdf = new SimpleDateFormat("HH:mm");
 		sdf.setLenient(false);
 		String date = sdf.format(new Date());
@@ -54,7 +54,7 @@ public class MethodesVerificationsDate {
 		return true;
 	}
 
-	public boolean estValideHeureMinute(String dateUtilisateur) {
+	public static boolean estValideHeureMinute(String dateUtilisateur) {
 		DateFormat sdf = new SimpleDateFormat("HH:mm");
 		sdf.setLenient(false);
 		try {

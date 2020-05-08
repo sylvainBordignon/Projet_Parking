@@ -13,8 +13,7 @@ import mysql.ClientMysql;
 import mysql.ReservationPermanenteMysql;
 import pojo.Client;
 import pojo.ReservationPermanente;
-import verificationsentreeclavier.MethodesVerificationsAjoutClient;
-import verificationsentreeclavier.MethodesVerificationsDate;
+import verificationsentreeclavier.MethodesFormatClavierInterface;
 
 public class InterfaceClient {
 
@@ -24,8 +23,7 @@ public class InterfaceClient {
 			MESSAGE_QUE_FAIRE = "Que souhaitez-vous faire ?",
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
-			MESSAGE_CHOIX_DUREE = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)",
-			MESSAGE_ERREUR_FORMAT = "Erreur dans le format, veuillez reéssayer.";
+			MESSAGE_CHOIX_DUREE = "Veuillez choisir une dur�e de réservation (Format HH:MM)";
 
 	private static Client client;
 
@@ -45,7 +43,7 @@ public class InterfaceClient {
 				System.out.println("Vous pouvez vous connecter.");
 				break;
 			case "2":
-				// pour se connecter
+				// pour la connexion
 				boolean finConnexion = false;
 				while (!finConnexion) {
 					System.out.println("Veuillez entrer votre numéro client : ");
@@ -73,7 +71,6 @@ public class InterfaceClient {
 			default:
 				System.out.println(MESSAGE_ERREUR);
 			}
-
 		}
 	}
 
@@ -95,7 +92,6 @@ public class InterfaceClient {
 				boolean finProfil = false;
 				while (!finProfil) {
 					System.out.println("Affichage des informations du profil :" + client);
-
 					System.out.println(MESSAGE_QUE_FAIRE
 							+ "\n1 - Modifier mon profil\n2 - Retourner à l'accueil de l'application\n3 - Se déconnecter");
 					System.out.print("Choix : ");
@@ -225,25 +221,19 @@ public class InterfaceClient {
 						}
 						break;
 					case "2":
-						System.out.println(
+						int supprReserv = MethodesFormatClavierInterface.entreeEntier(
 								"Veuillez entrez le numéro correspondant à la réservation permanente à supprimer :");
-						String supprReserv = sc.nextLine();
-						try {
-							int numReserv = Integer.parseInt(supprReserv);
-							if (numReserv >= 0 && numReserv < listeReservPerma.size()) {
-								int res = ReservationPermanenteMysql.getInstance().suppressionReservationPermanente(
-										listeReservPerma.get(Integer.parseInt(supprReserv)).getId());
-								if (res == 1) {
-									System.out.println("Votre réservation permanente à bien été supprimé.");
-								} else {
-									System.out.println("Erreur lors de la suppression dans la base de données.");
-								}
+						if (supprReserv >= 0 && supprReserv < listeReservPerma.size()) {
+							int res = ReservationPermanenteMysql.getInstance()
+									.suppressionReservationPermanente(listeReservPerma.get(supprReserv).getId());
+							if (res == 1) {
+								System.out.println("Votre réservation permanente à bien été supprimé.");
 							} else {
-								System.out.println(
-										"Erreur lors de la suppression, entrez un numéro correspondant à une réservation permanente.");
+								System.out.println("Erreur lors de la suppression dans la base de données.");
 							}
-						} catch (NumberFormatException e) {
-							System.out.println("Erreur, vous devez entrer un numéro.");
+						} else {
+							System.out.println(
+									"Erreur lors de la suppression, entrez un numéro correspondant à une réservation permanente.");
 						}
 						break;
 					case "3":
@@ -274,15 +264,9 @@ public class InterfaceClient {
 					String choixVehicule = sc.nextLine();
 					switch (choixVehicule) {
 					case "1":
-						System.out
-								.println("Veuillez entrez le numéro de plaque d'immatriculation du nouveau véhicule :");
-						String plaqueVehicule = sc.nextLine();
-						if (plaqueVehicule.matches("^([A-Z]){2}-([0-9]){3}-([A-Z]){2}")) {
-							ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, client.getId());// Ajout dans la
-																										// BDD
-							System.out.println("Véhicule ajouté.");
-						} else
-							System.out.println("Veuillez entrer un numéro d'immatriculation valide (Ex: AA-000-AA)");
+						String plaqueVehicule = MethodesFormatClavierInterface.entreePlaqueImmatriculation(
+								"Veuillez entrez le numéro de plaque d'immatriculation du nouveau véhicule :");
+						ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, client.getId());// Ajout dans la base
 						break;
 					case "2":
 						System.out.println("Veuillez entrez le numéro correspondant à la plaque d'immatriculation :");
@@ -358,62 +342,22 @@ public class InterfaceClient {
 
 	}
 
-	public static void entrerDateReservation() {
-		MethodesVerificationsDate verifDate = new MethodesVerificationsDate();
-		boolean valide = false;
-		String dateReserv = null, heureReserv, dureeReserv;
-		while (!valide) {
-			System.out.println(MESSAGE_CHOIX_DATE);
-			dateReserv = sc.nextLine();
-			valide = verifDate.estValideDate(dateReserv);
-			if (!valide) {
-				System.out.println(MESSAGE_ERREUR_FORMAT);
-			}
+	public static String[] entrerDateReservation() {
+		String[] tab = new String[3];
+		String dateReserv = MethodesFormatClavierInterface.entreeDate(MESSAGE_CHOIX_DATE);
+		String heureReserv;
+		tab[0] = dateReserv;
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String date = sdf.format(new Date());
+		if (date.equals(dateReserv)) {
+			heureReserv = MethodesFormatClavierInterface.entreeHeureMemeJour(MESSAGE_CHOIX_HEURE);
+		} else {
+			heureReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
 		}
-		valide = false;
-		while (!valide) {
-
-			System.out.println(MESSAGE_CHOIX_HEURE);
-			heureReserv = sc.nextLine();
-			valide = verifDate.estValideDate(heureReserv);
-			if (!valide) {
-				System.out.println(MESSAGE_ERREUR_FORMAT);
-			}
-
-			// si dateUtilisateur = dateAujourd'hui alors on vérifie si l'heure d'arrivée
-			// n'est pas déjà passé.
-
-			DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			String date = sdf.format(new Date());
-
-			if (date.equals(dateReserv)) {
-				System.out.println(MESSAGE_CHOIX_HEURE);
-				heureReserv = sc.nextLine();
-				valide = verifDate.estValideHeureMinuteMemeJour(heureReserv);
-				if (!valide) {
-					System.out.println(MESSAGE_ERREUR_FORMAT);
-				}
-
-			} else {
-				System.out.println(MESSAGE_CHOIX_HEURE);
-				heureReserv = sc.nextLine();
-				valide = verifDate.estValideHeureMinute(heureReserv);
-				if (!valide) {
-					System.out.println(MESSAGE_ERREUR_FORMAT);
-				}
-
-			}
-
-		}
-		System.out.println(MESSAGE_CHOIX_DUREE);
-		valide = false;
-		while (!valide) {
-			dureeReserv = sc.nextLine();
-			valide = verifDate.estValideHeureMinute(dureeReserv);
-			if (!valide) {
-				System.out.println(MESSAGE_ERREUR_FORMAT);
-			}
-		}
+		tab[1] = heureReserv;
+		String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
+		tab[2] = dureeReserv;
+		return tab;
 	}
 
 	public static void ajouterReservationPermanente() {
@@ -424,53 +368,33 @@ public class InterfaceClient {
 		if (typeReserv.equals("1") || typeReserv.equals("2") || typeReserv.equals("3")) {
 			boolean finAjout = false, donnees = false;
 			while (!finAjout) {
-				System.out.println(MESSAGE_CHOIX_HEURE);
-				String heureDebut = sc.nextLine();
-				MethodesVerificationsDate methodesDate = new MethodesVerificationsDate();
-				if (methodesDate.estValideHeureMinute(heureDebut)) {
-					System.out.println((MESSAGE_CHOIX_HEURE));
-					String duree = sc.nextLine();
-					if (methodesDate.estValideHeureMinute(duree)) {
-						try {
-							String[] tabDebut = heureDebut.split(":");
-							String[] tabDuree = duree.split(":");
-							reservation = new ReservationPermanente(client.getId(), "journalière",
-									new Time(Integer.parseInt(tabDebut[0]), Integer.parseInt(tabDebut[1]), 0),
-									new Time(Integer.parseInt(tabDuree[0]), Integer.parseInt(tabDuree[1]), 0));
-							donnees = true;
-						} catch (Exception e) {
-							System.out.println("Erreur dans le format des champs entrés, veuillez réessayer.");
-						}
-					} else {
-						System.out.println("Mauvais format de la durée.");
-					}
-				} else {
-					System.out.println("Mauvais format de l'heure ou doit être entre 0 et 24 heures.");
+				String heureDebut = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
+				String duree = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
+				try {
+					String[] tabDebut = heureDebut.split(":");
+					String[] tabDuree = duree.split(":");
+					reservation = new ReservationPermanente(client.getId(), "journalière",
+							new Time(Integer.parseInt(tabDebut[0]), Integer.parseInt(tabDebut[1]), 0),
+							new Time(Integer.parseInt(tabDuree[0]), Integer.parseInt(tabDuree[1]), 0));
+					donnees = true;
+				} catch (Exception e) {
+					System.out.println("Erreur dans le format des champs entrés, veuillez réessayer.");
 				}
 				boolean format = false;
 				if (typeReserv.equals("1") && donnees) {
 					format = true;
 				} else if (typeReserv.equals("2") && donnees) {
-					System.out.println(
-							"Jour de la semaine : (0 = Lundi, 1 = Mardi, 2 = Mercredi, 3 = Jeudi, 4 = Vendredi, 5 = Samedi, 6 = Dimanche)");
-					String choixJour = sc.nextLine();
-					try {
-						int jour = Integer.parseInt(choixJour);
-						if (jour >= 0 && jour <= 6) {
-							reservation.setJourSemaine(jour);
-							reservation.setType("hebdomadaire");
-							format = true;
-
-						}
-					} catch (Exception e) {
-						System.out.println("Le jour doit être un chiffre en 0 et 6.");
+					int choixJour = MethodesFormatClavierInterface.entreeEntier(
+							"Jour de la semaine : (1 = Lundi, 2 = Mardi, 3 = Mercredi, 4 = Jeudi, 5 = Vendredi, 6 = Samedi, 7 = Dimanche)");
+					if (choixJour >= 0 && choixJour <= 6) {
+						reservation.setJourSemaine(choixJour);
+						reservation.setType("hebdomadaire");
+						format = true;
 					}
 				} else if (typeReserv.equals("3") && donnees) {
-					System.out.println("Jour du mois : (1-28)");
-					String choixMois = sc.nextLine();
-					int jourMois = Integer.parseInt(choixMois);
-					if (jourMois >= 0 && jourMois <= 28) {
-						reservation.setJourMois(jourMois);
+					int choixMois = MethodesFormatClavierInterface.entreeEntier("Jour du mois : (1-28)");
+					if (choixMois >= 0 && choixMois <= 28) {
+						reservation.setJourMois(choixMois);
 						reservation.setType("mensuelle");
 						format = true;
 					}
@@ -513,9 +437,5 @@ public class InterfaceClient {
 		} else {
 			System.out.println(MESSAGE_ERREUR);
 		}
-	}
-
-	public static void main(String[] args) {
-		InterfaceClient.interfaceClient();
 	}
 }
