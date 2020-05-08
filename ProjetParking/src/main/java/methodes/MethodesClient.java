@@ -1,8 +1,11 @@
 package methodes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import mysql.ClientMysql;
+import mysql.RecherchePlaceDispoMysql;
 import pojo.Client;
 import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 
@@ -103,10 +106,27 @@ public class MethodesClient {
 				System.out.println("Veuillez choisir un nombre compris entre 1 et 7");
 				break;
 			}
-
 		}
 
 	}
+	
+	public void	consulterPlacesParkingDispo(String dateReserv, String heureReserv,String dureeReserv){
+		MethodesCalculs methodescalculs = new MethodesCalculs();
+// Conversion des date debut et fin utilisateur en formatBDD		
+String dateDebutReservation	 =	methodescalculs.conversionDateDebutReservationEnFormatBdd(dateReserv,heureReserv);
+String dateFinReservation	= methodescalculs.conversionDateFinReservationEnFormatBdd(dateDebutReservation, dureeReserv);
+
+int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation, dureeReserv);
+
+		System.out.println("Recherche des places disponibles du  "+dateDebutReservation+ " au  "+dateFinReservation);		
+		if(placeClient > 0) {
+			System.out.println("Il reste de la place, voulez-vous créer une réservation ? ");	
+		}else {
+		   System.out.println("Désolé il n'y a plus de place à ce créneau là !");
+		}
+		
+		
+			}
 		
 
 }

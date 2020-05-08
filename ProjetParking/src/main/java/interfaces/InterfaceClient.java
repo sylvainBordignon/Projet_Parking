@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import methodes.MethodesCalculs;
 import methodes.MethodesClient;
 import mysql.ClientMysql;
 import mysql.ReservationPermanenteMysql;
@@ -19,13 +20,13 @@ import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
 
-	private static final String MESSAGE_ERREUR = "Erreur dans la saisie, entrez un num�ro correspondant à un choix du menu.",
+	private static final String MESSAGE_ERREUR = "Erreur dans la saisie, entrez un numéro correspondant à un choix du menu.",
 			MESSAGE_RETOUR_ACCUEIL = "Retour à l'accueil...",
 			MESSAGE_FERMETURE_APPLI = "Fermeture de l'application mobile...",
 			MESSAGE_QUE_FAIRE = "Que souhaitez-vous faire ?",
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
-			MESSAGE_CHOIX_DUREE = "Veuillez choisir une dur�e de réservation (Format HH:MM)";
+			MESSAGE_CHOIX_DUREE = "Veuillez choisir une durée de réservation (Format : HH:MM)";
 
 	private static Client client;
 
@@ -349,7 +350,10 @@ public class InterfaceClient {
 				break;
 			case "5":
 				System.out.println("Consultation des disponiblités des places de parking");
-				entrerDateReservation();
+				String [] parametresClient = entrerDateReservation();
+				MethodesClient methodesclient = new MethodesClient();
+				methodesclient.consulterPlacesParkingDispo(parametresClient[0],parametresClient[1],parametresClient[2]);
+				
 				// Puis check dans la BDD
 
 				// si tout est bon
@@ -398,6 +402,7 @@ public class InterfaceClient {
 
 	}
 
+
 	public static String[] entrerDateReservation() {
 		String[] tab = new String[3];
 		String dateReserv = MethodesFormatClavierInterface.entreeDate(MESSAGE_CHOIX_DATE);
@@ -409,7 +414,9 @@ public class InterfaceClient {
 			heureReserv = MethodesFormatClavierInterface.entreeHeureMemeJour(MESSAGE_CHOIX_HEURE);
 		} else {
 			heureReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
+
 		}
+
 		tab[1] = heureReserv;
 		return tab;
 	}
@@ -433,6 +440,7 @@ public class InterfaceClient {
 					donnees = true;
 				} catch (Exception e) {
 					System.out.println("Erreur dans le format des champs entrés, veuillez réessayer.");
+
 				}
 				boolean format = false;
 				if (typeReserv.equals("1") && donnees) {
@@ -488,8 +496,11 @@ public class InterfaceClient {
 					}
 				}
 			}
+
 		} else {
 			System.out.println(MESSAGE_ERREUR);
+
+	
 		}
-	}
+		 }
 }

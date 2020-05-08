@@ -23,9 +23,11 @@ public class MethodesVerificationsAjoutClient {
 		return nom;
 	}
 
+
 	public boolean formatNom(String nom) {
 		return Pattern.matches("[A-zÀ-ú- ]+", nom) && (nom.length() > 1 && nom.length() <= 30);
 	}
+
 
 	// doit comporter uniquement des lettres et une taille < à 30
 	public String verifPrenomClient() {

@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class MethodesVerificationsDate {
+
 
 	private static final String MESSAGE_ERREUR_PASSEE = "Notre système ne permet seulement de visualiser les places disponibles dans le futur. ";
 
@@ -32,7 +34,8 @@ public class MethodesVerificationsDate {
 			return false;
 		}
 
-		return true;
+		
+return true;
 	}
 
 	public static boolean estValideHeureMinuteMemeJour(String dateUtilisateur) {
@@ -62,6 +65,23 @@ public class MethodesVerificationsDate {
 		} catch (ParseException e) {
 			return false;
 		}
+
+		if(dateUtilisateur.length()!=5) {
+		return false;	
+		}
+		System.out.println("OK");
+
+
 		return true;
 	}
+	public boolean estValideFormatReservation(String dureeReservationUtilisateur) {
+
+		if (Pattern.matches("^[0-9]{1,2}[:.,-][0-9]{1,2}?$",dureeReservationUtilisateur)) {
+			
+		return true;	
+		}
+		
+	return false;	
+	}
+	
 }
