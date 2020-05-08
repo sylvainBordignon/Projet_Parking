@@ -141,7 +141,7 @@ public class ClientMysql {
 		return null;
 	}
 
-	public List<Reservation> selectionnerListeReservations(int numClient) {
+	public ArrayList<Reservation> selectionnerListeReservations(int numClient) {
 		try {
 			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM reservation where id_client=?");
 			preparedStmt.setInt(1, numClient);
@@ -177,100 +177,24 @@ public class ClientMysql {
 
 	public boolean modifierReservation(Reservation reservation) {
 		try {
-			Reservation existe = ClientMysql.getInstance().obtenirReservation(reservation.getId());
-			if (existe != null) {
-				PreparedStatement preparedStmt2 = conn.prepareStatement(
-						"UPDATE reservation set date_debut = ?, date_fin = ?, duree = ?, date_arrive_reel = ?,"
-								+ " date_depart_reel = ?, id_place = ?, delai_attente = ?, where id = ?");
-				preparedStmt2.setTimestamp(1, reservation.getDate_debut());
-				preparedStmt2.setTimestamp(2, reservation.getDate_fin());
-				preparedStmt2.setInt(3, reservation.getDuree());
-				preparedStmt2.setTimestamp(4, reservation.getDate_arrive_reel());
-				preparedStmt2.setTimestamp(5, reservation.getDate_depart_reel());
-				preparedStmt2.setInt(6, reservation.getId_place());
-				preparedStmt2.setInt(7, reservation.getDelai_attente());
-				preparedStmt2.executeUpdate();
-				return true;
-			}
+			PreparedStatement preparedStmt2 = conn.prepareStatement(
+					"UPDATE reservation set date_debut = ?, date_fin = ?, duree = ?, date_arrive_reel = ?,"
+							+ " date_depart_reel = ?, id_place = ?, delai_attente = ? where id = ?");
+			preparedStmt2.setTimestamp(1, reservation.getDate_debut());
+			preparedStmt2.setTimestamp(2, reservation.getDate_fin());
+			preparedStmt2.setInt(3, reservation.getDuree());
+			preparedStmt2.setTimestamp(4, reservation.getDate_arrive_reel());
+			preparedStmt2.setTimestamp(5, reservation.getDate_depart_reel());
+			preparedStmt2.setInt(6, reservation.getId_place());
+			preparedStmt2.setInt(7, reservation.getDelai_attente());
+			preparedStmt2.setInt(8, reservation.getId());
+			preparedStmt2.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-
-	public Reservation obtenirReservation(int id) {
-		PreparedStatement preparedStmt1;
-		try {
-			preparedStmt1 = conn.prepareStatement("SELECT id FROM reservation where id = ?");
-			preparedStmt1.setInt(1, id);
-			ResultSet res = preparedStmt1.executeQuery();
-			if (res.next()) {
-				return new Reservation(res.getInt("id"), res.getInt("id_client"), res.getTimestamp("date_debut"),
-						res.getTimestamp("date_fin"), res.getInt("duree"), res.getTimestamp("date_arrive_reel"),
-						res.getTimestamp("date_depart_reel"), res.getInt("id_place"), res.getInt("delai_attente"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-//	public boolean modifierDureeReservation(int id, int heures, int minutes) {
-//		try {
-//			PreparedStatement preparedStmt1 = conn
-//					.prepareStatement("SELECT id, date_debut FROM reservation where id = ?");
-//			preparedStmt1.setInt(1, id);
-//			ResultSet res = preparedStmt1.executeQuery();
-//			if(res.next()) {
-//				LocalDateTime date_debut = LocalDateTime.parse(res.getString("date_debut"),
-//					    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
-//				System.out.println(res.getString("date_debut"));
-//				long millis = date_debut.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()+((heures*60 + minutes)*60*1000);
-//				Timestamp dateFin=new Timestamp(millis);
-//				PreparedStatement preparedStmt2 = conn
-//						.prepareStatement("UPDATE reservation set date_fin = ? where id= ?");
-//				preparedStmt2.setTimestamp(1, dateFin);
-//				preparedStmt2.setInt(2, id);
-//				preparedStmt2.executeUpdate();
-//				return true;
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return false;
-//
-//	}
-
-//	public boolean modifierDateReservation(int id, String date) {
-//		try {
-//			PreparedStatement preparedStmt1 = conn
-//					.prepareStatement("SELECT id, date_debut, date_fin FROM reservation where id = ?");
-//			preparedStmt1.setInt(1, id);
-//			ResultSet res = preparedStmt1.executeQuery();
-//			if(res.next()) {
-//				LocalDateTime ancienne_date_debut = LocalDateTime.parse(res.getString("date_debut"),
-//					    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
-//				LocalDateTime date_fin = LocalDateTime.parse(res.getString("date_fin"),
-//					    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
-//				LocalDateTime date_debut = LocalDateTime.parse(date,
-//					    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//				long millis = date_debut.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()+(
-//						date_fin.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-//						-ancienne_date_debut.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-//				Timestamp dateFin=new Timestamp(millis);
-//				PreparedStatement preparedStmt2= conn
-//						.prepareStatement("UPDATE reservation set date_debut = ?, date_fin = ? where id = ?");
-//				preparedStmt2.setString(1, date);
-//				preparedStmt2.setTimestamp(2, dateFin);
-//				preparedStmt2.setInt(3, id);
-//				preparedStmt2.executeUpdate();
-//				return true;
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return false;
-//	}
 
 	public static void main(String[] args) {
 		ClientMysql clientmysql = ClientMysql.getInstance();

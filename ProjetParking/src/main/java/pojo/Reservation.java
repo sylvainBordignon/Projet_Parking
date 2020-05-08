@@ -24,10 +24,19 @@ public class Reservation {
 		setDelai_attente(delaiAttente);
 	}
 
-	public Reservation(int idCli, Timestamp dateDebut, Timestamp dateFin) {
-		setId_client(idCli);
-		setDate_debut(dateDebut);
-		setDate_fin(dateFin);
+	public Reservation(int idCli, String dateDebut, int heures, int minutes) {
+		try {
+			setId_client(idCli);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		    Date parsedDate = dateFormat.parse(dateDebut);
+			setDate_debut(new Timestamp(parsedDate.getTime()));
+			setDuree(heures*60+minutes);
+			long millis=parsedDate.getTime()+(getDuree()*60000);
+			setDate_fin(new Timestamp(millis));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void modifierDuree(int heures, int minutes) {

@@ -15,6 +15,7 @@ import pojo.Client;
 import pojo.Reservation;
 import pojo.ReservationPermanente;
 import verificationsentreeclavier.MethodesFormatClavierInterface;
+import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
 
@@ -120,12 +121,17 @@ public class InterfaceClient {
 				boolean finReservation = false, reservationEnCours = false, reservationAVenir = false;
 				while (!finReservation) {
 					System.out.println("Liste des réservations : ");
-					// reservation en cours et � venir... repris et changement des booleans
+					ArrayList<Reservation> listeReservations=ClientMysql.getInstance().selectionnerListeReservations(client.getId());
+					if(!listeReservations.isEmpty()) {
+						reservationAVenir=true;
+					}
 					if (reservationEnCours) {
 						// affiche reservation en cours + choix dans menu
 					}
 					if (reservationAVenir) {
-						// affiche reservations + choix modif menu
+						for(int i=0; i<listeReservations.size(); i++) {
+							System.out.println(listeReservations.get(i));
+						}
 					}
 					if (!reservationEnCours && !reservationAVenir) {
 						System.out.println("Aucune réservation. Retour à l'accueil de l'application...");
@@ -166,31 +172,66 @@ public class InterfaceClient {
 						break;
 					case "2":
 						if (reservationAVenir) {
-							System.out.println("Quelle réservation souhaitez-vous modifier ?");
-							String choixModifReservation = sc.nextLine();
-							while(ClientMysql.getInstance().obtenirReservation(Integer.parseInt(choixModifReservation))==null) {
-								System.out.println("Réservation inexistante. Veuillez reessayer.");
-								choixModifReservation = sc.nextLine();
+							ClientMysql clientMysql = ClientMysql.getInstance();
+							System.out.println("Veuillez entrer l'ID de la réservation que vous voulez modifier.");
+							//listeReservations=clientMysql.selectionnerListeReservations(client.getId());
+							for(int i=0; i<listeReservations.size(); i++) {
+								System.out.println(listeReservations.get(i));
 							}
-							Reservation reservation = ClientMysql.getInstance().obtenirReservation(Integer.parseInt(choixModifReservation));
+							int choixModifReservation = MethodesFormatClavierInterface.entreeEntier("Choix :");
+							boolean trouve = false;
+							int emplacement=0;
+							while(!trouve) {
+								for(int i=0; i<listeReservations.size(); i++) {
+									if (listeReservations.get(i).getId()==choixModifReservation) {
+										trouve = true;
+										emplacement=i;
+									}
+								}
+								if(!trouve) {
+									System.out.println("Réservation inexistante.");
+									choixModifReservation = MethodesFormatClavierInterface.entreeEntier("Veuillez reessayer :");
+								}
+							}
+							Reservation reservation = listeReservations.get(emplacement);
 							System.out.println("Que voulez vous modifier? \n1 - Date de début \n2 - Duree ");
 							String quoiModifier = sc.nextLine();
 							switch (quoiModifier) {
 							case "1":
-//								System.out.println("Veuillez entrer la date de début. (dd/MM/yyyy)");
-//								String date = sc.nextLine();
-//								if(date)
-								
+								System.out.println("Veuillez entrer la date de début. (dd/MM/yyyy)");
+								String date = sc.nextLine();
+								while(!MethodesVerificationsDate.estValideDate(date)) {
+									System.out.println("Veuillez entrer une date valide.");
+									date = sc.nextLine();
+								}
+								//il faut vérifier qu'il y a de la place à ce créneau.
+								System.out.println("Veuillez entrer l'heure de début. (hh:mm)");
+								String heure = sc.nextLine();
+								while(!MethodesVerificationsDate.estValideHeureMinute(heure)) {
+									System.out.println("Veuillez entrer une heure valide.");
+									heure = sc.nextLine();
+								}
+								reservation.modifierDateDebut(date+" "+heure);
+								clientMysql.modifierReservation(reservation);
+								break;
+							case "2":
+								int heures = MethodesFormatClavierInterface.entreeEntier("Veuillez entrer le nombre d'heures.");
+								int minutes = MethodesFormatClavierInterface.entreeEntier("Veuillez entrer le nombre de minutes.");
+								reservation.modifierDuree(heures, minutes);
+								clientMysql.modifierReservation(reservation);
+								break;
 							}
-							ClientMysql.getInstance().modifierReservation(reservation);
-							// puis interface modif
 						} else {
 							System.out.println(MESSAGE_ERREUR);
 						}
 						break;
 					case "3":
-						entrerDateReservation();
-						// +save dans la BDD
+//						String[] tab=entrerDateReservation();
+//						System.out.println("Veuillez entrer la durée de la reservation.");
+//						int heures = MethodesFormatClavierInterface.entreeEntier("Nombre d'heures :");
+//						int minutes = MethodesFormatClavierInterface.entreeEntier("Nombre de minutes :");
+//						Reservation reservation = new Reservation(client.getId(), tab[0]+" "+tab[1], heures, minutes);
+//						ClientMysql.getInstance().ajouterUneReservation(reservation);
 						break;
 					case "4":
 						finReservation = true;
@@ -370,8 +411,6 @@ public class InterfaceClient {
 			heureReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
 		}
 		tab[1] = heureReserv;
-		String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
-		tab[2] = dureeReserv;
 		return tab;
 	}
 
