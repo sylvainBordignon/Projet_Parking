@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ConnexionBDD.Connexion;
+import connexionBDD.Connexion;
 
 public class GerantMysql {
 	Connection conn;

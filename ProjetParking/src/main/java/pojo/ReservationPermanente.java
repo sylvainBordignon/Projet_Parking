@@ -4,22 +4,22 @@ import java.sql.Time;
 
 public class ReservationPermanente {
 	
-	private int id, idClient, duree;
+	private int id, idClient;
 	
-	private Integer jourSemaine, jourMois;
+	private Integer jourSemaine = null, jourMois = null;
 	
 	private String type;
 	
-	private Time heureDebut;
+	private Time heureDebut, duree;
 	
-	public ReservationPermanente(int idCli, String type, Time heureDebut, int duree) {
+	public ReservationPermanente(int idCli, String type, Time heureDebut, Time duree) {
 		setIdClient(idCli);
 		setType(type);
 		setHeureDebut(heureDebut);
 		setDuree(duree);
 	}
 	
-	public ReservationPermanente(int idCli, String type, Time heureDebut, int duree, int jourSemaine) {
+	public ReservationPermanente(int idCli, String type, Time heureDebut, Time duree, int jourSemaine) {
 		setIdClient(idCli);
 		setType(type);
 		setHeureDebut(heureDebut);
@@ -27,7 +27,7 @@ public class ReservationPermanente {
 		setJourSemaine(jourSemaine);
 	}
 	
-	public ReservationPermanente(int idCli, String type, Time heureDebut, int duree, Integer jourSemaine, Integer jourMois) {
+	public ReservationPermanente(int idCli, String type, Time heureDebut, Time duree, Integer jourSemaine, Integer jourMois) {
 		setIdClient(idCli);
 		setType(type);
 		setHeureDebut(heureDebut);
@@ -36,7 +36,16 @@ public class ReservationPermanente {
 		setJourMois(jourMois);
 	}
 	
-	public ReservationPermanente(int id, int idCli, String type, Time heureDebut, int duree, Integer jourSemaine, Integer jourMois) {
+	public ReservationPermanente(int id, int idCli, String type, Time heureDebut, Time duree, Integer jourSemaine) {
+		setId(id);
+		setIdClient(idCli);
+		setType(type);
+		setHeureDebut(heureDebut);
+		setDuree(duree);
+		setJourSemaine(jourSemaine);
+	}
+	
+	public ReservationPermanente(int id, int idCli, String type, Time heureDebut, Time duree, Integer jourSemaine, Integer jourMois) {
 		setId(id);
 		setIdClient(idCli);
 		setType(type);
@@ -62,11 +71,11 @@ public class ReservationPermanente {
 		this.idClient = idClient;
 	}
 
-	public int getDuree() {
+	public Time getDuree() {
 		return duree;
 	}
 
-	public void setDuree(int duree) {
+	public void setDuree(Time duree) {
 		this.duree = duree;
 	}
 
@@ -91,7 +100,8 @@ public class ReservationPermanente {
 	}
 
 	public void setJourSemaine(Integer jourSemaine) {
-		this.jourSemaine = jourSemaine;
+		if(jourSemaine != 0)
+			this.jourSemaine = jourSemaine;
 	}
 
 	public Integer getJourMois() {
@@ -99,6 +109,13 @@ public class ReservationPermanente {
 	}
 
 	public void setJourMois(Integer jourMois) {
-		this.jourMois = jourMois;
+		if(jourMois != 0)
+			this.jourMois = jourMois;
+	}
+
+	@Override
+	public String toString() {
+		return "ReservationPermanente [id=" + id + ", idClient=" + idClient + ", duree=" + duree + ", jourSemaine="
+				+ jourSemaine + ", jourMois=" + jourMois + ", type=" + type + ", heureDebut=" + heureDebut + "]";
 	}
 }

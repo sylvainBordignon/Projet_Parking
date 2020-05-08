@@ -12,8 +12,9 @@ import methodes.MethodesClient;
 import mysql.ClientMysql;
 import mysql.ReservationPermanenteMysql;
 import pojo.Client;
+import pojo.Reservation;
 import pojo.ReservationPermanente;
-import verificationsentreeclavier.MethodesVerificationsDate;
+import verificationsentreeclavier.MethodesFormatClavierInterface;
 
 public class InterfaceClient {
 
@@ -23,7 +24,7 @@ public class InterfaceClient {
 			MESSAGE_QUE_FAIRE = "Que souhaitez-vous faire ?",
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
-			MESSAGE_CHOIX_DUREE = "Veuillez choisir une dur�e de réservation (en minutes de stationnement)";
+			MESSAGE_CHOIX_DUREE = "Veuillez choisir une dur�e de réservation (Format HH:MM)";
 
 	private static Client client;
 
@@ -39,9 +40,11 @@ public class InterfaceClient {
 			switch (choixAppli) {
 			case "1":
 				// module pour l'inscription
+				MethodesClient.ajouterUnClient();
+				System.out.println("Vous pouvez vous connecter.");
 				break;
 			case "2":
-				// pour se connecter
+				// pour la connexion
 				boolean finConnexion = false;
 				while (!finConnexion) {
 					System.out.println("Veuillez entrer votre numéro client : ");
@@ -69,12 +72,10 @@ public class InterfaceClient {
 			default:
 				System.out.println(MESSAGE_ERREUR);
 			}
-
 		}
 	}
 
 	public static void interfaceClient() {
-		MethodesClient methodesclient = new MethodesClient();
 		boolean fin = false;
 		while (!fin) {
 			System.out.println(MESSAGE_QUE_FAIRE);
@@ -91,15 +92,14 @@ public class InterfaceClient {
 			case "1":
 				boolean finProfil = false;
 				while (!finProfil) {
-					System.out.println("Affichage des informations du profil... A RAJOUTER");
+					System.out.println("Affichage des informations du profil :" + client);
 					System.out.println(MESSAGE_QUE_FAIRE
 							+ "\n1 - Modifier mon profil\n2 - Retourner à l'accueil de l'application\n3 - Se déconnecter");
 					System.out.print("Choix : ");
 					String choixProfil = sc.nextLine();
 					switch (choixProfil) {
 					case "1":
-						methodesclient.modifierClient(client);
-						// ...
+						MethodesClient.modifierClient(client);
 						System.out.println("Validation des modifications effectuées.");
 						break;
 					case "2":
@@ -117,9 +117,7 @@ public class InterfaceClient {
 				}
 				break;
 			case "2":
-				boolean finReservation = false;
-				boolean reservationEnCours = false;
-				boolean reservationAVenir = false;
+				boolean finReservation = false, reservationEnCours = false, reservationAVenir = false;
 				while (!finReservation) {
 					System.out.println("Liste des réservations : ");
 					// reservation en cours et � venir... repris et changement des booleans
@@ -170,7 +168,21 @@ public class InterfaceClient {
 						if (reservationAVenir) {
 							System.out.println("Quelle réservation souhaitez-vous modifier ?");
 							String choixModifReservation = sc.nextLine();
-							// verif
+							while(ClientMysql.getInstance().obtenirReservation(Integer.parseInt(choixModifReservation))==null) {
+								System.out.println("Réservation inexistante. Veuillez reessayer.");
+								choixModifReservation = sc.nextLine();
+							}
+							Reservation reservation = ClientMysql.getInstance().obtenirReservation(Integer.parseInt(choixModifReservation));
+							System.out.println("Que voulez vous modifier? \n1 - Date de début \n2 - Duree ");
+							String quoiModifier = sc.nextLine();
+							switch (quoiModifier) {
+							case "1":
+//								System.out.println("Veuillez entrer la date de début. (dd/MM/yyyy)");
+//								String date = sc.nextLine();
+//								if(date)
+								
+							}
+							ClientMysql.getInstance().modifierReservation(reservation);
 							// puis interface modif
 						} else {
 							System.out.println(MESSAGE_ERREUR);
@@ -209,183 +221,34 @@ public class InterfaceClient {
 						}
 					}
 					System.out.println(MESSAGE_QUE_FAIRE + "\n1 - Ajouter une réservation permanente");
-
 					if (!listeReservPerma.isEmpty()) {
 						System.out.println("2 - Supprimer une réservation permanente");
 					}
-
 					System.out.println("3 - Retour à l'accueil\n4 - Se déconnecter");
 					String choixPermanent = sc.nextLine();
 					switch (choixPermanent) {
 					case "1":
-						if (listeReservPerma.size() <= 1) {
-							ReservationPermanente reservation = null;
-							System.out.println(
-									"Veuillez choisir un type de réservation permanente : \n1 - Journalier\n2 - Hebdomadaire\n3 - Mensuel");
-							String typeReserv = sc.nextLine();
-							boolean finAjout = false;
-							switch (typeReserv) {
-							case "1":
-								while (!finAjout) {
-									System.out.println(MESSAGE_CHOIX_HEURE);
-									String heureDebut = sc.nextLine();
-									MethodesVerificationsDate methodesDate = new MethodesVerificationsDate();
-									if (methodesDate.estValideHeureMinute(heureDebut)) {
-										System.out.println((MESSAGE_CHOIX_DUREE));
-										String duree = sc.nextLine();
-										try {
-											String[] tab = heureDebut.split(":");
-											reservation = new ReservationPermanente(client.getId(), "journalière",
-													new Time(Integer.parseInt(tab[0]), Integer.parseInt(tab[1]), 0),
-													Integer.parseInt(duree));
-											ReservationPermanenteMysql.getInstance()
-													.ajoutReservationPermanenteAuto(reservation);
-											finAjout = true;
-											System.out.println("Votre réservation permanente à bien été ajoutée.");
-										} catch (Exception e) {
-											System.out.println(
-													"Erreur dans le format des champs entrés, veuillez réessayer.");
-										}
-									} else {
-										System.out.println(
-												"Mauvais format de l'heure ou doit être entre 0 et 24 heures.");
-									}
-								}
-								break;
-							case "2":
-								while (!finAjout) {
-									System.out.println(
-											"Jour de la semaine : (0 = Lundi, 1 = Mardi, 2 = Mercredi, 3 = Jeudi, 4 = Vendredi, 5 = Samedi, 6 = Dimanche)");
-									String choixJour = sc.nextLine();
-									System.out.println(MESSAGE_CHOIX_HEURE);
-									String heureDebut = sc.nextLine();
-									MethodesVerificationsDate methodesDate = new MethodesVerificationsDate();
-									if (methodesDate.estValideHeureMinute(heureDebut)) {
-										System.out.println((MESSAGE_CHOIX_DUREE));
-										String duree = sc.nextLine();
-										try {
-											String[] tab = heureDebut.split(":");
-											int jour = Integer.parseInt(choixJour);
-											if (jour >= 0 && jour <= 6) {
-												reservation = new ReservationPermanente(client.getId(), "hebdomadaire",
-														new Time(Integer.parseInt(tab[0]), Integer.parseInt(tab[1]), 0),
-														Integer.parseInt(duree), jour);
-												ReservationPermanenteMysql.getInstance()
-														.ajoutReservationPermanenteAuto(reservation);
-												finAjout = true;
-												System.out.println("Votre réservation permanente à bien été ajoutée.");
-											} else {
-												System.out.println("Le jour doit être un chiffre en 0 et 6.");
-											}
-										} catch (Exception e) {
-											System.out.println(
-													"Erreur dans le format des champs entrés, veuillez réessayer.");
-										}
-									} else {
-										System.out.println(
-												"Mauvais format de l'heure ou doit être entre 0 et 24 heures.");
-									}
-								}
-								break;
-							case "3":
-								while (!finAjout) {
-									System.out.println("Jour du mois : (1-28)");
-									String choixMois = sc.nextLine();
-									System.out.println(MESSAGE_CHOIX_HEURE);
-									String heureDebut = sc.nextLine();
-									MethodesVerificationsDate methodesDate = new MethodesVerificationsDate();
-									if (methodesDate.estValideHeureMinute(heureDebut)) {
-										System.out.println((MESSAGE_CHOIX_DUREE));
-										String duree = sc.nextLine();
-										try {
-											String[] tab = heureDebut.split(":");
-											int jourMois = Integer.parseInt(choixMois);
-											if (jourMois >= 0 && jourMois <= 28) {
-												reservation = new ReservationPermanente(client.getId(), "mensuelle",
-														new Time(Integer.parseInt(tab[0]), Integer.parseInt(tab[1]), 0),
-														Integer.parseInt(duree), null, jourMois);
-												ReservationPermanenteMysql.getInstance()
-														.ajoutReservationPermanenteAuto(reservation);
-												finAjout = true;
-												System.out.println("Votre réservation permanente à bien été ajoutée.");
-											} else {
-												System.out.println("Le jour doit être un chiffre en 0 et 28.");
-											}
-										} catch (Exception e) {
-											System.out.println(
-													"Erreur dans le format des champs entrés, veuillez réessayer.");
-										}
-									} else {
-										System.out.println(
-												"Mauvais format de l'heure ou doit être entre 0 et 24 heures.");
-									}
-								}
-								break;
-							default:
-								System.out.println(MESSAGE_ERREUR);
-							}
+						if (listeReservPerma.size() < 3) {
+							ajouterReservationPermanente();
 						} else {
-							// si deja 3 r�servations, proposer une fusion ou suppression
-							System.out.println("Vous possédez déjà 3 réservations.\n" + MESSAGE_QUE_FAIRE
-									+ "\n1 - Fusionner deux réservations\n2 - Supprimer une réservation\n3 - Revenir au menu précédant\n4 - Retour à l'accueil\n5 - Se déconnecter");
-							String choixReservPlein = sc.nextLine();
-							switch (choixReservPlein) {
-							case "1":
-								System.out.println("Entrer les num�ros des deux réservations : ");
-								// ...prendre date d�but 1 jusqua date fin 2
-								// modif BDD
-								break;
-							case "2":
-								System.out.println(
-										"Veuillez entrez le numéro correspondant à la réservation permanente :");
-								String supprReserv = sc.nextLine();
-								try {
-									int numReserv = Integer.parseInt(supprReserv);
-									if (numReserv >= 0 && numReserv < listeReservPerma.size()) {
-										int res = ReservationPermanenteMysql.getInstance()
-												.suppressionReservationPermanente(
-														listeReservPerma.get(Integer.parseInt(supprReserv)).getId());
-										System.out.println("Votre réservation permanente à bien été supprimé.");
-									} else {
-										System.out.println(
-												"Erreur lors de la suppression, entrez un numéro correspondant à une réservation permanente.");
-									}
-								} catch (NumberFormatException e) {
-									System.out.println("Erreur, vous devez entrer un numéro.");
-								}
-								break;
-							case "3":
-								break;
-							case "4":
-								finPermanent = true;
-								System.out.println(MESSAGE_RETOUR_ACCUEIL);
-								break;
-							case "5":
-								finPermanent = true;
-								fin = true;
-								System.out.println(MESSAGE_FERMETURE_APPLI);
-								break;
-							default:
-								System.out.println(MESSAGE_ERREUR);
-							}
-							break;
+							System.out.println(
+									"Vous possédez déjà 3 réservations. Vous devez en supprimer une avant de pouvoir ajouter une nouvelle réservation.");
 						}
 						break;
 					case "2":
-						System.out.println("Veuillez entrez le numéro correspondant à la réservation permanente :");
-						String supprReserv = sc.nextLine();
-						try {
-							int numReserv = Integer.parseInt(supprReserv);
-							if (numReserv >= 0 && numReserv < listeReservPerma.size()) {
-								int res = ReservationPermanenteMysql.getInstance().suppressionReservationPermanente(
-										listeReservPerma.get(Integer.parseInt(supprReserv)).getId());
+						int supprReserv = MethodesFormatClavierInterface.entreeEntier(
+								"Veuillez entrez le numéro correspondant à la réservation permanente à supprimer :");
+						if (supprReserv >= 0 && supprReserv < listeReservPerma.size()) {
+							int res = ReservationPermanenteMysql.getInstance()
+									.suppressionReservationPermanente(listeReservPerma.get(supprReserv).getId());
+							if (res == 1) {
 								System.out.println("Votre réservation permanente à bien été supprimé.");
 							} else {
-								System.out.println(
-										"Erreur lors de la suppression, entrez un numéro correspondant à une réservation permanente.");
+								System.out.println("Erreur lors de la suppression dans la base de données.");
 							}
-						} catch (NumberFormatException e) {
-							System.out.println("Erreur, vous devez entrer un numéro.");
+						} else {
+							System.out.println(
+									"Erreur lors de la suppression, entrez un numéro correspondant à une réservation permanente.");
 						}
 						break;
 					case "3":
@@ -407,7 +270,7 @@ public class InterfaceClient {
 				while (!finVehicule) {
 					System.out.println("Liste de vos véhicules : ");
 					ArrayList<String> listeVehicules = (ArrayList<String>) ClientMysql.getInstance()
-							.selectionnerListeVehicules(5);// 5 est un num random, il faut avoir le num client
+							.selectionnerListeVehicules(client.getId());
 					for (int i = 0; i < listeVehicules.size(); i++) {
 						System.out.println(listeVehicules.get(i));
 					}
@@ -416,22 +279,15 @@ public class InterfaceClient {
 					String choixVehicule = sc.nextLine();
 					switch (choixVehicule) {
 					case "1":
-						System.out
-								.println("Veuillez entrez le numéro de plaque d'immatriculation du nouveau véhicule :");
-						String plaqueVehicule = sc.nextLine();
-						if (plaqueVehicule.matches("^([A-Z]){2}-([0-9]){3}-([A-Z]){2}")) {
-							ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, 5);// Ajout dans la BDD; 5 est un
-																							// num random, il faut avoir
-																							// le num client
-							System.out.println("Véhicule ajouté.");
-						} else
-							System.out.println("Veuillez entrer un numéro d'immatriculation valide (Ex: AA-000-AA)");
+						String plaqueVehicule = MethodesFormatClavierInterface.entreePlaqueImmatriculation(
+								"Veuillez entrez le numéro de plaque d'immatriculation du nouveau véhicule :");
+						ClientMysql.getInstance().ajouterVehicule(plaqueVehicule, client.getId());// Ajout dans la base
 						break;
 					case "2":
 						System.out.println("Veuillez entrez le numéro correspondant à la plaque d'immatriculation :");
 						String supprPlaque = sc.nextLine();
-						if (ClientMysql.getInstance().supprimerVehicule(supprPlaque, 5)) {
-							// Suppression dans la BDD; 5 est un num random, il faut avoir le num client
+						if (ClientMysql.getInstance().supprimerVehicule(supprPlaque, client.getId())) {
+							// Suppression dans la BDD
 							System.out.println("Véhicule supprimé.");
 						} else
 							System.out.println("Véhicule inconnu.");
@@ -498,68 +354,103 @@ public class InterfaceClient {
 
 			}
 		}
+
 	}
 
-	public static void entrerDateReservation() {
-		MethodesVerificationsDate verifDate = new MethodesVerificationsDate();
-		boolean valide = false;
-		String dateReserv = null, heureReserv, dureeReserv;
-		while (!valide) {
-			System.out.println(MESSAGE_CHOIX_DATE);
-			dateReserv = sc.nextLine();
-			valide = verifDate.estValideDate(dateReserv);
-			if (!valide) {
-				System.out.println("Erreur dans le format, veuillez reéssayer.");
-			}
+	public static String[] entrerDateReservation() {
+		String[] tab = new String[3];
+		String dateReserv = MethodesFormatClavierInterface.entreeDate(MESSAGE_CHOIX_DATE);
+		String heureReserv;
+		tab[0] = dateReserv;
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String date = sdf.format(new Date());
+		if (date.equals(dateReserv)) {
+			heureReserv = MethodesFormatClavierInterface.entreeHeureMemeJour(MESSAGE_CHOIX_HEURE);
+		} else {
+			heureReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
 		}
-		valide = false;
-		while (!valide) {
-
-			System.out.println(MESSAGE_CHOIX_HEURE);
-			heureReserv = sc.nextLine();
-			valide = verifDate.estValideDate(heureReserv);
-			if (!valide) {
-				System.out.println("Erreur dans le format, veuillez reéssayer.");
-			}
-
-			// si dateUtilisateur = dateAujourd'hui alors on vérifie si l'heure d'arrivée
-			// n'est pas déjà passé.
-
-			DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			String date = sdf.format(new Date());
-
-			if (date.equals(dateReserv)) {
-				System.out.println(MESSAGE_CHOIX_HEURE);
-				heureReserv = sc.nextLine();
-				valide = verifDate.estValideHeureMinuteMemeJour(heureReserv);
-				if (!valide) {
-					System.out.println("Erreur dans le format, veuillez reéssayer.");
-				}
-
-			} else {
-				System.out.println(MESSAGE_CHOIX_HEURE);
-				heureReserv = sc.nextLine();
-				valide = verifDate.estValideHeureMinute(heureReserv);
-				if (!valide) {
-					System.out.println("Erreur dans le format, veuillez reéssayer.");
-				}
-
-			}
-
-		}
-		System.out.println(MESSAGE_CHOIX_DUREE);
-		valide = false;
-		while (!valide) {
-			dureeReserv = sc.nextLine();
-			valide = verifDate.estValideHeureMinute(dureeReserv);
-			if (!valide) {
-				System.out.println("Erreur dans le format, veuillez reéssayer.");
-			}
-		}
+		tab[1] = heureReserv;
+		String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
+		tab[2] = dureeReserv;
+		return tab;
 	}
 
-	public static void main(String[] args) {
-		InterfaceClient.interfaceClient();
+	public static void ajouterReservationPermanente() {
+		ReservationPermanente reservation = null;
+		System.out.println(
+				"Veuillez choisir un type de réservation permanente : \n1 - Journalier\n2 - Hebdomadaire\n3 - Mensuel");
+		String typeReserv = sc.nextLine();
+		if (typeReserv.equals("1") || typeReserv.equals("2") || typeReserv.equals("3")) {
+			boolean finAjout = false, donnees = false;
+			while (!finAjout) {
+				String heureDebut = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
+				String duree = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
+				try {
+					String[] tabDebut = heureDebut.split(":");
+					String[] tabDuree = duree.split(":");
+					reservation = new ReservationPermanente(client.getId(), "journalière",
+							new Time(Integer.parseInt(tabDebut[0]), Integer.parseInt(tabDebut[1]), 0),
+							new Time(Integer.parseInt(tabDuree[0]), Integer.parseInt(tabDuree[1]), 0));
+					donnees = true;
+				} catch (Exception e) {
+					System.out.println("Erreur dans le format des champs entrés, veuillez réessayer.");
+				}
+				boolean format = false;
+				if (typeReserv.equals("1") && donnees) {
+					format = true;
+				} else if (typeReserv.equals("2") && donnees) {
+					int choixJour = MethodesFormatClavierInterface.entreeEntier(
+							"Jour de la semaine : (1 = Lundi, 2 = Mardi, 3 = Mercredi, 4 = Jeudi, 5 = Vendredi, 6 = Samedi, 7 = Dimanche)");
+					if (choixJour >= 0 && choixJour <= 6) {
+						reservation.setJourSemaine(choixJour);
+						reservation.setType("hebdomadaire");
+						format = true;
+					}
+				} else if (typeReserv.equals("3") && donnees) {
+					int choixMois = MethodesFormatClavierInterface.entreeEntier("Jour du mois : (1-28)");
+					if (choixMois >= 0 && choixMois <= 28) {
+						reservation.setJourMois(choixMois);
+						reservation.setType("mensuelle");
+						format = true;
+					}
+				}
+				if (donnees && format) {
+					ReservationPermanente reservContigue = ReservationPermanenteMysql.getInstance()
+							.reservationContigue(reservation);
+					if (reservContigue != null) {
+						boolean finFusion = false;
+						while (!finFusion) {
+							System.out.println(
+									"La réservation permanente que vous souhaitez ajouter est contigue avec une autre, vous devez les fusionnez ou en supprimer une.");
+							System.out.println(MESSAGE_QUE_FAIRE
+									+ "\n1 - Fusionner les deux réservations\n 2 - Annuler l'insertion");
+							String choixFusion = sc.nextLine();
+							switch (choixFusion) {
+							case "1":
+								finFusion = true;
+								finAjout = true;
+								ReservationPermanenteMysql.getInstance().fusionDeuxReservationsContigue(reservContigue,
+										reservation);
+								System.out.println("Fusion des deux réservations.");
+								break;
+							case "2":
+								finFusion = true;
+								finAjout = true;
+								System.out.println("Annulation de l'ajout.");
+								break;
+							default:
+								System.out.println(MESSAGE_ERREUR);
+							}
+						}
+					} else {
+						ReservationPermanenteMysql.getInstance().ajoutReservationPermanenteAuto(reservation);
+						finAjout = true;
+						System.out.println("Votre réservation permanente à bien été ajoutée.");
+					}
+				}
+			}
+		} else {
+			System.out.println(MESSAGE_ERREUR);
+		}
 	}
 }
-
