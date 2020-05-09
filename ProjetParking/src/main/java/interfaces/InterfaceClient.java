@@ -233,7 +233,8 @@ public class InterfaceClient {
 							case "2":
 								String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
 								String debutReserv =reservation.getDate_debut().toString();
-								String finReserv = reservation.getDate_fin().toString();
+								debutReserv =	debutReserv.substring(0,19);
+								System.out.println(debutReserv);
 								MethodesClient methodesclient2 = new MethodesClient();
 								methodesclient2.modifierDureeReservation(debutReserv, dureeReserv,client.getId(),reservation);
 						 
