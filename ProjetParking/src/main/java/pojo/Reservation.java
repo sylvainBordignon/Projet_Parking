@@ -74,7 +74,7 @@ public class Reservation {
 	public void modifierDateDebut(String dateDebut) {
 		try {
 			long dureeCourante = this.getDuree()*60000;
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		    Date parsedDate = dateFormat.parse(dateDebut);
 			Timestamp nouvelleDateDebut = new Timestamp(parsedDate.getTime());
 			Timestamp nouvelleDateFin=new Timestamp(parsedDate.getTime()+dureeCourante);

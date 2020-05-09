@@ -166,7 +166,7 @@ reponse= MethodesFormatClavierInterface.validerUneReservation(OUI_NON);
 			}
 	
 	
-	public void	modifierUneReservation(String dateReserv, String heureReserv,String dureeReserv,int numeroClient){
+	public void	modifierUneReservation(String dateReserv, String heureReserv,String dureeReserv,int numeroClient,Reservation reservation){
 		MethodesCalculs methodescalculs = new MethodesCalculs();
 		MethodesFormatClavierInterface methodesformatclavierinterface = new MethodesFormatClavierInterface();
 // Conversion des date debut et fin utilisateur en formatBDD		
@@ -182,7 +182,25 @@ int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservat
 						" \n Retour au menu ... "
 						);	
 		int duree = methodescalculs.conversionHeureMinuteEnMinute(dureeReserv);	
-		Reservation reservation= new Reservation(numeroClient,dateDebutReservation,dateFinReservation,duree,placeClient);
+	//	Reservation reservation= new Reservation(numeroClient,dateDebutReservation,dateFinReservation,duree,placeClient);
+		reservation.modifierDateDebut(dateDebutReservation);
 		ClientMysql.getInstance().modifierReservation(reservation);	
 			}
+	
+	public void modifierDureeReservation(String dateReserv,String dureeReserv, int numeroClient, Reservation reservation) {
+	
+		MethodesCalculs methodescalculs = new MethodesCalculs();
+		String dateFinReservation	= methodescalculs.conversionDateFinReservationEnFormatBdd(dateReserv, dureeReserv);
+		int placeClient = methodescalculs.numeroPlaceReservationClient(dateReserv, dateFinReservation, dureeReserv);
+		
+		System.out.println("Votre réservation a bien été modifié. \n"
+				+ "Récapitulatif :  \n"
+				+ "- début de la réservation : "+dateReserv+" \n"
+				+"- fin de la réservation : "+dateFinReservation+"\n"
+				+ "- votre numéro de place de parking réservé : "+placeClient+
+				" \n Retour au menu ... "
+				);	
+		reservation.modifierDuree(dureeReserv);
+		ClientMysql.getInstance().modifierReservation(reservation);		
+	}
 }

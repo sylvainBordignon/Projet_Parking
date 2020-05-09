@@ -90,7 +90,7 @@ public class MethodesFormatClavierInterface {
 		Scanner sc = new Scanner(System.in);
 		String entree = "";
 		Boolean reponse = false;
-		System.out.println("Il reste de la place, voulez-vous créer une réservation ? \n  Rentrez 'o' pour oui ou 'n' pour non ");
+		System.out.println("Voulez-vous créer une réservation ? \n ");
 		boolean fin = false;
 		while(!fin) {
 			System.out.println(message);

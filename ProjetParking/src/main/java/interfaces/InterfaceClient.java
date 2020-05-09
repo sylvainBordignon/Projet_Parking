@@ -222,8 +222,7 @@ public class InterfaceClient {
 						
 							if (restePlace == true) {
 								
-							
-								methodesclient.modifierUneReservation(dateReserv,heureReserv,sduree,client.getId());
+								methodesclient.modifierUneReservation(dateReserv,heureReserv,sduree,client.getId(),reservation);
 								
 							}else {
 							System.out.println("Vous ne pouvez pas modifier cette réservation à cette date, le parking est complet.");	
@@ -232,11 +231,11 @@ public class InterfaceClient {
 								break;
 							case "2":
 								String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
-								reservation.modifierDuree(dureeReserv);
-								clientMysql.modifierReservation(reservation);
-								break;
-								
-								
+								String debutReserv =reservation.getDate_debut().toString();
+								String finReserv = reservation.getDate_fin().toString();
+								MethodesClient methodesclient2 = new MethodesClient();
+								methodesclient2.modifierDureeReservation(debutReserv, dureeReserv,client.getId(),reservation);				
+								break;	
 							}
 						} else {
 							System.out.println(MESSAGE_ERREUR);
