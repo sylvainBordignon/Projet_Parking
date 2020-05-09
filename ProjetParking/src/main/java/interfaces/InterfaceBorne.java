@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.sql.Timestamp;
 import java.util.Scanner;
 
 import mysql.ClientMysql;
@@ -47,11 +48,22 @@ public class InterfaceBorne {
 			if (reservation != null) {// v�rification que le num�ro reservation existe dans la base
 				PLACES_LIBRES = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
 				if (PLACES_LIBRES == 0)
-					System.out.println(MESSAGE_DEDOMMAGEMENT);
-				else
-					System.out.println(MESSAGE_ACCEPTATION);
-				// + on enregistre la pr�sence du client dans la base (arrive reel) si sa place
-				// est dispo, sinon trouve une autre place
+					System.out.println(MESSAGE_DEDOMMAGEMENT);//facture ???
+				else {
+					if (PlaceParkingMysql.getInstance().verifierPlaceNonPrise(reservation.getId_place())) {
+						// si la place n'est pas prise
+						PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(reservation.getId_place());
+					} else {
+						System.out.println("Votre place réservée est encore occupée, veuillez aller à la place :");
+						int idPlace = PlaceParkingMysql.getInstance().trouverPlaceDisponible();
+						System.out.println("place "+idPlace);
+						PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(idPlace);
+						reservation.setId_place(idPlace);
+					}
+					reservation.setDate_arrive_reel(new Timestamp(System.currentTimeMillis()));
+					ClientMysql.getInstance().modifierReservation(reservation);
+					System.out.println("Vous occupez la place "+reservation.getId_place()+" pour une durée de "+reservation.getDuree()+" minutes.  Merci de votre visite.");
+				}
 			} else {// le num�ro n'existe pas dans la base
 				System.out.println("Numéro de reservation inconnu.");
 				int reponse = InterfaceBorne.reessayer();
