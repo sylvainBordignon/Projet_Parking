@@ -180,11 +180,12 @@ public class ClientMysql {
 	public void ajouterUneReservation(Reservation reservation) {
 		try {
 			PreparedStatement preparedStmt = conn.prepareStatement(
-					"INSERT INTO reservation (id_client, date_debut, date_fin, id_place) VALUES (?,?,?,?)");
+					"INSERT INTO reservation (id_client, date_debut, date_fin, id_place,duree) VALUES (?,?,?,?,?)");
 			preparedStmt.setInt(1, reservation.getId_client());
 			preparedStmt.setTimestamp(2, reservation.getDate_debut());
 			preparedStmt.setTimestamp(3, reservation.getDate_fin());
-			preparedStmt.setInt(4, 1);// ajouter une attribution de place automatique
+			preparedStmt.setInt(5, reservation.getDuree());
+			preparedStmt.setInt(4, reservation.getId_place());
 			preparedStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
