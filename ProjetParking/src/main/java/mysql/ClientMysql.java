@@ -141,6 +141,22 @@ public class ClientMysql {
 		return null;
 	}
 
+	public Reservation visualiserReservation(int id) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM reservation where id = ?");
+			preparedStmt.setInt(1, id);
+			ResultSet res = preparedStmt.executeQuery();
+			if (res.next()) {
+				return new Reservation(res.getInt("id"), res.getInt("id_client"), res.getTimestamp("date_debut"),
+						res.getTimestamp("date_fin"), res.getInt("duree"), res.getTimestamp("date_arrive_reel"),
+						res.getTimestamp("date_depart_reel"), res.getInt("id_place"), res.getInt("delai_attente"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public ArrayList<Reservation> selectionnerListeReservations(int numClient) {
 		try {
 			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM reservation where id_client=?");
