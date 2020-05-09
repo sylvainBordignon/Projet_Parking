@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import methodes.MethodesCalculs;
 
@@ -57,8 +58,14 @@ public class Reservation {
 		
 	}
 	
-	
-	
+	public Reservation(int idCli, Timestamp dateDebut,int duree,int place, Timestamp dateArriveReel) {
+			setId_client(idCli);
+			setDate_debut(dateDebut);
+			setDate_fin(new Timestamp(dateDebut.getTime()+TimeUnit.MINUTES.toMillis(duree)));
+			setDuree(duree);
+			setId_place(place);
+			setDate_arrive_reel(dateArriveReel);
+	}	
 	
 	public void modifierDuree(String duree) {
 		MethodesCalculs methodescalculs = new MethodesCalculs();
