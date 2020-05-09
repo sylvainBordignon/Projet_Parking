@@ -116,5 +116,11 @@ public class MethodesCalculs {
 		return   numeroPlace ; 
 
 	}
+	
+	public String conversionMinuteEnFormatHeure(int dureeMinute) {
+		int nbHeure = dureeMinute / 60;
+		int nbMinute = dureeMinute % 60;
+		return Integer.toString(nbHeure) + ":" + Integer.toString(nbMinute);
+	}
 
 }

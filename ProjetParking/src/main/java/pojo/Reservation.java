@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
 
+import methodes.MethodesCalculs;
+
 public class Reservation {
 	private int id, id_client, id_place, delai_attente, duree;
 	
@@ -58,11 +60,13 @@ public class Reservation {
 	
 	
 	
-	public void modifierDuree(int heures, int minutes) {
+	public void modifierDuree(String duree) {
+		MethodesCalculs methodescalculs = new MethodesCalculs();
+	    int dureeMinute =	methodescalculs.conversionHeureMinuteEnMinute(duree);
 		Date dateDebut = this.getDate_debut();
-		long millis = dateDebut.getTime()+((heures*60 + minutes)*60000);
+		long millis = dateDebut.getTime()+((dureeMinute)*60000);
 		Timestamp nouvelledateFin=new Timestamp(millis);
-		int nouvelleDuree = heures*60+minutes;
+		int nouvelleDuree = dureeMinute;
 		this.setDate_fin(nouvelledateFin);
 		this.setDuree(nouvelleDuree);
 	}
