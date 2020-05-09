@@ -39,6 +39,25 @@ public class Reservation {
 		
 	}
 	
+	public Reservation(int idCli, String dateDebut,String dateFin,int duree,int place) {
+		try {
+			setId_client(idCli);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    Date parsedDate = dateFormat.parse(dateDebut);
+			setDate_debut(new Timestamp(parsedDate.getTime()));
+		    parsedDate = dateFormat.parse(dateFin);
+			setDate_fin(new Timestamp(parsedDate.getTime()));
+			setDuree(duree);
+			setId_place(place);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	
 	public void modifierDuree(int heures, int minutes) {
 		Date dateDebut = this.getDate_debut();
 		long millis = dateDebut.getTime()+((heures*60 + minutes)*60000);

@@ -16,6 +16,7 @@ import pojo.Client;
 import pojo.Reservation;
 import pojo.ReservationPermanente;
 import verificationsentreeclavier.MethodesFormatClavierInterface;
+import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
@@ -26,6 +27,7 @@ public class InterfaceClient {
 			MESSAGE_QUE_FAIRE = "Que souhaitez-vous faire ?",
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
+			MESSAGE_ENTREZ_ENTIER = "Veuillez  rentrer un entier",
 			MESSAGE_CHOIX_DUREE = "Veuillez choisir une durée de réservation (Format : HH:MM)";
 
 	private static Client client;
@@ -46,14 +48,16 @@ public class InterfaceClient {
 				System.out.println("Vous pouvez vous connecter.");
 				break;
 			case "2":
+				MethodesVerificationsAjoutClient methodesverificationajoutclient= new MethodesVerificationsAjoutClient();
 				// pour la connexion
 				boolean finConnexion = false;
 				while (!finConnexion) {
 					System.out.println("Veuillez entrer votre numéro client : ");
-					String numCli = sc.nextLine();
+					int numCli = MethodesFormatClavierInterface.entreeEntier(MESSAGE_ENTREZ_ENTIER);
+					String numClient = String.valueOf(numCli);
 					System.out.println("Veuillez saisir votre adresse mail :");
-					String mail = sc.nextLine();
-					client = ClientMysql.getInstance().visualierInfoClient(Integer.parseInt(numCli));
+					String mail = methodesverificationajoutclient.verifMail();
+					client = ClientMysql.getInstance().visualierInfoClient(numCli);
 					if (client != null) {
 						if (client.getMail().equals(mail)) {
 							finConnexion = true;
@@ -353,8 +357,8 @@ public class InterfaceClient {
 				String [] parametresClient = entrerDateReservation();
 				MethodesClient methodesclient = new MethodesClient();
 			
-				methodesclient.consulterPlacesParkingDispo(parametresClient[0],parametresClient[1],parametresClient[2]);
-					
+				methodesclient.consulterPlacesParkingDispo(parametresClient[0],parametresClient[1],parametresClient[2],client.getId());
+				
 				// si oui on fait la r�servation + retour accueil
 				// si non on demande si nouvelle recherche ou retour accueil
 				break;

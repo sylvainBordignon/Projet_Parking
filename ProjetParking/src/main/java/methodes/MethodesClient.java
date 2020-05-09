@@ -7,6 +7,7 @@ import java.util.Scanner;
 import mysql.ClientMysql;
 import mysql.RecherchePlaceDispoMysql;
 import pojo.Client;
+import pojo.Reservation;
 import verificationsentreeclavier.MethodesFormatClavierInterface;
 import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 
@@ -111,7 +112,7 @@ public class MethodesClient {
 
 	}
 	
-	public void	consulterPlacesParkingDispo(String dateReserv, String heureReserv,String dureeReserv){
+	public void	consulterPlacesParkingDispo(String dateReserv, String heureReserv,String dureeReserv,int numeroClient){
 		MethodesCalculs methodescalculs = new MethodesCalculs();
 		MethodesFormatClavierInterface methodesformatclavierinterface = new MethodesFormatClavierInterface();
 // Conversion des date debut et fin utilisateur en formatBDD		
@@ -119,7 +120,7 @@ String dateDebutReservation	 =	methodescalculs.conversionDateDebutReservationEnF
 String dateFinReservation	= methodescalculs.conversionDateFinReservationEnFormatBdd(dateDebutReservation, dureeReserv);
 String OUI_NON = "Veuillez rentrez 'o' pour oui ou 'n' pour non ";
 int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation, dureeReserv);
-
+int duree =0;
 		System.out.println("Recherche des places disponibles du  "+dateDebutReservation+ " au  "+dateFinReservation);		
 		if(placeClient > 0) {
 			boolean reponse;
@@ -133,20 +134,21 @@ int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservat
 						+"- fin de la réservation : "+dateFinReservation+"\n"
 						+ "- votre numéro de place de parking réservé : "+placeClient+
 						" \n Retour au menu ... "
-						);
+						);	
+			
+				// Création de l'objet réservation 	
+			 duree = methodescalculs.conversionHeureMinuteEnMinute(dureeReserv);
+				Reservation reservation = new Reservation(numeroClient,dateDebutReservation,dateFinReservation,duree,placeClient);
+				// Insertion dans la BDD
+				ClientMysql.getInstance().ajouterUneReservation(reservation);
 				
 			}else {
 			System.out.println("Retour au menu ...");	
 			}
 			
-			
-		
 		}else {
 		   System.out.println("Désolé il n'y a plus de place à ce créneau là !");
 		}
-		
-		
+	
 			}
-		
-
 }
