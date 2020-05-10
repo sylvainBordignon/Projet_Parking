@@ -3,6 +3,8 @@ package interfaces;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -127,7 +129,7 @@ public class InterfaceClient {
 				while (!finReservation) {
 					System.out.println("Liste des réservations : ");
 					ArrayList<Reservation> listeReservations=ClientMysql.getInstance().selectionnerListeReservations(client.getId());
-					Reservation reservationCourante = ClientMysql.getInstance().obtenirReservationCourante(client.getId());
+					Reservation reservationCourante = ClientMysql.getInstance().verifierReservationCorrespondanteClientMemeJour(client.getId());
 					if(!listeReservations.isEmpty()) {
 						reservationAVenir=true;
 					}
@@ -165,14 +167,16 @@ public class InterfaceClient {
 							String choixReservEnCours = sc.nextLine();
 							switch (choixReservEnCours) {
 							case "1":
-								// si possible et dans 30 derni�res minutes
+								Date dateFin=reservationCourante.getDate_fin();
 								MethodesClient methodeClient=new MethodesClient();
-								String dateDebut = reservationCourante.getDate_debut().toString();
-								MethodesCalculs methodesCalculs = new MethodesCalculs();
-								String sduree = methodesCalculs.conversionMinuteEnFormatHeure(reservationCourante.getDuree());	
-								methodeClient.modifierDureeReservation(dateDebut, sduree, client.getId(), reservationCourante);
-								//Vérifier ici avec sylvain
-								// sinon impossible
+								if(methodeClient.verifierProlongationPossible30Minutes(reservationCourante)) {
+									String dateDebut = reservationCourante.getDate_debut().toString();
+									dateDebut =	dateDebut.substring(0,19);
+									MethodesCalculs methodesCalculs = new MethodesCalculs();
+									String sduree = methodesCalculs.conversionMinuteEnFormatHeure(reservationCourante.getDuree()+30);
+									methodeClient.modifierDureeReservation(dateDebut, sduree, client.getId(), reservationCourante);
+								} else
+									System.out.println("Vous ne pouvez prolonger la réservation que 30 minutes avant la fin.");
 								break;
 							case "2":
 								// prolonger d�lai attente

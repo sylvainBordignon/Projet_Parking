@@ -228,25 +228,6 @@ public class ClientMysql {
 		}
 		return false;
 	}
-	
-	public Reservation obtenirReservationCourante(int idClient) {
-        try {
-            PreparedStatement preparedStmt = conn.prepareStatement(
-                    "SELECT * FROM reservation r r.id_client = ? and DATE(r.date_debut) =< DATE(now()) and DATE(r.date_fin) >= DATE(now());");
-            preparedStmt.setInt(1, idClient);
-            ResultSet res = preparedStmt.executeQuery();
-            if (res.next()) {
-                return new Reservation(res.getInt("id"), res.getInt("id_client"), res.getTimestamp("date_debut"),
-                        res.getTimestamp("date_fin"), res.getInt("duree"), res.getTimestamp("date_arrive_reel"),
-                        res.getTimestamp("date_depart_reel"), res.getInt("id_place"), res.getInt("delai_attente"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-	
-	
 
 	public Reservation verifierReservationCorrespondanteClientMemeJour(int id) {
 		try {
