@@ -28,6 +28,7 @@ public class InterfaceClient {
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
 			MESSAGE_ENTREZ_ENTIER = "Veuillez  rentrer un entier",
+			MESSAGE_ENTREZ_NUMERO_CLIENT = "Veuillez  rentrer votre numéro de client",
 			MESSAGE_CHOIX_DUREE = "Veuillez choisir une durée de réservation (Format : HH:MM)";
 
 	private static Client client;
@@ -52,10 +53,8 @@ public class InterfaceClient {
 				// pour la connexion
 				boolean finConnexion = false;
 				while (!finConnexion) {
-					System.out.println("Veuillez entrer votre numéro client : ");
-					int numCli = MethodesFormatClavierInterface.entreeEntier(MESSAGE_ENTREZ_ENTIER);
+					int numCli = MethodesFormatClavierInterface.entreeEntier(MESSAGE_ENTREZ_NUMERO_CLIENT);
 					String numClient = String.valueOf(numCli);
-					System.out.println("Veuillez saisir votre adresse mail :");
 					String mail = methodesverificationajoutclient.verifMail();
 					client = ClientMysql.getInstance().visualierInfoClient(numCli);
 					if (client != null) {
