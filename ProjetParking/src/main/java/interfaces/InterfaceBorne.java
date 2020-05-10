@@ -2,7 +2,6 @@ package interfaces;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
 import mysql.AssociationMysql;
@@ -23,21 +22,27 @@ public class InterfaceBorne {
 
 	public static void lancerInterfaceBorne() {
 		System.out.println("Bienvenue sur l'interface du parking.");
-		int reponse = MethodesFormatClavierInterface
-				.entreeEntier("Avez vous une réservation?\n1 - Oui\n2 - Non" + RETOUR_MENU_PRINCIPAL);
-		switch (reponse) {
-		case 1:
-			InterfaceBorne.menuReservation();
-			break;
-		case 2:
-			InterfaceBorne.menuSansReservation();
-			break;
-		case 0:
-			InterfaceGenerale.interfaceGenerale();
-			break;
-		default:
-			// cas defaut ???
-			break;
+		boolean fin = false;
+		while (!fin) {
+			int reponse = MethodesFormatClavierInterface
+					.entreeEntier("Avez vous une réservation?\n1 - Oui\n2 - Non" + RETOUR_MENU_PRINCIPAL);
+			switch (reponse) {
+			case 1:
+				fin = true;
+				InterfaceBorne.menuReservation();
+				break;
+			case 2:
+				fin = true;
+				InterfaceBorne.menuSansReservation();
+				break;
+			case 0:
+				fin = true;
+				InterfaceGenerale.interfaceGenerale();
+				break;
+			default:
+				System.out.println(MESSAGE_ERREUR);
+				break;
+			}
 		}
 	}
 
@@ -47,7 +52,7 @@ public class InterfaceBorne {
 		if (numReservation == 0) {
 			InterfaceGenerale.interfaceGenerale();
 		} else {
-			Reservation reservation = ClientMysql.getInstance().visualiserReservation(numReservation);
+			Reservation reservation = ClientMysql.getInstance().visualiserReservationMemeJour(numReservation);
 			if (reservation != null) {// v�rification que le num�ro reservation existe dans la base
 				PLACES_LIBRES = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
 				if (PLACES_LIBRES == 0)
@@ -66,7 +71,7 @@ public class InterfaceBorne {
 					reservation.setDate_arrive_reel(new Timestamp(System.currentTimeMillis()));
 					ClientMysql.getInstance().modifierReservation(reservation);
 					System.out.println("Vous occupez la place " + reservation.getId_place() + " pour une durée de "
-							+ reservation.getDuree() + " minutes.  Merci de votre visite.");
+							+ reservation.getDuree() + " minutes. Merci de votre visite.");
 				}
 			} else {// le num�ro n'existe pas dans la base
 				System.out.println("Numéro de reservation inconnu.");

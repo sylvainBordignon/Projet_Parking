@@ -141,9 +141,10 @@ public class ClientMysql {
 		return null;
 	}
 
-	public Reservation visualiserReservation(int id) {
+	public Reservation visualiserReservationMemeJour(int id) {
+		
 		try {
-			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM reservation where id = ?");
+			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM reservation where id = ? and date_debut < now() and date_fin > now();");
 			preparedStmt.setInt(1, id);
 			ResultSet res = preparedStmt.executeQuery();
 			if (res.next()) {
