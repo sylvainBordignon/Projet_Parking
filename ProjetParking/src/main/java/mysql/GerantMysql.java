@@ -77,11 +77,11 @@ public class GerantMysql {
 		return (int)selectionnerUnTarif("nb_places_surréservation");
 	}
 	
-	public void modifierNbPlaceSurreservation(float montant) {
+	public void modifierNbPlaceSurreservation(int nbPlace) {
 		try {
 			PreparedStatement preparedStmt = conn
 					.prepareStatement("UPDATE parametresParking set valeur = ? where nom = ?");
-			preparedStmt.setFloat(1, montant);
+			preparedStmt.setInt(1, nbPlace);
 			preparedStmt.setString(2, "nb_places_surréservation");
 			preparedStmt.executeUpdate();
 		} catch (SQLException e) {
