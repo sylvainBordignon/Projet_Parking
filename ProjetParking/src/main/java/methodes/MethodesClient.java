@@ -1,5 +1,6 @@
 package methodes;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -204,5 +205,9 @@ int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservat
 				);	
 		reservation.modifierDuree(dureeReserv);
 		ClientMysql.getInstance().modifierReservation(reservation);		
+	}
+	
+	public boolean verifierProlongationPossible30Minutes(Reservation reservation) {
+		return (reservation.getDate_fin().getTime()-1800000)<ZonedDateTime.now().toInstant().toEpochMilli();
 	}
 }
