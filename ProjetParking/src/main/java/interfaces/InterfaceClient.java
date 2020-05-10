@@ -127,8 +127,12 @@ public class InterfaceClient {
 				while (!finReservation) {
 					System.out.println("Liste des réservations : ");
 					ArrayList<Reservation> listeReservations=ClientMysql.getInstance().selectionnerListeReservations(client.getId());
+					Reservation reservationCourante = ClientMysql.getInstance().obtenirReservationCourante(client.getId());
 					if(!listeReservations.isEmpty()) {
 						reservationAVenir=true;
+					}
+					if(reservationCourante!=null) {
+						reservationEnCours=true;
 					}
 					if (reservationEnCours) {
 						// affiche reservation en cours + choix dans menu
@@ -162,7 +166,12 @@ public class InterfaceClient {
 							switch (choixReservEnCours) {
 							case "1":
 								// si possible et dans 30 derni�res minutes
-								System.out.println("Prolongation de la fin de la réservation");
+								MethodesClient methodeClient=new MethodesClient();
+								String dateDebut = reservationCourante.getDate_debut().toString();
+								MethodesCalculs methodesCalculs = new MethodesCalculs();
+								String sduree = methodesCalculs.conversionMinuteEnFormatHeure(reservationCourante.getDuree());	
+								methodeClient.modifierDureeReservation(dateDebut, sduree, client.getId(), reservationCourante);
+								//Vérifier ici avec sylvain
 								// sinon impossible
 								break;
 							case "2":
