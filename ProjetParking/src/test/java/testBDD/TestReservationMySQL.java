@@ -12,14 +12,14 @@ public class TestReservationMySQL {
     @Test
     public void testVisualiserReservation() {
     	ClientMysql client = ClientMysql.getInstance();
-    	Reservation test = client.visualiserReservation(4);
-        assertTrue(test.getDuree() == 200);
+    	Reservation test = client.visualiserReservationMemeJour(9);
+        assertTrue(test.getDuree() == 600);
     }
     
     @Test
     public void testVisualiserReservationtNonExistante() {
     	ClientMysql client = ClientMysql.getInstance();
-    	Reservation test = client.visualiserReservation(999);
+    	Reservation test = client.visualiserReservationMemeJour(999);
         assertNull(test);
     }
 }
