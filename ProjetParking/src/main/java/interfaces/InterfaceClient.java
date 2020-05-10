@@ -219,8 +219,7 @@ public class InterfaceClient {
 							String sduree =methodescalculs.conversionMinuteEnFormatHeure(dureeMinute);	
 							MethodesClient methodesclient = new MethodesClient();
 							System.out.println("Date de réservation : "+dateReserv+" \n Heure de réservation : "+heureReserv+" \n durée réservation : "+sduree);
-							boolean restePlace=methodesclient.consulterPlacesParkingDispo(dateReserv,heureReserv,sduree);
-						
+							boolean restePlace=methodesclient.consulterPlacesParkingDispo(dateReserv,heureReserv,sduree);				
 							if (restePlace == true) {
 							
 								methodesclient.modifierUneReservation(dateReserv,heureReserv,sduree,client.getId(),reservation);
@@ -239,7 +238,7 @@ public class InterfaceClient {
 								methodesclient2.modifierDureeReservation(debutReserv, dureeReserv,client.getId(),reservation);
 						 
 				
-								
+			
 								break;
 								
 								
