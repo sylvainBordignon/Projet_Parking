@@ -191,6 +191,22 @@ public class ClientMysql {
 			e.printStackTrace();
 		}
 	}
+	
+	public void ajouterUneReservationBorne(Reservation reservation) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement(
+					"INSERT INTO reservation (id_client, date_debut, date_fin, id_place,duree, date_arrive_reel) VALUES (?,?,?,?,?, ?)");
+			preparedStmt.setInt(1, reservation.getId_client());
+			preparedStmt.setTimestamp(2, reservation.getDate_debut());
+			preparedStmt.setTimestamp(3, reservation.getDate_fin());
+			preparedStmt.setInt(5, reservation.getDuree());
+			preparedStmt.setInt(4, reservation.getId_place());
+			preparedStmt.setTimestamp(6, reservation.getDate_arrive_reel());
+			preparedStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public boolean modifierReservation(Reservation reservation) {
 		try {
@@ -231,6 +247,23 @@ public class ClientMysql {
     }
 	
 	
+
+	public Reservation verifierReservationCorrespondanteClientMemeJour(int id) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement(
+					"SELECT * FROM reservation r where id_client = ? and r.date_debut < now() and r.date_fin > now();");
+			preparedStmt.setInt(1, id);
+			ResultSet res = preparedStmt.executeQuery();
+			if (res.next()) {
+				return new Reservation(res.getInt("id"), res.getInt("id_client"), res.getTimestamp("date_debut"),
+						res.getTimestamp("date_fin"), res.getInt("duree"), res.getTimestamp("date_arrive_reel"),
+						res.getTimestamp("date_depart_reel"), res.getInt("id_place"), res.getInt("delai_attente"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static void main(String[] args) {
 		ClientMysql clientmysql = ClientMysql.getInstance();

@@ -227,10 +227,11 @@ public class InterfaceClient {
 							MethodesCalculs methodescalculs = new MethodesCalculs();
 							String sduree =methodescalculs.conversionMinuteEnFormatHeure(dureeMinute);	
 							MethodesClient methodesclient = new MethodesClient();
+							System.out.println("Date de réservation : "+dateReserv+" \n Heure de réservation : "+heureReserv+" \n durée réservation : "+sduree);
 							boolean restePlace=methodesclient.consulterPlacesParkingDispo(dateReserv,heureReserv,sduree);
 						
 							if (restePlace == true) {
-								
+							
 								methodesclient.modifierUneReservation(dateReserv,heureReserv,sduree,client.getId(),reservation);
 								
 							}else {
@@ -241,10 +242,16 @@ public class InterfaceClient {
 							case "2":
 								String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
 								String debutReserv =reservation.getDate_debut().toString();
-								String finReserv = reservation.getDate_fin().toString();
+								debutReserv =	debutReserv.substring(0,19);
+								System.out.println(debutReserv);
 								MethodesClient methodesclient2 = new MethodesClient();
-								methodesclient2.modifierDureeReservation(debutReserv, dureeReserv,client.getId(),reservation);				
-								break;	
+								methodesclient2.modifierDureeReservation(debutReserv, dureeReserv,client.getId(),reservation);
+						 
+				
+								
+								break;
+								
+								
 							}
 						} else {
 							System.out.println(MESSAGE_ERREUR);

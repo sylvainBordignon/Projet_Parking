@@ -113,12 +113,14 @@ public class MethodesClient {
 	}
 	
 	public boolean	consulterPlacesParkingDispo(String dateReserv, String heureReserv,String dureeReserv){
+		
 		MethodesCalculs methodescalculs = new MethodesCalculs();
 		MethodesFormatClavierInterface methodesformatclavierinterface = new MethodesFormatClavierInterface();
 // Conversion des date debut et fin utilisateur en formatBDD		
 String dateDebutReservation	 =	methodescalculs.conversionDateDebutReservationEnFormatBdd(dateReserv,heureReserv);
 String dateFinReservation	= methodescalculs.conversionDateFinReservationEnFormatBdd(dateDebutReservation, dureeReserv);
 int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation, dureeReserv);
+
 System.out.println("Recherche des places disponibles du  "+dateDebutReservation+ " au  "+dateFinReservation);		
 		if(placeClient > 0) {
 			

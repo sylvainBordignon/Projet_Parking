@@ -30,7 +30,6 @@ public class MethodesCalculs {
 
 	public int conversionHeureMinuteEnMinute(String heureMinute) {
 // format heureMinute = XX:XX
-		System.out.println(heureMinute);
 		String heure = heureMinute.substring(0, 2);
 		String minute = heureMinute.substring(3, 5);
 		int nbHeure = Integer.parseInt(heure);
@@ -121,7 +120,21 @@ public class MethodesCalculs {
 	public String conversionMinuteEnFormatHeure(int dureeMinute) {
 		int nbHeure = dureeMinute / 60;
 		int nbMinute = dureeMinute % 60;
-		return Integer.toString(nbHeure) + ":" + Integer.toString(nbMinute);
+		String heure,minute;
+		
+		if(nbHeure<10 ) {
+		heure ="0"+Integer.toString(nbHeure); 
+		}else {
+		heure =Integer.toString(nbHeure); 	
+		}
+		
+		if(nbMinute<10) {
+		minute = "0"+Integer.toString(nbMinute);	
+		}else {
+		minute =Integer.toString(nbMinute);	
+		}
+		
+		return heure+":"+minute;
 	}
 
 }
