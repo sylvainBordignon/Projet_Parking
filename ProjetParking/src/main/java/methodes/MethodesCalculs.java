@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import mysql.GerantMysql;
 import mysql.RecherchePlaceDispoMysql;
 
 public class MethodesCalculs {
@@ -95,12 +96,27 @@ public class MethodesCalculs {
 		nombreDeReservationPermanente = this.nombreDeReservationPermanenteTotalDurantReservationClient(
 				dateDebutReservation, dateFinReservation, duree);
 
+		
 		if (listeDesPlacesDuParking.size() > nombreDeReservationPermanente) {
 			numeroPlace = listeDesPlacesDuParking.get(0);
+		}else {
+			// y a plus de place pour cette date de réservation , il faut regarder les sureservations. 
+		int nbPlaceSureserve =GerantMysql.getInstance().selectionnerNbPlaceSurreservationEnCours();
+		
+
+			if (nbPlaceSureserve > 0) {
+			
+				// on accepte quand même la réservation et on soustrait de 1 le nb de suréservation en cours
+				GerantMysql.getInstance().modifierNbPlaceSurreservationEnCours(nbPlaceSureserve-1);
+				return nbPlaceSureserve;
+				
+			} else {
+			// il n'y a plus du tout de place 	
+			return 0;	
+			}
+			
 		}
-
-		listeDesPlacesDuParking.size();
-
+		
 		return numeroPlace;
 
 	}

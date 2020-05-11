@@ -60,6 +60,7 @@ public class RecherchePlaceDispoMysql {
 		}
 		return listeDesPlaces;
 	}
+	
 
 	public int listeDesPlacesReservePermanentJournaliereDurantPeriodeReservationClient(String dateDebutReservation,
 			String dateFinReservation, String duree) {
@@ -231,4 +232,21 @@ public class RecherchePlaceDispoMysql {
 		}
 		return nbPlaceMensuelle;
 	}
+	
+	
+	
+	public int nombrePlacesDuParking() {
+		int nbPlaces=0;
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement("SELECT count(*) FROM  placeparking");
+			ResultSet res = preparedStmt.executeQuery();
+			while (res.next()) {
+			nbPlaces =res.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nbPlaces;
+	}
+	
 }

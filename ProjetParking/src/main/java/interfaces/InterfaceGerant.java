@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.Scanner;
 
+import methodes.MethodesGerant;
 import mysql.ClientMysql;
 import mysql.GerantMysql;
 import pojo.Client;
@@ -133,8 +134,9 @@ public class InterfaceGerant {
 						sc.next();
 					}
 					nbPlaceSurreservation = sc.nextInt();
-					GerantMysql.getInstance().modifierNbPlaceSurreservation(nbPlaceSurreservation);
-					System.out.println("Nouvelle valeur : " + nbPlaceSurreservation);
+					MethodesGerant methodesgerant = new MethodesGerant();
+				
+		             methodesgerant.changerNombreSurreservation(nbPlaceSurreservation);
 					nbPlaceSurreservation = -1;
 				} while (nbPlaceSurreservation != -1);
 				break;

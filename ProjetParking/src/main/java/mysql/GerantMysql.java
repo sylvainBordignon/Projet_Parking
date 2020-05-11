@@ -77,6 +77,10 @@ public class GerantMysql {
 		return (int)selectionnerUnTarif("nb_places_surréservation");
 	}
 	
+	public int selectionnerNbPlaceSurreservationEnCours() {
+		return (int)selectionnerUnTarif("nb_places_surréservation_en_cours");
+	}
+	
 	public void modifierNbPlaceSurreservation(int nbPlace) {
 		try {
 			PreparedStatement preparedStmt = conn
@@ -88,4 +92,17 @@ public class GerantMysql {
 			e.printStackTrace();
 		}
 	}
+	
+	public void modifierNbPlaceSurreservationEnCours(int nbPlace) {
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("UPDATE parametresParking set valeur = ? where nom = ?");
+			preparedStmt.setInt(1, nbPlace);
+			preparedStmt.setString(2, "nb_places_surréservation_en_cours");
+			preparedStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

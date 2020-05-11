@@ -377,7 +377,6 @@ public class InterfaceClient {
 						parametresClient[2]);
 				MethodesClient.creeUneReservation(parametresClient[0], parametresClient[1], parametresClient[2],
 						client.getId());
-
 				// si oui on fait la r�servation + retour accueil
 				// si non on demande si nouvelle recherche ou retour accueil
 				break;

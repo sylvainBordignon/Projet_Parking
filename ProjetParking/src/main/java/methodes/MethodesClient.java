@@ -136,6 +136,7 @@ public class MethodesClient {
 		String ouiOuNon = "Veuillez rentrez 'o' pour oui ou 'n' pour non ";
 		int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation,
 				dureeReserv);
+	
 		int duree = 0;
 		boolean reponse = MethodesFormatClavierInterface.validerUneReservation(ouiOuNon);
 
@@ -168,6 +169,7 @@ public class MethodesClient {
 				dureeReserv);
 		int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation,
 				dureeReserv);
+			
 		System.out.println(
 				"Votre réservation a bien été modifié. \n" + "Récapitulatif :  \n" + "- début de la réservation : "
 						+ dateDebutReservation + " \n" + "- fin de la réservation : " + dateFinReservation + "\n"
@@ -183,6 +185,8 @@ public class MethodesClient {
 		String dateFinReservation = methodescalculs.conversionDateFinReservationEnFormatBdd(dateReserv, dureeReserv);
 		int placeClient = methodescalculs.numeroPlaceReservationClient(dateReserv, dateFinReservation, dureeReserv);
 
+	
+		
 		System.out.println(
 				"Votre réservation a bien été modifié. \n" + "Récapitulatif :  \n" + "- début de la réservation : "
 						+ dateReserv + " \n" + "- fin de la réservation : " + dateFinReservation + "\n"
@@ -194,4 +198,6 @@ public class MethodesClient {
 	public static boolean verifierProlongationPossible30Minutes(Reservation reservation) {
 		return (reservation.getDate_fin().getTime() - 1800000) < ZonedDateTime.now().toInstant().toEpochMilli();
 	}
+		
+	
 }
