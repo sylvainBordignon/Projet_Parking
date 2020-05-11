@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import mysql.RecherchePlaceDispoMysql;
@@ -47,8 +46,7 @@ public class MethodesCalculs {
 	}
 
 	public String recupererHeureDansUneDate(String dateDebut) {
-		String heure = dateDebut.substring(11, 16);
-		return heure;
+		return dateDebut.substring(11, 16);
 	}
 
 	public String recupererHeureFinDansUneDate(String dateDebut, int duree) {
@@ -56,13 +54,8 @@ public class MethodesCalculs {
 		return conversionDureeMinuteEnFormatHeure(heureDebut, duree);
 	}
 
-	public boolean ReservationEstSuperieureA24H(String duree) {
-		int minutes = conversionHeureMinuteEnMinute(duree);
-		if (minutes < 1440) {
-			return false;
-		} else {
-			return true;
-		}
+	public boolean reservationEstSuperieureA24H(String duree) {
+		return conversionHeureMinuteEnMinute(duree) >= 1440;
 	}
 
 	public String conversionDureeMinute2EnFormatHeure(int dureeMinute) {
@@ -73,15 +66,14 @@ public class MethodesCalculs {
 
 	public int nombreDeReservationPermanenteTotalDurantReservationClient(String dateDebutReservation,
 			String dateFinReservation, String duree) {
-		RecherchePlaceDispoMysql rechercheplacedispomysql = new RecherchePlaceDispoMysql(null);
-		int nbPlaceJournaliere = rechercheplacedispomysql
-				.getInstance().listeDesPlacesReservePermanentJournaliereDurantPeriodeReservationClient(dateDebutReservation,
+		int nbPlaceJournaliere = RecherchePlaceDispoMysql.getInstance()
+				.listeDesPlacesReservePermanentJournaliereDurantPeriodeReservationClient(dateDebutReservation,
 						dateFinReservation, duree);
-		int nbPlaceHebdomadaire = rechercheplacedispomysql
-				.getInstance().listeDesPlacesReservePermanentHebdomadaireDurantPeriodeReservationClient(dateDebutReservation,
+		int nbPlaceHebdomadaire = RecherchePlaceDispoMysql.getInstance()
+				.listeDesPlacesReservePermanentHebdomadaireDurantPeriodeReservationClient(dateDebutReservation,
 						dateFinReservation, duree);
-		int nbPlaceMensuelle = rechercheplacedispomysql
-				.getInstance().listeDesPlacesReservePermanentMensuelleDurantPeriodeReservationClient(dateDebutReservation,
+		int nbPlaceMensuelle = RecherchePlaceDispoMysql.getInstance()
+				.listeDesPlacesReservePermanentMensuelleDurantPeriodeReservationClient(dateDebutReservation,
 						dateFinReservation, duree);
 
 		return nbPlaceJournaliere + nbPlaceHebdomadaire + nbPlaceMensuelle;
@@ -89,52 +81,48 @@ public class MethodesCalculs {
 	}
 
 	public int numeroPlaceReservationClient(String dateDebutReservation, String dateFinReservation, String duree) {
-        int numeroPlace=0;
+		int numeroPlace = 0;
 		// Récupération de toute les places du parking
-		RecherchePlaceDispoMysql rechercheplacedispomysql = new RecherchePlaceDispoMysql(null);
-		List<Integer> listeDesPlacesDuParking = new ArrayList<Integer>();
-		listeDesPlacesDuParking = rechercheplacedispomysql.getInstance().listeDesPlacesDuParking();
+		List<Integer> listeDesPlacesDuParking = RecherchePlaceDispoMysql.getInstance().listeDesPlacesDuParking();
 		// Récupération des places occupées pour la période du client
-		List<Integer> listeDesPlacesReserve = new ArrayList<Integer>();
-		listeDesPlacesReserve = rechercheplacedispomysql.getInstance()
+		List<Integer> listeDesPlacesReserve = RecherchePlaceDispoMysql.getInstance()
 				.listeDesPlacesReserveDurantPeriodeReservationClient(dateDebutReservation, dateFinReservation);
-	
+
 		// place du parking dispo après la soustraction des places dans réservation
 		listeDesPlacesDuParking.removeAll(listeDesPlacesReserve);
 
 		int nombreDeReservationPermanente;
-		nombreDeReservationPermanente =	this.nombreDeReservationPermanenteTotalDurantReservationClient(dateDebutReservation, dateFinReservation, duree);
-	
-		
-		if(listeDesPlacesDuParking.size() > nombreDeReservationPermanente) {
-			numeroPlace =listeDesPlacesDuParking.get(0);
+		nombreDeReservationPermanente = this.nombreDeReservationPermanenteTotalDurantReservationClient(
+				dateDebutReservation, dateFinReservation, duree);
+
+		if (listeDesPlacesDuParking.size() > nombreDeReservationPermanente) {
+			numeroPlace = listeDesPlacesDuParking.get(0);
 		}
-		
+
 		listeDesPlacesDuParking.size();
-		
-		
-		return   numeroPlace ; 
+
+		return numeroPlace;
 
 	}
-	
+
 	public String conversionMinuteEnFormatHeure(int dureeMinute) {
 		int nbHeure = dureeMinute / 60;
 		int nbMinute = dureeMinute % 60;
-		String heure,minute;
-		
-		if(nbHeure<10 ) {
-		heure ="0"+Integer.toString(nbHeure); 
-		}else {
-		heure =Integer.toString(nbHeure); 	
+		String heure, minute;
+
+		if (nbHeure < 10) {
+			heure = "0" + Integer.toString(nbHeure);
+		} else {
+			heure = Integer.toString(nbHeure);
 		}
-		
-		if(nbMinute<10) {
-		minute = "0"+Integer.toString(nbMinute);	
-		}else {
-		minute =Integer.toString(nbMinute);	
+
+		if (nbMinute < 10) {
+			minute = "0" + Integer.toString(nbMinute);
+		} else {
+			minute = Integer.toString(nbMinute);
 		}
-		
-		return heure+":"+minute;
+
+		return heure + ":" + minute;
 	}
 
 }

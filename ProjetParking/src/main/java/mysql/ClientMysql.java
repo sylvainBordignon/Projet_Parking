@@ -39,7 +39,7 @@ public class ClientMysql {
 			ins.setString(3, obj.getAdresse());
 			ins.setString(4, obj.getNumeroMobile());
 			ins.setString(5, obj.getMail());
-			ins.setString(6, obj.getIBAN());
+			ins.setString(6, obj.getIban());
 			ins.executeUpdate();
 			ResultSet res = ins.getGeneratedKeys();
 			if (res.next()) {
@@ -65,7 +65,7 @@ public class ClientMysql {
 			up.setString(3, obj.getAdresse());
 			up.setString(4, obj.getNumeroMobile());
 			up.setString(5, obj.getMail());
-			up.setString(6, obj.getIBAN());
+			up.setString(6, obj.getIban());
 			up.setInt(7, obj.getId());
 
 			up.executeUpdate();
@@ -249,7 +249,7 @@ public class ClientMysql {
 
 	public static void main(String[] args) {
 		ClientMysql clientmysql = ClientMysql.getInstance();
-		ArrayList<Reservation> reservations = (ArrayList<Reservation>) clientmysql.selectionnerListeReservations(5);
+		ArrayList<Reservation> reservations = clientmysql.selectionnerListeReservations(5);
 		for (int i = 0; i < reservations.size(); i++) {
 			System.out.println(reservations.get(i));
 		}

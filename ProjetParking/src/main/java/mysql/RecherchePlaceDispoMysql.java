@@ -72,7 +72,7 @@ public class RecherchePlaceDispoMysql {
 		dureeTest = 1440 - dureeTest;
 		String strDureeTest = methodescalculs.conversionDureeMinute2EnFormatHeure(dureeTest);
 
-		if (methodescalculs.ReservationEstSuperieureA24H(duree) == false) {
+		if (methodescalculs.reservationEstSuperieureA24H(duree) == false) {
 // la reservation du client dure moins de 24h 
 			DateFormat sdf = new SimpleDateFormat("HH:mm");
 			sdf.setLenient(false);

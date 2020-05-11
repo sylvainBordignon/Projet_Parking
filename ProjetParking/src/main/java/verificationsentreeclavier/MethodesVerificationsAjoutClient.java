@@ -5,11 +5,12 @@ import java.util.regex.Pattern;
 
 public class MethodesVerificationsAjoutClient {
 
+	private static Scanner sc = new Scanner(System.in);
+
 	// doit comporter uniquement des lettres et une taille < à 30
-	public String verifNomClient() {
+	public static String verifNomClient() {
 		String nom = null;
 		boolean estValide = false;
-		Scanner sc = new Scanner(System.in);
 		System.out.println("Veuillez rentrer votre nom\n nom :  ");
 		while (!estValide) {
 			nom = sc.nextLine();
@@ -23,17 +24,14 @@ public class MethodesVerificationsAjoutClient {
 		return nom;
 	}
 
-
-	public boolean formatNom(String nom) {
+	public static boolean formatNom(String nom) {
 		return Pattern.matches("[A-zÀ-ú- ]+", nom) && (nom.length() > 1 && nom.length() <= 30);
 	}
 
-
 	// doit comporter uniquement des lettres et une taille < à 30
-	public String verifPrenomClient() {
+	public static String verifPrenomClient() {
 		String prenom = null;
 		boolean estValide = false;
-		Scanner sc = new Scanner(System.in);
 		System.out.println("Veuillez rentrer votre prenom \n prenom :  ");
 		while (!estValide) {
 			prenom = sc.nextLine();
@@ -47,15 +45,14 @@ public class MethodesVerificationsAjoutClient {
 		return prenom;
 	}
 
-	public boolean formatPrenom(String prenom) {
+	public static boolean formatPrenom(String prenom) {
 		return Pattern.matches("[A-zÀ-ú-]+", prenom) && (prenom.length() > 1 && prenom.length() <= 30);
 	}
 
 	// une adresse peut contenir n'importe quel type de caractères sauf + /
-	public String verifAdresse() {
+	public static String verifAdresse() {
 		String adresse = null;
 		boolean estValide = false;
-		Scanner sc = new Scanner(System.in);
 		System.out.println("Veuillez rentrer votre adresse \n adresse :  ");
 		while (!estValide) {
 			adresse = sc.nextLine();
@@ -69,14 +66,13 @@ public class MethodesVerificationsAjoutClient {
 		return adresse;
 	}
 
-	public boolean formatAdresse(String adresse) {
+	public static boolean formatAdresse(String adresse) {
 		return adresse.length() < 50 && Pattern.matches("[A-zÀ-ú0-9'_ ]*$", adresse);
 	}
 
 	// xxxx@xx.xxx
-	public String verifMail() {
+	public static String verifMail() {
 		String mail = null;
-		Scanner sc = new Scanner(System.in);
 		boolean estValide = false;
 		System.out.println("Veuillez rentrer votre mail \n mail : ");
 		while (!estValide) {
@@ -91,33 +87,31 @@ public class MethodesVerificationsAjoutClient {
 		return mail;
 	}
 
-	public boolean formatMail(String mail) {
+	public static boolean formatMail(String mail) {
 		return Pattern.matches("^(.+)@(.+)$", mail);
 	}
 
-	public String verifIban() {
-		String IBAN = null;
-		Scanner sc = new Scanner(System.in);
+	public static String verifIban() {
+		String iban = null;
 		boolean estValide = false;
 		System.out.println("Veuillez rentrer votre IBAN \n IBAN : ");
 		while (!estValide) {
-			IBAN = sc.nextLine();
-			if (formatIban(IBAN)) {
+			iban = sc.nextLine();
+			if (formatIban(iban)) {
 				estValide = true;
 			} else {
 				System.out.println("Veuillez rentrer un IBAN valide  ");
 			}
 		}
-		return IBAN;
+		return iban;
 	}
 
-	public boolean formatIban(String IBAN) {
-		return Pattern.matches("[A-Z]{2}\\d{2} ?\\d{4} ?\\d{4} ?\\d{4} ?\\d{4} ?[\\d]{0,2}", IBAN);
+	public static boolean formatIban(String iban) {
+		return Pattern.matches("[A-Z]{2}\\d{2} ?\\d{4} ?\\d{4} ?\\d{4} ?\\d{4} ?[\\d]{0,2}", iban);
 	}
 
-	public String verifMobile() {
+	public static String verifMobile() {
 		String mobile = null;
-		Scanner sc = new Scanner(System.in);
 		boolean estValide = false;
 		System.out.println("Veuillez rentrer votre numéro de mobile \n numéro de mobile : ");
 		while (!estValide) {
@@ -131,7 +125,7 @@ public class MethodesVerificationsAjoutClient {
 		return mobile;
 	}
 
-	public boolean formatMobile(String mobile) {
+	public static boolean formatMobile(String mobile) {
 		return Pattern.matches("^(06|07)\\d{8} ?", mobile);
 	}
 }

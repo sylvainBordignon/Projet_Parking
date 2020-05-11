@@ -2,32 +2,32 @@ package pojo;
 
 public class Client {
 	private int id;
-	private String nom, prenom, adresse, mail, IBAN, numeroMobile;
+	private String nom, prenom, adresse, mail, iban, numeroMobile;
 
-	public Client(String numeroMobile, String nom, String prenom, String adresse, String mail, String IBAN) {
+	public Client(String numeroMobile, String nom, String prenom, String adresse, String mail, String iban) {
 
 		this.numeroMobile = numeroMobile;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.adresse = adresse;
 		this.mail = mail;
-		this.IBAN = IBAN;
+		this.iban = iban;
 	}
 
-	public Client(int id, String numeroMobile, String nom, String prenom, String adresse, String mail, String IBAN) {
+	public Client(int id, String numeroMobile, String nom, String prenom, String adresse, String mail, String iban) {
 		this.id = id;
 		this.numeroMobile = numeroMobile;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.adresse = adresse;
 		this.mail = mail;
-		this.IBAN = IBAN;
+		this.iban = iban;
 	}
 
 	@Override
 	public String toString() {
 		return "Client [numeroMobile=" + numeroMobile + ", nom=" + nom + ", prenom=" + prenom + ", adresse=" + adresse
-				+ ", mail=" + mail + ", IBAN=" + IBAN + "]";
+				+ ", mail=" + mail + ", iban=" + iban + "]";
 	}
 
 	public String getNumeroMobile() {
@@ -70,14 +70,6 @@ public class Client {
 		this.mail = mail;
 	}
 
-	public String getIBAN() {
-		return IBAN;
-	}
-
-	public void setIBAN(String iBAN) {
-		IBAN = iBAN;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -86,4 +78,11 @@ public class Client {
 		this.id = id;
 	}
 
+	public String getIban() {
+		return iban;
+	}
+
+	public void setIban(String iban) {
+		this.iban = iban;
+	}
 }

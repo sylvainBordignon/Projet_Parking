@@ -3,8 +3,6 @@ package interfaces;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +17,6 @@ import pojo.Reservation;
 import pojo.ReservationPermanente;
 import verificationsentreeclavier.MethodesFormatClavierInterface;
 import verificationsentreeclavier.MethodesVerificationsAjoutClient;
-import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceClient {
 
@@ -29,7 +26,6 @@ public class InterfaceClient {
 			MESSAGE_QUE_FAIRE = "Que souhaitez-vous faire ?",
 			MESSAGE_CHOIX_DATE = "Veuillez choisir une date (Format : JJ/MM/AAAA)",
 			MESSAGE_CHOIX_HEURE = "Veuillez choisir une heure de début (Format : HH:MM)",
-			MESSAGE_ENTREZ_ENTIER = "Veuillez  rentrer un entier",
 			MESSAGE_ENTREZ_NUMERO_CLIENT = "Veuillez  rentrer votre numéro de client",
 			MESSAGE_CHOIX_DUREE = "Veuillez choisir une durée de réservation (Format : HH:MM)";
 
@@ -51,13 +47,11 @@ public class InterfaceClient {
 				System.out.println("Vous pouvez vous connecter.");
 				break;
 			case "2":
-				MethodesVerificationsAjoutClient methodesverificationajoutclient= new MethodesVerificationsAjoutClient();
 				// pour la connexion
 				boolean finConnexion = false;
 				while (!finConnexion) {
 					int numCli = MethodesFormatClavierInterface.entreeEntier(MESSAGE_ENTREZ_NUMERO_CLIENT);
-					String numClient = String.valueOf(numCli);
-					String mail = methodesverificationajoutclient.verifMail();
+					String mail = MethodesVerificationsAjoutClient.verifMail();
 					client = ClientMysql.getInstance().visualierInfoClient(numCli);
 					if (client != null) {
 						if (client.getMail().equals(mail)) {
@@ -127,19 +121,18 @@ public class InterfaceClient {
 				boolean finReservation = false, reservationEnCours = false, reservationAVenir = false;
 				while (!finReservation) {
 					System.out.println("Liste des réservations : ");
-					ArrayList<Reservation> listeReservations=ClientMysql.getInstance().selectionnerListeReservations(client.getId());
-					Reservation reservationCourante = ClientMysql.getInstance().verifierReservationCorrespondanteClientMemeJour(client.getId());
-					if(!listeReservations.isEmpty()) {
-						reservationAVenir=true;
+					ArrayList<Reservation> listeReservations = ClientMysql.getInstance()
+							.selectionnerListeReservations(client.getId());
+					Reservation reservationCourante = ClientMysql.getInstance()
+							.verifierReservationCorrespondanteClientMemeJour(client.getId());
+					if (!listeReservations.isEmpty()) {
+						reservationAVenir = true;
 					}
-					if(reservationCourante!=null) {
-						reservationEnCours=true;
-					}
-					if (reservationEnCours) {
-						// affiche reservation en cours + choix dans menu
+					if (reservationCourante != null) {
+						reservationEnCours = true;
 					}
 					if (reservationAVenir) {
-						for(int i=0; i<listeReservations.size(); i++) {
+						for (int i = 0; i < listeReservations.size(); i++) {
 							System.out.println(listeReservations.get(i));
 						}
 					}
@@ -152,11 +145,10 @@ public class InterfaceClient {
 						System.out.println("1 - Gérer la réservation en cours");
 					}
 					if (reservationAVenir) {
-						System.out.println("2 - Modifier une réservation à venir");// +ajout
+						System.out.println("2 - Modifier une réservation à venir");
 					}
-					System.out.println("3 - Ajouter une nouvelle réservation");
-					System.out.println("4 - Retourner à l'accueil de l'application");
-					System.out.println("5 - Se déconnecter");
+					System.out.println("3 - Retourner à l'accueil de l'application");
+					System.out.println("4 - Se déconnecter");
 					String choixReservation = sc.nextLine();
 					switch (choixReservation) {
 					case "1":
@@ -166,16 +158,18 @@ public class InterfaceClient {
 							String choixReservEnCours = sc.nextLine();
 							switch (choixReservEnCours) {
 							case "1":
-								Date dateFin=reservationCourante.getDate_fin();
-								MethodesClient methodeClient=new MethodesClient();
-								if(methodeClient.verifierProlongationPossible30Minutes(reservationCourante)) {
+								if (MethodesClient.verifierProlongationPossible30Minutes(reservationCourante)) {
 									String dateDebut = reservationCourante.getDate_debut().toString();
-									dateDebut =	dateDebut.substring(0,19);
+									dateDebut = dateDebut.substring(0, 19);
 									MethodesCalculs methodesCalculs = new MethodesCalculs();
-									String sduree = methodesCalculs.conversionMinuteEnFormatHeure(reservationCourante.getDuree()+30);
-									methodeClient.modifierDureeReservation(dateDebut, sduree, client.getId(), reservationCourante);
-								} else
-									System.out.println("Vous ne pouvez prolonger la réservation que 30 minutes avant la fin.");
+									String sduree = methodesCalculs
+											.conversionMinuteEnFormatHeure(reservationCourante.getDuree() + 30);
+									MethodesClient.modifierDureeReservation(dateDebut, sduree, client.getId(),
+											reservationCourante);
+								} else {
+									System.out.println(
+											"Vous ne pouvez prolonger la réservation que 30 minutes avant la fin.");
+								}
 								break;
 							case "2":
 								// prolonger d�lai attente
@@ -189,89 +183,83 @@ public class InterfaceClient {
 						break;
 					case "2":
 						if (reservationAVenir) {
-							ClientMysql clientMysql = ClientMysql.getInstance();
 							System.out.println("Veuillez entrer l'ID de la réservation que vous voulez modifier.");
-							//listeReservations=clientMysql.selectionnerListeReservations(client.getId());
-							for(int i=0; i<listeReservations.size(); i++) {
+							for (int i = 0; i < listeReservations.size(); i++) {
 								System.out.println(listeReservations.get(i));
 							}
 							int choixModifReservation = MethodesFormatClavierInterface.entreeEntier("Choix :");
 							boolean trouve = false;
-							int emplacement=0;
-							while(!trouve) {
-								for(int i=0; i<listeReservations.size(); i++) {
-									if (listeReservations.get(i).getId()==choixModifReservation) {
+							int emplacement = 0;
+							while (!trouve) {
+								for (int i = 0; i < listeReservations.size(); i++) {
+									if (listeReservations.get(i).getId() == choixModifReservation) {
 										trouve = true;
-										emplacement=i;
+										emplacement = i;
 									}
 								}
-								if(!trouve) {
+								if (!trouve) {
 									System.out.println("Réservation inexistante.");
-									choixModifReservation = MethodesFormatClavierInterface.entreeEntier("Veuillez reessayer :");
+									choixModifReservation = MethodesFormatClavierInterface
+											.entreeEntier("Veuillez reessayer :");
 								}
 							}
 							Reservation reservation = listeReservations.get(emplacement);
-							System.out.println("Que voulez vous modifier? \n1 - Date de début \n2 - Duree ");
-							String quoiModifier = sc.nextLine();
-							switch (quoiModifier) {
-							case "1":			
-								String dateReserv = MethodesFormatClavierInterface.entreeDate(MESSAGE_CHOIX_DATE);
-								String heureReserv;
-								DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								String date = sdf.format(new Date());
-								if (date.equals(dateReserv)) {
-									heureReserv = MethodesFormatClavierInterface.entreeHeureMemeJour(MESSAGE_CHOIX_HEURE);
-								} else {
-									heureReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
-
+							boolean finChoixModif = false;
+							while (!finChoixModif) {
+								System.out.println("Que voulez vous modifier? \n1 - Date de début \n2 - Duree ");
+								String quoiModifier = sc.nextLine();
+								switch (quoiModifier) {
+								case "1":
+									String dateReserv = MethodesFormatClavierInterface.entreeDate(MESSAGE_CHOIX_DATE);
+									String heureReserv;
+									DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+									String date = sdf.format(new Date());
+									if (date.equals(dateReserv)) {
+										heureReserv = MethodesFormatClavierInterface
+												.entreeHeureMemeJour(MESSAGE_CHOIX_HEURE);
+									} else {
+										heureReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_HEURE);
+									}
+									int dureeMinute = reservation.getDuree();
+									MethodesCalculs methodescalculs = new MethodesCalculs();
+									String sduree = methodescalculs.conversionMinuteEnFormatHeure(dureeMinute);
+									System.out.println(
+											"Date de réservation : " + dateReserv + " \n Heure de réservation : "
+													+ heureReserv + " \n durée réservation : " + sduree);
+									boolean restePlace = MethodesClient.consulterPlacesParkingDispo(dateReserv,
+											heureReserv, sduree);
+									if (restePlace) {
+										MethodesClient.modifierUneReservation(dateReserv, heureReserv, sduree,
+												client.getId(), reservation);
+									} else {
+										System.out.println(
+												"Vous ne pouvez pas modifier cette réservation à cette date, le parking est complet.");
+									}
+									finChoixModif = true;
+									break;
+								case "2":
+									String dureeReserv = MethodesFormatClavierInterface
+											.entreeHeure(MESSAGE_CHOIX_DUREE);
+									String debutReserv = reservation.getDate_debut().toString();
+									debutReserv = debutReserv.substring(0, 19);
+									System.out.println(debutReserv);
+									MethodesClient.modifierDureeReservation(debutReserv, dureeReserv, client.getId(),
+											reservation);
+									finChoixModif = true;
+									break;
+								default:
+									System.out.println(MESSAGE_ERREUR);
 								}
-								
-							int dureeMinute = reservation.getDuree();
-							MethodesCalculs methodescalculs = new MethodesCalculs();
-							String sduree =methodescalculs.conversionMinuteEnFormatHeure(dureeMinute);	
-							MethodesClient methodesclient = new MethodesClient();
-							System.out.println("Date de réservation : "+dateReserv+" \n Heure de réservation : "+heureReserv+" \n durée réservation : "+sduree);
-							boolean restePlace=methodesclient.consulterPlacesParkingDispo(dateReserv,heureReserv,sduree);				
-							if (restePlace == true) {
-							
-								methodesclient.modifierUneReservation(dateReserv,heureReserv,sduree,client.getId(),reservation);
-								
-							}else {
-							System.out.println("Vous ne pouvez pas modifier cette réservation à cette date, le parking est complet.");	
-							}
-								
-								break;
-							case "2":
-								String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
-								String debutReserv =reservation.getDate_debut().toString();
-								debutReserv =	debutReserv.substring(0,19);
-								System.out.println(debutReserv);
-								MethodesClient methodesclient2 = new MethodesClient();
-								methodesclient2.modifierDureeReservation(debutReserv, dureeReserv,client.getId(),reservation);
-						 
-				
-			
-								break;
-								
-								
 							}
 						} else {
 							System.out.println(MESSAGE_ERREUR);
 						}
 						break;
 					case "3":
-//						String[] tab=entrerDateReservation();
-//						System.out.println("Veuillez entrer la durée de la reservation.");
-//						int heures = MethodesFormatClavierInterface.entreeEntier("Nombre d'heures :");
-//						int minutes = MethodesFormatClavierInterface.entreeEntier("Nombre de minutes :");
-//						Reservation reservation = new Reservation(client.getId(), tab[0]+" "+tab[1], heures, minutes);
-//						ClientMysql.getInstance().ajouterUneReservation(reservation);
-						break;
-					case "4":
 						finReservation = true;
 						System.out.println(MESSAGE_RETOUR_ACCUEIL);
 						break;
-					case "5":
+					case "4":
 						finReservation = true;
 						fin = true;
 						System.out.println(MESSAGE_FERMETURE_APPLI);
@@ -364,8 +352,9 @@ public class InterfaceClient {
 						if (ClientMysql.getInstance().supprimerVehicule(supprPlaque, client.getId())) {
 							// Suppression dans la BDD
 							System.out.println("Véhicule supprimé.");
-						} else
+						} else {
 							System.out.println("Véhicule inconnu.");
+						}
 						break;
 					case "3":
 						finVehicule = true;
@@ -383,11 +372,11 @@ public class InterfaceClient {
 				break;
 			case "5":
 				System.out.println("Consultation des disponiblités des places de parking");
-				String [] parametresClient = entrerDateReservation();
-				MethodesClient methodesclient = new MethodesClient();
-			
-				methodesclient.consulterPlacesParkingDispo(parametresClient[0],parametresClient[1],parametresClient[2]);
-				methodesclient.creeUneReservation(parametresClient[0],parametresClient[1],parametresClient[2],client.getId());
+				String[] parametresClient = entrerDateReservation();
+				MethodesClient.consulterPlacesParkingDispo(parametresClient[0], parametresClient[1],
+						parametresClient[2]);
+				MethodesClient.creeUneReservation(parametresClient[0], parametresClient[1], parametresClient[2],
+						client.getId());
 
 				// si oui on fait la r�servation + retour accueil
 				// si non on demande si nouvelle recherche ou retour accueil
@@ -430,7 +419,6 @@ public class InterfaceClient {
 
 	}
 
-
 	public static String[] entrerDateReservation() {
 		String[] tab = new String[3];
 		String dateReserv = MethodesFormatClavierInterface.entreeDate(MESSAGE_CHOIX_DATE);
@@ -445,10 +433,11 @@ public class InterfaceClient {
 
 		}
 		String dureeReserv = MethodesFormatClavierInterface.entreeHeure(MESSAGE_CHOIX_DUREE);
-        tab[2] = dureeReserv;
+		tab[2] = dureeReserv;
 		tab[1] = heureReserv;
 		return tab;
 	}
+
 	public static void ajouterReservationPermanente() {
 		ReservationPermanente reservation = null;
 		System.out.println(
@@ -527,8 +516,6 @@ public class InterfaceClient {
 
 		} else {
 			System.out.println(MESSAGE_ERREUR);
-
-	
 		}
-		 }
+	}
 }

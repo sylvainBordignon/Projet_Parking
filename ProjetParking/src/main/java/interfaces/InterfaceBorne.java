@@ -18,7 +18,7 @@ public class InterfaceBorne {
 	public static final String MESSAGE_SANS_DEDOMMAGEMENT = "Il n'y a pas de places disponibles. Veuillez nous excuser.";
 	public static int PLACES_LIBRES;
 	public static final String RETOUR_MENU_PRINCIPAL = "\nTapez '0' pour retourner au menu principal";
-	public static Scanner in = new Scanner(System.in);
+	public static final Scanner in = new Scanner(System.in);
 
 	public static void lancerInterfaceBorne() {
 		System.out.println("Bienvenue sur l'interface du parking.");

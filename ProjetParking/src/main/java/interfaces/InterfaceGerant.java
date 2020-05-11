@@ -10,11 +10,9 @@ import verificationsentreeclavier.MethodesVerificationsDate;
 public class InterfaceGerant {
 
 	public static void lancerInterfaceGerant() {
-		MethodesVerificationsDate methodesverificationdate = new MethodesVerificationsDate();
 		Scanner sc = new Scanner(System.in);
 		int choix = 0;
 		do {
-
 			System.out.println("Bienvenue sur l'interface du gérant. \n\n");
 
 			System.out.println("Veuillez sélectionner une option parmis les choix suivants : \n"
@@ -124,7 +122,7 @@ public class InterfaceGerant {
 				} while (choixModifTarif != -1);
 				break;
 			case 3:
-				int nbPlaceSurreservation = (int) GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
+				int nbPlaceSurreservation = GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
 				do {
 
 					System.out.println(
@@ -208,24 +206,17 @@ public class InterfaceGerant {
 							);
 							boolean saisieDateDebutEstValide, saisieDateFinEstValide = false;
 							String dateDebut, dateFin;
-
 							dateDebut = sc.nextLine();
-
 							if (dateDebut.equals("-1")) {
-
 								retourMenuTransaction = -1;
 							} else {
-
-								saisieDateDebutEstValide = methodesverificationdate.estValideDate(dateDebut);
-
-								if (saisieDateDebutEstValide == true) {
+								saisieDateDebutEstValide = MethodesVerificationsDate.estValideDate(dateDebut);
+								if (saisieDateDebutEstValide) {
 									System.out.println(
 											"Veuillez rentrer la date de fin au format suivant : JJ/MM/AAAA \n");
 									dateFin = sc.nextLine();
-									saisieDateFinEstValide = methodesverificationdate.estValideDate(dateFin);
-
-									if (saisieDateFinEstValide == true) {
-
+									saisieDateFinEstValide = MethodesVerificationsDate.estValideDate(dateFin);
+									if (saisieDateFinEstValide) {
 										System.out.println("Affichage des résultats .......");
 
 									} else {
