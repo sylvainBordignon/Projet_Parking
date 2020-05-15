@@ -161,7 +161,9 @@ public class InterfaceGerant {
 						int retourMenuListeReservations;
 						do {
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Voici la liste des places occupées ainsi que leurs informations");
+									+ "Voici la liste des places occupées ainsi que leurs informations \n"
+									+ "|  Nom  |  Prenom  |  num_place  |  date arrive  |  date fin  |  duree  |  date arrive reel  |  délai  |  \n");
+							GerantMysql.getInstance().visualiserLesReservationsEnCours();
 
 							while (!sc.hasNextInt()) {
 								System.out.println("Veuillez rentrer un nombre ! ");

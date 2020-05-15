@@ -29,9 +29,9 @@ public class Connexion {
 	// M�thode qui va nous retourner notre instance et la cr�er si elle n'existe pas
 	public static Connection getInstance() {
 		if (conn == null) {
-			System.out.println("ouverture connexion ");
+			
 			new Connexion();
-			System.out.println("Connexion Ok ");
+			
 		}
 		return conn;
 	}
