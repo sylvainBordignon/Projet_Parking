@@ -11,7 +11,7 @@ import pojo.Client;
 import pojo.Reservation;
 import verificationsentreeclavier.MethodesFormatClavierInterface;
 
-public class InterfaceBorne {
+public class InterfaceBorneEntree {
 	public static final String MESSAGE_ERREUR = "Veuillez entrer une information correcte.";
 	public static final String MESSAGE_ACCEPTATION = "Vous occupez la place ... pour une durée de ... Merci de votre visite.";
 	public static final String MESSAGE_DEDOMMAGEMENT = "Il n'y a pas de places disponibles. Vous recevrez un dédommagement. Veuillez nous excuser.";
@@ -29,11 +29,11 @@ public class InterfaceBorne {
 			switch (reponse) {
 			case 1:
 				fin = true;
-				InterfaceBorne.menuReservation();
+				InterfaceBorneEntree.menuReservation();
 				break;
 			case 2:
 				fin = true;
-				InterfaceBorne.menuSansReservation();
+				InterfaceBorneEntree.menuSansReservation();
 				break;
 			case 0:
 				fin = true;
@@ -75,11 +75,11 @@ public class InterfaceBorne {
 				}
 			} else {// le num�ro n'existe pas dans la base
 				System.out.println("Numéro de reservation inconnu.");
-				int reponse = InterfaceBorne.reessayer();
+				int reponse = InterfaceBorneEntree.reessayer();
 				if (reponse == 1)
-					InterfaceBorne.menuReservation();
+					InterfaceBorneEntree.menuReservation();
 				else if (reponse == 2)
-					InterfaceBorne.menuSansReservation();
+					InterfaceBorneEntree.menuSansReservation();
 			}
 		}
 	}
@@ -89,13 +89,13 @@ public class InterfaceBorne {
 				.entreePlaqueImmatriculation("Veuillez entrer votre plaque d'immatriculation.");
 		if (!AssociationMysql.getInstance().verificationPlaqueExiste(immatriculation)) {// la plaque n'existe pas
 			System.out.println("Numéro d'immatriculation inconnu.");
-			int reponse = InterfaceBorne.reessayer();
+			int reponse = InterfaceBorneEntree.reessayer();
 			if (reponse == 1)
-				InterfaceBorne.menuSansReservation();
+				InterfaceBorneEntree.menuSansReservation();
 			else if (reponse == 2)
-				InterfaceBorne.verifNumClient();
+				InterfaceBorneEntree.verifNumClient();
 		} else {// la plaque existe, on v�rifie qu'une reservation existe
-			InterfaceBorne.verifReservationExistePlaque(immatriculation);
+			InterfaceBorneEntree.verifReservationExistePlaque(immatriculation);
 		}
 	}
 
@@ -104,13 +104,13 @@ public class InterfaceBorne {
 		Client client = ClientMysql.getInstance().visualierInfoClient(numClient);
 		if (client == null) {// le num�ro n'existe pas dans la base
 			System.out.println("Numéro de client inconnu.");
-			int reponse = InterfaceBorne.reessayer();
+			int reponse = InterfaceBorneEntree.reessayer();
 			if (reponse == 1)
-				InterfaceBorne.verifNumClient();
+				InterfaceBorneEntree.verifNumClient();
 			else if (reponse == 2)// numéro de client non reconnu
 				System.out.println("Veuillez vous diriger vers la sortie. Merci pour votre visite.");
 		} else {// le numero existe dans la base, on vérifie qu'une reservation existe
-			InterfaceBorne.verifReservationExisteClient(numClient);
+			InterfaceBorneEntree.verifReservationExisteClient(numClient);
 		}
 	}
 
@@ -126,11 +126,11 @@ public class InterfaceBorne {
 			else {
 				ArrayList<Integer> liste = AssociationMysql.getInstance().clientsUtilisantCeVehicule(immatriculation);
 				if (liste.size() == 1) {
-					InterfaceBorne.dureeSejour(liste.get(0));
+					InterfaceBorneEntree.dureeSejour(liste.get(0));
 				} else {
 					System.out
 							.println("Il y a plusieurs utilisateurs associés à ce véhicule, veuillez vous identifier.");
-					InterfaceBorne.verifNumClient();
+					InterfaceBorneEntree.verifNumClient();
 				}
 			}
 		}
@@ -147,7 +147,7 @@ public class InterfaceBorne {
 			else {
 				System.out.println(
 						"Vous n'avez pas de réservation à cette date. Une nouvelle réservation va être créée.");
-				InterfaceBorne.dureeSejour(client);
+				InterfaceBorneEntree.dureeSejour(client);
 			}
 		}
 	}
