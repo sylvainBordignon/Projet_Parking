@@ -48,5 +48,13 @@ public class TestGerantMySQL {
         gerant.modifierTarifProlongationAttente(tarifBase);
     }
     
-
+    @Test
+    public void testTarifDepassementAugmentation() {
+    	GerantMysql gerant = GerantMysql.getInstance();
+    	float tarifBase = gerant.selectionnerTarifDepassementAugmentation();
+    	gerant.modifierTarifDepassementAugmentation(10);
+        float tarif = gerant.selectionnerTarifDepassementAugmentation();
+        assertTrue(tarif==10);
+        gerant.modifierTarifDepassementAugmentation(tarifBase);
+    }
 }

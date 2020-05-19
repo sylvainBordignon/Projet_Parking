@@ -54,8 +54,9 @@ public class InterfaceGerant {
 					System.out.println("Quel tarif voulez-vous modifier ? (Entrez -1 pour revenir au menu principal) \n"
 
 							+ "1 - Frais de stationnement pendant période réservée \n"
-							+ "2 - Frais de stationnement de dépassement de période " + "\n"
-							+ "3 - Frais de prolongation de la période d'attente  \n");
+							+ "2 - Frais de stationnement de dépassement de période de base \n"
+							+ "3 - Frais de stationnement de dépassement cumulatif \n"
+							+ "4 - Frais de prolongation de la période d'attente  \n");
 					while (!sc.hasNextInt()) {
 						System.out.println("Veuillez rentrer un nombre ! ");
 						sc.next();
@@ -85,7 +86,7 @@ public class InterfaceGerant {
 						do {
 							float tarifDepassement = GerantMysql.getInstance().selectionnerTarifDepassement();
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Valeur actuelle des frais de dépassement de stationnement : " + tarifDepassement
+									+ "Valeur actuelle des frais de dépassement de stationnement de base : " + tarifDepassement
 									+ " \n" + "Veuillez saisir la nouvelle valeur ...");
 							while (!sc.hasNextFloat()) {
 								System.out.println("Veuillez rentrer un nombre ! ");
@@ -99,6 +100,24 @@ public class InterfaceGerant {
 						} while (valeurFraisStationementDepassementPeriode != -1);
 						break;
 					case 3:
+						float valeurFraisStationementDepassementCumulatif;
+						do {
+							float tarifDepassementCumul = GerantMysql.getInstance().selectionnerTarifDepassementAugmentation();
+							System.out.println("Saisissez -1 pour revenir en arrière \n"
+									+ "Valeur actuelle des frais de dépassement de stationnement cumulatif : " + tarifDepassementCumul
+									+ " \n" + "Veuillez saisir la nouvelle valeur ...");
+							while (!sc.hasNextFloat()) {
+								System.out.println("Veuillez rentrer un nombre ! ");
+								sc.next();
+							}
+							valeurFraisStationementDepassementCumulatif = sc.nextFloat();
+							GerantMysql.getInstance()
+									.modifierTarifDepassementAugmentation(valeurFraisStationementDepassementCumulatif);
+							System.out.println("Nouveau tarif : " + valeurFraisStationementDepassementCumulatif);
+							valeurFraisStationementDepassementCumulatif = -1;
+						} while (valeurFraisStationementDepassementCumulatif != -1);
+						break;
+					case 4:
 						float valeurProlongationAttente;
 						do {
 							float tarifProlongation = GerantMysql.getInstance().selectionnerTarifProlongationAttente();
@@ -135,8 +154,8 @@ public class InterfaceGerant {
 					}
 					nbPlaceSurreservation = sc.nextInt();
 					MethodesGerant methodesgerant = new MethodesGerant();
-				
-		             methodesgerant.changerNombreSurreservation(nbPlaceSurreservation);
+
+					methodesgerant.changerNombreSurreservation(nbPlaceSurreservation);
 					nbPlaceSurreservation = -1;
 				} while (nbPlaceSurreservation != -1);
 				break;

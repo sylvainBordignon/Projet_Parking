@@ -36,6 +36,10 @@ public class GerantMysql {
 	public float selectionnerTarifProlongationAttente() {
 		return selectionnerUnTarif("tarif_prolongation_attente");
 	}
+	
+	public float selectionnerTarifDepassementAugmentation() {
+		return selectionnerUnTarif("tarif_dépassement_augmentation");
+	}
 
 	public float selectionnerUnTarif(String tarif) {
 		try {
@@ -61,6 +65,10 @@ public class GerantMysql {
 
 	public void modifierTarifProlongationAttente(float montant) {
 		modifierUnTarif(montant, "tarif_prolongation_attente");
+	}
+	
+	public void modifierTarifDepassementAugmentation(float montant) {
+		modifierUnTarif(montant, "tarif_dépassement_augmentation");
 	}
 
 	public void modifierUnTarif(float montant, String tarif) {

@@ -22,4 +22,5 @@ public class TestReservationMySQL {
     	Reservation test = client.visualiserReservationMemeJour(999);
         assertNull(test);
     }
+    //creer classe ReservationMysql et faire ces tests
 }

@@ -92,6 +92,14 @@ public class Reservation {
 		}
 	}
 	
+	public int calculerTempsDepassement() {
+		int res = (int) ((date_depart_reel.getTime()-date_fin.getTime())/1000/60);
+		if(res > 0) {
+			return res;
+		}
+		return 0;
+	}
+	
 	public int getDuree() {
 		return duree;
 	}
