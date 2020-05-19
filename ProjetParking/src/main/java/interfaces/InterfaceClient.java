@@ -172,7 +172,16 @@ public class InterfaceClient {
 								}
 								break;
 							case "2":
-								// prolonger d�lai attente
+								if (MethodesClient.verifierProlongationDelaiDattentePossible(reservationCourante)) {
+									int prolongation = MethodesFormatClavierInterface.entreeEntier("De combien de minutes voulez-vous prolonger le délai d'attentes?");
+									while(!MethodesClient.verifierProlongationCorrecte(reservationCourante, prolongation)){
+										System.out.println("Le delai d'attente ne peut pas excéder l'heure de fin de la réservation.");
+										prolongation = MethodesFormatClavierInterface.entreeEntier("Veuillez entrer une nouvelle valeur : ");
+									}
+									reservationCourante.setDelai_attente(reservationCourante.getDelai_attente()+prolongation);
+									ClientMysql.getInstance().modifierReservation(reservationCourante);
+									System.out.println("Le délai d'attente a bien été prolongé.");
+								}
 								break;
 							default:
 								System.out.println(MESSAGE_ERREUR);

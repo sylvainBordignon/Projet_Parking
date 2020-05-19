@@ -194,4 +194,14 @@ public class MethodesClient {
 	public static boolean verifierProlongationPossible30Minutes(Reservation reservation) {
 		return (reservation.getDate_fin().getTime() - 1800000) < ZonedDateTime.now().toInstant().toEpochMilli();
 	}
+	public static boolean verifierProlongationDelaiDattentePossible(Reservation reservation) {
+		//si heure actuelle > heure debut et heure actuelle < heure debut + delai d'attente 
+		return (reservation.getDate_debut().getTime() < ZonedDateTime.now().toInstant().toEpochMilli()
+				&& ZonedDateTime.now().toInstant().toEpochMilli() < (reservation.getDate_debut().getTime() + (reservation.getDelai_attente() * 60000)));
+	}
+	
+	public static boolean verifierProlongationCorrecte(Reservation reservation, int prolongation) {
+		//si heure debut + delai d'attente + prolongation est < date de fin
+		return ((reservation.getDate_debut().getTime() + (reservation.getDelai_attente() * 60000) + (prolongation * 60000)) < reservation.getDate_fin().getTime());
+	}
 }
