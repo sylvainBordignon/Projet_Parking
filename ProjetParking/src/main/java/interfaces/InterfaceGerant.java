@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.Scanner;
 
+import methodes.MethodesGerant;
 import mysql.ClientMysql;
 import mysql.GerantMysql;
 import pojo.Client;
@@ -133,8 +134,9 @@ public class InterfaceGerant {
 						sc.next();
 					}
 					nbPlaceSurreservation = sc.nextInt();
-					GerantMysql.getInstance().modifierNbPlaceSurreservation(nbPlaceSurreservation);
-					System.out.println("Nouvelle valeur : " + nbPlaceSurreservation);
+					MethodesGerant methodesgerant = new MethodesGerant();
+				
+		             methodesgerant.changerNombreSurreservation(nbPlaceSurreservation);
 					nbPlaceSurreservation = -1;
 				} while (nbPlaceSurreservation != -1);
 				break;
@@ -159,7 +161,9 @@ public class InterfaceGerant {
 						int retourMenuListeReservations;
 						do {
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Voici la liste des places occupées ainsi que leurs informations");
+									+ "Voici la liste des places occupées ainsi que leurs informations \n"
+									+ "|  Nom  |  Prenom  |  num_place  |  date arrive  |  date fin  |  duree  |  date arrive reel  |  délai  |  \n");
+							GerantMysql.getInstance().visualiserLesReservationsEnCours();
 
 							while (!sc.hasNextInt()) {
 								System.out.println("Veuillez rentrer un nombre ! ");

@@ -12,7 +12,7 @@ public class InterfaceGenerale {
 			String choix = sc.nextLine();
 			switch(choix) {
 			case "1":
-				InterfaceBorne.lancerInterfaceBorne();
+				InterfaceBorneEntree.lancerInterfaceBorne();
 				break;
 			case "2":
 				InterfaceClient.accesInterfaceClient();
