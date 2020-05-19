@@ -8,19 +8,24 @@ public class InterfaceGenerale {
 		Scanner sc = new Scanner(System.in);
 		while(!fermetureInterface) {
 			System.out.println("Menu d'accueil de l'API générale");
-			System.out.println("Que souhaitez-vous faire ?\n1 - Interface de la borne du parking\n2 - Interface client\n3 - Interface gérant\n4 - Fermer l'API.");
+			System.out.println("Que souhaitez-vous faire ?\n1 - Interface borne entrée du parking\n2 - Interface borne sortie du parking\n3 - Interface client\n4 - Interface gérant"
+					+ "\n5 - Fermer l'API."
+					);
 			String choix = sc.nextLine();
 			switch(choix) {
 			case "1":
 				InterfaceBorneEntree.lancerInterfaceBorne();
 				break;
 			case "2":
-				InterfaceClient.accesInterfaceClient();
+				InterfaceBorneSortie.lancerInterfaceBorne();
 				break;
 			case "3":
-				InterfaceGerant.lancerInterfaceGerant();
+				InterfaceClient.accesInterfaceClient();
 				break;
 			case "4":
+				InterfaceGerant.lancerInterfaceGerant();
+				break;
+			case "5":
 				fermetureInterface = true;
 				System.out.println("Fermeture de l'API.");
 				break;

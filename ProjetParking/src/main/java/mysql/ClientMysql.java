@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import connexionBDD.Connexion;
@@ -193,6 +195,24 @@ public class ClientMysql {
 		}
 	}
 	
+	public void ajouterUneReservationDansHistorique(Reservation reservation) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement(
+					"INSERT INTO reservation (id_client, date_debut, date_fin, id_place,duree,date_arrive_reel,date_depart_reel,delai_attente) VALUES (?,?,?,?,?,?,?,?)");
+			preparedStmt.setInt(1, reservation.getId_client());
+			preparedStmt.setTimestamp(2, reservation.getDate_debut());
+			preparedStmt.setTimestamp(3, reservation.getDate_fin());
+			preparedStmt.setInt(5, reservation.getDuree());
+			preparedStmt.setInt(4, reservation.getId_place());
+			preparedStmt.setTimestamp(5,reservation.getDate_arrive_reel());
+			preparedStmt.setTimestamp(6,reservation.getDate_depart_reel());
+			preparedStmt.setInt(7, reservation.getDelai_attente());
+			preparedStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void ajouterUneReservationBorne(Reservation reservation) {
 		try {
 			PreparedStatement preparedStmt = conn.prepareStatement(
@@ -245,6 +265,22 @@ public class ClientMysql {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void editerDateDepartReel(int idclient) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 String sDate = dateFormat.format(new Date());
+		 sDate =  sDate.substring(0, 19);
+		
+		try {
+		PreparedStatement preparedStmt = conn.prepareStatement("UPDATE reservation set date_depart_reel = ? where id = ?");
+		preparedStmt.setString(1, sDate);
+		preparedStmt.setInt(2, idclient);
+	   preparedStmt.executeUpdate();
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+
 	}
 
 	public static void main(String[] args) {
