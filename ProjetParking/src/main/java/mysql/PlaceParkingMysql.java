@@ -110,5 +110,16 @@ public class PlaceParkingMysql {
 		return 0;
 	}
 	
+	public void supprimerPlaceParking(int id) {
+		try {          
+			           PreparedStatement preparedStmt2 = conn
+						.prepareStatement("DELETE FROM reservation where id=? ");
+				preparedStmt2.setInt(1, id);
+				preparedStmt2.executeUpdate();		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 }

@@ -1,9 +1,16 @@
 package methodes;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Scanner;
 
 import mysql.ClientMysql;
+import mysql.GerantMysql;
+import mysql.PlaceParkingMysql;
 import pojo.Client;
 import pojo.Reservation;
 import verificationsentreeclavier.MethodesFormatClavierInterface;
@@ -207,6 +214,33 @@ public class MethodesClient {
 	public static boolean verifierProlongationCorrecte(Reservation reservation, int prolongation) {
 		//si heure debut + delai d'attente + prolongation est < date de fin
 		return ((reservation.getDate_debut().getTime() + (reservation.getDelai_attente() * 60000) + (prolongation * 60000)) < reservation.getDate_fin().getTime());
+	}
+	
+	public static void sortieParking(Reservation reservation) {		
+		String sDate; 
+		// Si oui , on UPDATE la date de fin de stationnement , on libère la place du parking, nb_surreservation en cours + 1 si < à nb_surreserrvation	
+		// enregistrement fin d'occupation de place 
+		sDate=ClientMysql.getInstance().editerDateDepartReel(reservation.getId());
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    Date parsedDate = dateFormat.parse(sDate);
+		    reservation.setDate_depart_reel(new Timestamp(parsedDate.getTime()));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// reservation.setDate_depart_reel(date_depart_reel);
+		int nbPlaceSurreservation, nbPlaceSurreservationEnCours;
+		nbPlaceSurreservation =GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
+		nbPlaceSurreservationEnCours = GerantMysql.getInstance().selectionnerNbPlaceSurreservationEnCours();
+		if (nbPlaceSurreservationEnCours<nbPlaceSurreservation) {	
+		GerantMysql.getInstance().modifierNbPlaceSurreservationEnCours(nbPlaceSurreservationEnCours+1);	
+		}
+		ClientMysql.getInstance().ajouterUneReservationDansHistorique(reservation);
+		PlaceParkingMysql.getInstance().supprimerPlaceParking(reservation.getId());
+		System.out.println("Vous pouvez sortir, Bonne journée ! ");
+		
 	}
 		
 }

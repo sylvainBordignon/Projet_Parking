@@ -198,15 +198,14 @@ public class ClientMysql {
 	public void ajouterUneReservationDansHistorique(Reservation reservation) {
 		try {
 			PreparedStatement preparedStmt = conn.prepareStatement(
-					"INSERT INTO reservation (id_client, date_debut, date_fin, id_place,duree,date_arrive_reel,date_depart_reel,delai_attente) VALUES (?,?,?,?,?,?,?,?)");
+					"INSERT INTO historiquereservation (id_client, date_debut,id_place,duree,date_depart_reel,delai_attente,id) VALUES (?,?,?,?,?,?,?)");
 			preparedStmt.setInt(1, reservation.getId_client());
 			preparedStmt.setTimestamp(2, reservation.getDate_debut());
-			preparedStmt.setTimestamp(3, reservation.getDate_fin());
-			preparedStmt.setInt(5, reservation.getDuree());
-			preparedStmt.setInt(4, reservation.getId_place());
-			preparedStmt.setTimestamp(5,reservation.getDate_arrive_reel());
-			preparedStmt.setTimestamp(6,reservation.getDate_depart_reel());
-			preparedStmt.setInt(7, reservation.getDelai_attente());
+			preparedStmt.setInt(3, reservation.getId_place());
+			preparedStmt.setInt(4, reservation.getDuree());
+			preparedStmt.setTimestamp(5,reservation.getDate_depart_reel());
+			preparedStmt.setInt(6, reservation.getDelai_attente());
+			preparedStmt.setInt(7, reservation.getId());
 			preparedStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -267,7 +266,24 @@ public class ClientMysql {
 		return null;
 	}
 	
-	public void editerDateDepartReel(int idclient) {
+	public Reservation recupererInfosReservationDelaiDepasse(int id) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement(
+					"SELECT * FROM reservation r where id_client = ? and r.date_debut < now() and r.date_fin < now();");
+			preparedStmt.setInt(1, id);
+			ResultSet res = preparedStmt.executeQuery();
+			if (res.next()) {
+				return new Reservation(res.getInt("id"), res.getInt("id_client"), res.getTimestamp("date_debut"),
+						res.getTimestamp("date_fin"), res.getInt("duree"), res.getTimestamp("date_arrive_reel"),
+						res.getTimestamp("date_depart_reel"), res.getInt("id_place"), res.getInt("delai_attente"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String editerDateDepartReel(int idclient) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		 String sDate = dateFormat.format(new Date());
 		 sDate =  sDate.substring(0, 19);
@@ -280,7 +296,8 @@ public class ClientMysql {
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
-
+		return sDate;
+		
 	}
 
 	public static void main(String[] args) {
