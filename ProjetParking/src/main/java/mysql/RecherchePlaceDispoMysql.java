@@ -249,4 +249,6 @@ public class RecherchePlaceDispoMysql {
 		return nbPlaces;
 	}
 	
+
+	
 }

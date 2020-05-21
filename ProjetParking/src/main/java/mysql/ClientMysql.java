@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import connexionBDD.Connexion;
@@ -193,6 +195,23 @@ public class ClientMysql {
 		}
 	}
 	
+	public void ajouterUneReservationDansHistorique(Reservation reservation) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement(
+					"INSERT INTO historiquereservation (id_client, date_debut,id_place,duree,date_depart_reel,delai_attente,id) VALUES (?,?,?,?,?,?,?)");
+			preparedStmt.setInt(1, reservation.getId_client());
+			preparedStmt.setTimestamp(2, reservation.getDate_debut());
+			preparedStmt.setInt(3, reservation.getId_place());
+			preparedStmt.setInt(4, reservation.getDuree());
+			preparedStmt.setTimestamp(5,reservation.getDate_depart_reel());
+			preparedStmt.setInt(6, reservation.getDelai_attente());
+			preparedStmt.setInt(7, reservation.getId());
+			preparedStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void ajouterUneReservationBorne(Reservation reservation) {
 		try {
 			PreparedStatement preparedStmt = conn.prepareStatement(
@@ -245,6 +264,40 @@ public class ClientMysql {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public Reservation recupererInfosReservationDelaiDepasse(int id) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement(
+					"SELECT * FROM reservation r where id_client = ? and r.date_debut < now() and r.date_fin < now();");
+			preparedStmt.setInt(1, id);
+			ResultSet res = preparedStmt.executeQuery();
+			if (res.next()) {
+				return new Reservation(res.getInt("id"), res.getInt("id_client"), res.getTimestamp("date_debut"),
+						res.getTimestamp("date_fin"), res.getInt("duree"), res.getTimestamp("date_arrive_reel"),
+						res.getTimestamp("date_depart_reel"), res.getInt("id_place"), res.getInt("delai_attente"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String editerDateDepartReel(int idclient) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 String sDate = dateFormat.format(new Date());
+		 sDate =  sDate.substring(0, 19);
+		
+		try {
+		PreparedStatement preparedStmt = conn.prepareStatement("UPDATE reservation set date_depart_reel = ? where id = ?");
+		preparedStmt.setString(1, sDate);
+		preparedStmt.setInt(2, idclient);
+	   preparedStmt.executeUpdate();
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+		return sDate;
+		
 	}
 
 	public static void main(String[] args) {
