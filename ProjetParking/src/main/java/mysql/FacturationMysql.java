@@ -29,7 +29,7 @@ public class FacturationMysql {
 	public int genererFacturation(Facturation facturation) {
 		try {
 			PreparedStatement ins = this.conn.prepareStatement(
-					"INSERT INTO facturation (id_client, id_historique_reservation, ,cout_normal, cout_depassement, cout_remboursement, cout_prologation_attente) VALUES (?,?,?,?,?,?)");
+					"INSERT INTO facturation (id_client, id_historique_reservation, cout_normal, cout_depassement, cout_remboursement, cout_prolongation_attente) VALUES (?,?,?,?,?,?)");
 			ins.setInt(1, facturation.getIdClient());
 			ins.setInt(2, facturation.getIdHistoriqueReservation());
 			ins.setFloat(3, facturation.getCoutNormal());

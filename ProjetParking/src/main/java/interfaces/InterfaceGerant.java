@@ -214,7 +214,7 @@ public class InterfaceGerant {
 										System.out.println("Affichage des résultats .......");
 										ArrayList<Reservation> reservations = ClientMysql.getInstance().selectionnerListeReservationsPasseesPeriode(dateDebut, dateFin);
 										for (int i = 0; i < reservations.size(); i++) {
-											System.out.println(reservations.get(i));
+											System.out.println(reservations.get(i).afficherInfo());
 										}
 									} else {
 
@@ -244,7 +244,7 @@ public class InterfaceGerant {
 								ArrayList<Reservation> reservations = ClientMysql.getInstance()
 										.selectionnerListeReservationsPassees(client.getId());
 								for (int i = 0; i < reservations.size(); i++) {
-									System.out.println(reservations.get(i));
+									System.out.println(reservations.get(i).afficherInfo());
 								}
 							} else {
 								System.out.println("Ce numéro de client n'est associé à aucun client.");

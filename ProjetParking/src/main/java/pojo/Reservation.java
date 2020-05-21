@@ -3,7 +3,6 @@ package pojo;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -11,11 +10,11 @@ import methodes.MethodesCalculs;
 
 public class Reservation {
 	private int id, id_client, id_place, delai_attente, duree;
-	
+
 	private Timestamp date_debut, date_fin, date_arrive_reel, date_depart_reel;
-	
-	public Reservation(int id, int idCli, Timestamp dateDebut, Timestamp dateFin, int duree,
-			Timestamp dateArriveReel, Timestamp dateDepartReel, int idPlace, int delaiAttente) {
+
+	public Reservation(int id, int idCli, Timestamp dateDebut, Timestamp dateFin, int duree, Timestamp dateArriveReel,
+			Timestamp dateDepartReel, int idPlace, int delaiAttente) {
 		setId(id);
 		setId_client(idCli);
 		setDate_debut(dateDebut);
@@ -31,75 +30,75 @@ public class Reservation {
 		try {
 			setId_client(idCli);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-		    Date parsedDate = dateFormat.parse(dateDebut);
+			Date parsedDate = dateFormat.parse(dateDebut);
 			setDate_debut(new Timestamp(parsedDate.getTime()));
-			setDuree(heures*60+minutes);
-			long millis=parsedDate.getTime()+(getDuree()*60000);
+			setDuree(heures * 60 + minutes);
+			long millis = parsedDate.getTime() + (getDuree() * 60000);
 			setDate_fin(new Timestamp(millis));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	public Reservation(int idCli, String dateDebut,String dateFin,int duree,int place) {
+
+	public Reservation(int idCli, String dateDebut, String dateFin, int duree, int place) {
 		try {
 			setId_client(idCli);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		    Date parsedDate = dateFormat.parse(dateDebut);
+			Date parsedDate = dateFormat.parse(dateDebut);
 			setDate_debut(new Timestamp(parsedDate.getTime()));
-		    parsedDate = dateFormat.parse(dateFin);
+			parsedDate = dateFormat.parse(dateFin);
 			setDate_fin(new Timestamp(parsedDate.getTime()));
 			setDuree(duree);
 			setId_place(place);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	public Reservation(int idCli, Timestamp dateDebut,int duree,int place, Timestamp dateArriveReel) {
-			setId_client(idCli);
-			setDate_debut(dateDebut);
-			setDate_fin(new Timestamp(dateDebut.getTime()+TimeUnit.MINUTES.toMillis(duree)));
-			setDuree(duree);
-			setId_place(place);
-			setDate_arrive_reel(dateArriveReel);
-	}	
-	
+
+	public Reservation(int idCli, Timestamp dateDebut, int duree, int place, Timestamp dateArriveReel) {
+		setId_client(idCli);
+		setDate_debut(dateDebut);
+		setDate_fin(new Timestamp(dateDebut.getTime() + TimeUnit.MINUTES.toMillis(duree)));
+		setDuree(duree);
+		setId_place(place);
+		setDate_arrive_reel(dateArriveReel);
+	}
+
 	public void modifierDuree(String duree) {
 		MethodesCalculs methodescalculs = new MethodesCalculs();
-	    int dureeMinute =	methodescalculs.conversionHeureMinuteEnMinute(duree);
+		int dureeMinute = methodescalculs.conversionHeureMinuteEnMinute(duree);
 		Date dateDebut = this.getDate_debut();
-		long millis = dateDebut.getTime()+((dureeMinute)*60000);
-		Timestamp nouvelledateFin=new Timestamp(millis);
+		long millis = dateDebut.getTime() + ((dureeMinute) * 60000);
+		Timestamp nouvelledateFin = new Timestamp(millis);
 		int nouvelleDuree = dureeMinute;
 		this.setDate_fin(nouvelledateFin);
 		this.setDuree(nouvelleDuree);
 	}
-	
+
 	public void modifierDateDebut(String dateDebut) {
 		try {
-			long dureeCourante = this.getDuree()*60000;
+			long dureeCourante = this.getDuree() * 60000;
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		    Date parsedDate = dateFormat.parse(dateDebut);
+			Date parsedDate = dateFormat.parse(dateDebut);
 			Timestamp nouvelleDateDebut = new Timestamp(parsedDate.getTime());
-			Timestamp nouvelleDateFin=new Timestamp(parsedDate.getTime()+dureeCourante);
+			Timestamp nouvelleDateFin = new Timestamp(parsedDate.getTime() + dureeCourante);
 			this.setDate_debut(nouvelleDateDebut);
 			this.setDate_fin(nouvelleDateFin);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int calculerTempsDepassement() {
-		int res = (int) ((date_depart_reel.getTime()-date_fin.getTime())/1000/60);
-		if(res > 0) {
+		int res = (int) ((date_depart_reel.getTime() - date_fin.getTime()) / 1000 / 60);
+		if (res > 0) {
 			return res;
 		}
 		return 0;
 	}
-	
+
 	public int getDuree() {
 		return duree;
 	}
@@ -107,7 +106,7 @@ public class Reservation {
 	public void setDuree(int duree) {
 		this.duree = duree;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -155,7 +154,7 @@ public class Reservation {
 	public void setDate_fin(Timestamp date_fin) {
 		this.date_fin = date_fin;
 	}
-	
+
 	public Timestamp getDate_arrive_reel() {
 		return date_arrive_reel;
 	}
@@ -172,13 +171,25 @@ public class Reservation {
 		this.date_depart_reel = date_depart_reel;
 	}
 
+	public String afficherInfo() {
+		Date dateDebut = date_debut;
+		Date dateFin = date_fin;
+		long dureeMillis = dateFin.getTime() - dateDebut.getTime();
+		long minutes = dureeMillis / (60 * 1000) % 60;
+		long heures = dureeMillis / (60 * 60 * 1000);
+		return "ID: " + id + ", ID client : "+id_client+", ID place : "+id_place+", Date début: " + date_debut + ", Duree: " + heures + " heures et " + minutes
+				+ " minutes, date arrivé réél : " + date_arrive_reel + ", date départ réel : " + date_depart_reel
+				+ ", délai attente : " + delai_attente;
+	}
+
 	@Override
 	public String toString() {
-		Date dateDebut=date_debut;
-		Date dateFin=date_fin;
-		long dureeMillis=dateFin.getTime()-dateDebut.getTime();
-		long minutes = dureeMillis / (60 * 1000) % 60; 
+		Date dateDebut = date_debut;
+		Date dateFin = date_fin;
+		long dureeMillis = dateFin.getTime() - dateDebut.getTime();
+		long minutes = dureeMillis / (60 * 1000) % 60;
 		long heures = dureeMillis / (60 * 60 * 1000);
-		return "ID: "+ id + ", Date début: "+ date_debut +", Duree: "+ heures +" heures et "+ minutes +" minutes";
+		return "ID: " + id + ", Date début: " + date_debut + ", Duree: " + heures + " heures et " + minutes
+				+ " minutes";
 	}
 }
