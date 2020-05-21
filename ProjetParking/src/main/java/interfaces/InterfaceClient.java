@@ -11,8 +11,10 @@ import java.util.Scanner;
 import methodes.MethodesCalculs;
 import methodes.MethodesClient;
 import mysql.ClientMysql;
+import mysql.FacturationMysql;
 import mysql.ReservationPermanenteMysql;
 import pojo.Client;
+import pojo.Facturation;
 import pojo.Reservation;
 import pojo.ReservationPermanente;
 import verificationsentreeclavier.MethodesFormatClavierInterface;
@@ -395,12 +397,21 @@ public class InterfaceClient {
 					System.out.println(
 							"Quelles factures voulez-vous consulter ?\n1 - Les factures du mois-ci\n2 - Toutes les factures\n3 - Retour à l'accueil\n4 - Se déconnecter");
 					String choixFacture = sc.nextLine();
+					ArrayList<Facturation> facturations;
 					switch (choixFacture) {
 					case "1":
 						System.out.println("Affichage des factures du mois");
+						facturations = FacturationMysql.getInstance().selectionnerFacturationsClientMois(client.getId());
+						for(int i = 0; i < facturations.size(); i++) {
+							System.out.println(facturations.get(i));
+						}
 						break;
 					case "2":
 						System.out.println("Affichage de toutes les factures du client");
+						facturations = FacturationMysql.getInstance().selectionnerFacturationsClient(client.getId());
+						for(int i = 0; i < facturations.size(); i++) {
+							System.out.println(facturations.get(i));
+						}
 						break;
 					case "3":
 						finFacture = true;

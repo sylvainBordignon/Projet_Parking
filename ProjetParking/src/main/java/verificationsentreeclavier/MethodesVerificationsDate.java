@@ -34,6 +34,18 @@ public class MethodesVerificationsDate {
 		}
 		return true;
 	}
+	
+	public static boolean estValideDateFormat(String dateUtilisateur) {
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sdf.setLenient(false);
+		String date = sdf.format(new Date());
+		try {
+			sdf.parse(dateUtilisateur);
+		} catch (ParseException e) {
+			return false;
+		}
+		return true;
+	}
 
 	public static boolean estValideHeureMinuteMemeJour(String dateUtilisateur) {
 		DateFormat sdf = new SimpleDateFormat("HH:mm");

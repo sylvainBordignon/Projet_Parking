@@ -1,11 +1,14 @@
 package interfaces;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import methodes.MethodesGerant;
 import mysql.ClientMysql;
 import mysql.GerantMysql;
 import pojo.Client;
+import pojo.Reservation;
+import verificationsentreeclavier.MethodesFormatClavierInterface;
 import verificationsentreeclavier.MethodesVerificationsDate;
 
 public class InterfaceGerant {
@@ -22,22 +25,14 @@ public class InterfaceGerant {
 					+ "3 - Modifier le nombre de place en surréservation. \n"
 					+ "4 - Visualiser les réservations en cours. \n" + "5 - Visualiser les transactions des clients  \n"
 					+ "6 - Visualiser les statistiques du parking \n" + "7 - Revenir à l'accueil des api  \n");
-			while (!sc.hasNextInt()) {
-				System.out.println("Veuillez rentrer un nombre ! ");
-				sc.next();
-			}
-			choix = sc.nextInt();
+			choix = MethodesFormatClavierInterface
+					.entreeEntier("Choississez un nombre correspondant à une fonctionnalité");
 			switch (choix) {
 			case 1:
 				int numeroClient;
 				do {
-					System.out.println(
-							"Veuillez saisir le numéro du client ... (Entrez -1 pour revenir au menu principal) ");
-					while (!sc.hasNextInt()) {
-						System.out.println("Veuillez rentrer un nombre ! ");
-						sc.next();
-					}
-					numeroClient = sc.nextInt();
+					numeroClient = MethodesFormatClavierInterface.entreeEntier(
+							"Veuillez saisir le numéro du client ... (Entrez 0 pour revenir au menu principal)");
 					System.out.println("Information du client :");
 					Client c = ClientMysql.getInstance().visualierInfoClient(numeroClient);
 					if (c == null) {
@@ -45,8 +40,8 @@ public class InterfaceGerant {
 					} else {
 						System.out.println(c);
 					}
-					numeroClient = -1;
-				} while (numeroClient != -1);
+					numeroClient = 0;
+				} while (numeroClient != 0);
 				break;
 			case 2:
 				int choixModifTarif;
@@ -57,11 +52,8 @@ public class InterfaceGerant {
 							+ "2 - Frais de stationnement de dépassement de période de base \n"
 							+ "3 - Frais de stationnement de dépassement cumulatif \n"
 							+ "4 - Frais de prolongation de la période d'attente  \n");
-					while (!sc.hasNextInt()) {
-						System.out.println("Veuillez rentrer un nombre ! ");
-						sc.next();
-					}
-					choixModifTarif = sc.nextInt();
+					choixModifTarif = MethodesFormatClavierInterface
+							.entreeEntier("Choississez un nombre correspondant à une fonctionnalité");
 					switch (choixModifTarif) {
 					case 1:
 						float valeurFraisStationementPendantReservation;
@@ -70,7 +62,6 @@ public class InterfaceGerant {
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
 									+ "Valeur actuelle des frais de stationnement :" + tarifNormal + "\n"
 									+ "Veuillez saisir la nouvelle valeur ...");
-
 							while (!sc.hasNextFloat()) {
 								System.out.println("Veuillez rentrer un nombre ! ");
 								sc.next();
@@ -86,8 +77,8 @@ public class InterfaceGerant {
 						do {
 							float tarifDepassement = GerantMysql.getInstance().selectionnerTarifDepassement();
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Valeur actuelle des frais de dépassement de stationnement de base : " + tarifDepassement
-									+ " \n" + "Veuillez saisir la nouvelle valeur ...");
+									+ "Valeur actuelle des frais de dépassement de stationnement de base : "
+									+ tarifDepassement + " \n" + "Veuillez saisir la nouvelle valeur ...");
 							while (!sc.hasNextFloat()) {
 								System.out.println("Veuillez rentrer un nombre ! ");
 								sc.next();
@@ -102,10 +93,11 @@ public class InterfaceGerant {
 					case 3:
 						float valeurFraisStationementDepassementCumulatif;
 						do {
-							float tarifDepassementCumul = GerantMysql.getInstance().selectionnerTarifDepassementAugmentation();
+							float tarifDepassementCumul = GerantMysql.getInstance()
+									.selectionnerTarifDepassementAugmentation();
 							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Valeur actuelle des frais de dépassement de stationnement cumulatif : " + tarifDepassementCumul
-									+ " \n" + "Veuillez saisir la nouvelle valeur ...");
+									+ "Valeur actuelle des frais de dépassement de stationnement cumulatif : "
+									+ tarifDepassementCumul + " \n" + "Veuillez saisir la nouvelle valeur ...");
 							while (!sc.hasNextFloat()) {
 								System.out.println("Veuillez rentrer un nombre ! ");
 								sc.next();
@@ -144,17 +136,10 @@ public class InterfaceGerant {
 			case 3:
 				int nbPlaceSurreservation = GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
 				do {
-
-					System.out.println(
+					nbPlaceSurreservation = MethodesFormatClavierInterface.entreeEntier(
 							"Veuillez saisir le nouveau nombre de place en surréservation (Saisissez -1 pour revenir en arrière) "
 									+ "Nombre actuel : " + nbPlaceSurreservation);
-					while (!sc.hasNextInt()) {
-						System.out.println("Veuillez rentrer un nombre ! ");
-						sc.next();
-					}
-					nbPlaceSurreservation = sc.nextInt();
 					MethodesGerant methodesgerant = new MethodesGerant();
-
 					methodesgerant.changerNombreSurreservation(nbPlaceSurreservation);
 					nbPlaceSurreservation = -1;
 				} while (nbPlaceSurreservation != -1);
@@ -167,15 +152,9 @@ public class InterfaceGerant {
 
 							+ "1 - Pour chaque place réservé, afficher le client et le créneau  \n"
 							+ "2 - Rafrichir la page " + "\n");
-
-					while (!sc.hasNextInt()) {
-						System.out.println("Veuillez rentrer un nombre ! ");
-						sc.next();
-					}
-					choixModifTarif = sc.nextInt();
-
+					choixModifTarif = MethodesFormatClavierInterface
+							.entreeEntier("Choississez un nombre correspondant à une fonctionnalité");
 					switch (choixModifTarif) {
-
 					case 1:
 						int retourMenuListeReservations;
 						do {
@@ -183,7 +162,6 @@ public class InterfaceGerant {
 									+ "Voici la liste des places occupées ainsi que leurs informations \n"
 									+ "|  Nom  |  Prenom  |  num_place  |  date arrive  |  date fin  |  duree  |  date arrive reel  |  délai  |  \n");
 							GerantMysql.getInstance().visualiserLesReservationsEnCours();
-
 							while (!sc.hasNextInt()) {
 								System.out.println("Veuillez rentrer un nombre ! ");
 								sc.next();
@@ -191,7 +169,6 @@ public class InterfaceGerant {
 							retourMenuListeReservations = sc.nextInt();
 						} while (retourMenuListeReservations != -1);
 						break;
-
 					case 2:
 						int retourMenuReservationRafraichissement;
 						do {
@@ -209,14 +186,10 @@ public class InterfaceGerant {
 			case 5:
 				int choixTransaction;
 				do {
-					System.out.println("Saisissez -1 pour revenir en arrière \n"
-							+ "1 - Visualiser les transactions pour une période donnée. \n"
-							+ "2 - Visualiser les transactions pour un client spécifique.  \n");
-					while (!sc.hasNextInt()) {
-						System.out.println("Veuillez rentrer un nombre ! ");
-						sc.next();
-					}
-					choixTransaction = sc.nextInt();
+					choixTransaction = MethodesFormatClavierInterface
+							.entreeEntier("Saisissez -1 pour revenir en arrière \n"
+									+ "1 - Visualiser les transactions pour une période donnée. \n"
+									+ "2 - Visualiser les transactions pour un client spécifique.  \n");
 					switch (choixTransaction) {
 					case 1:
 						int retourMenuTransaction;
@@ -224,24 +197,25 @@ public class InterfaceGerant {
 							System.out.println(
 									"Saisissez -1 pour revenir en arrière \n" + "Veuillez rentrer la période ...\n"
 											+ "Commencez par rentrer la date de début au format suivant : JJ/MM/AAAA\n"
-											+ "date de début : "
-
-							);
+											+ "date de début : ");
 							boolean saisieDateDebutEstValide, saisieDateFinEstValide = false;
 							String dateDebut, dateFin;
 							dateDebut = sc.nextLine();
 							if (dateDebut.equals("-1")) {
 								retourMenuTransaction = -1;
 							} else {
-								saisieDateDebutEstValide = MethodesVerificationsDate.estValideDate(dateDebut);
+								saisieDateDebutEstValide = MethodesVerificationsDate.estValideDateFormat(dateDebut);
 								if (saisieDateDebutEstValide) {
 									System.out.println(
 											"Veuillez rentrer la date de fin au format suivant : JJ/MM/AAAA \n");
 									dateFin = sc.nextLine();
-									saisieDateFinEstValide = MethodesVerificationsDate.estValideDate(dateFin);
+									saisieDateFinEstValide = MethodesVerificationsDate.estValideDateFormat(dateFin);
 									if (saisieDateFinEstValide) {
 										System.out.println("Affichage des résultats .......");
-
+										ArrayList<Reservation> reservations = ClientMysql.getInstance().selectionnerListeReservationsPasseesPeriode(dateDebut, dateFin);
+										for (int i = 0; i < reservations.size(); i++) {
+											System.out.println(reservations.get(i));
+										}
 									} else {
 
 										// la date de fin n'est pas valide
@@ -262,18 +236,20 @@ public class InterfaceGerant {
 					case 2:
 						int numeroClientTransaction;
 						do {
-							System.out.println("Saisissez -1 pour revenir en arrière \n"
-									+ "Veuillez rentrer le numéro du client afin de visualiser ses transactions.");
-
-							while (!sc.hasNextInt()) {
-								System.out.println("Veuillez rentrer un nombre ! ");
-								sc.next();
+							System.out.println("Saisissez 0 pour revenir en arrière \n");
+							numeroClientTransaction = MethodesFormatClavierInterface.entreeEntier(
+									"Veuillez rentrer le numéro du client afin de visualiser ses transactions.");
+							Client client = ClientMysql.getInstance().visualierInfoClient(numeroClientTransaction);
+							if (client != null) {
+								ArrayList<Reservation> reservations = ClientMysql.getInstance()
+										.selectionnerListeReservationsPassees(client.getId());
+								for (int i = 0; i < reservations.size(); i++) {
+									System.out.println(reservations.get(i));
+								}
+							} else {
+								System.out.println("Ce numéro de client n'est associé à aucun client.");
 							}
-							numeroClientTransaction = sc.nextInt();
-
-							// Traitement Si client existe alors sinon ...
-
-						} while (numeroClientTransaction != -1);
+						} while (numeroClientTransaction != 0);
 						break;
 					default:
 						System.out.println("Veuillez rentrer un nombre entre 1 et 2 ");

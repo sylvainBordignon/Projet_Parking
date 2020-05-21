@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -175,6 +177,52 @@ public class ClientMysql {
 			}
 			return listePlaques;
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}
+	
+	public ArrayList<Reservation> selectionnerListeReservationsPassees(int numClient) {
+		try {
+			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM historiquereservation where id_client=?");
+			preparedStmt.setInt(1, numClient);
+			ResultSet res = preparedStmt.executeQuery();
+			ArrayList<Reservation> listePlaques = new ArrayList<>();
+			while (res.next()) {
+				Reservation reservation = new Reservation(res.getInt("id"), res.getInt("id_client"),
+						res.getTimestamp("date_debut"), res.getTimestamp("date_fin"), res.getInt("duree"),
+						res.getTimestamp("date_arrive_reel"), res.getTimestamp("date_depart_reel"),
+						res.getInt("id_place"), res.getInt("delai_attente"));
+				listePlaques.add(reservation);
+			}
+			return listePlaques;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}
+	
+	public ArrayList<Reservation> selectionnerListeReservationsPasseesPeriode(String dateDebut, String dateFin) {
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		    Date parsedDate = dateFormat.parse(dateDebut);
+			Timestamp dateDebutPeriode = new Timestamp(parsedDate.getTime());
+		    parsedDate = dateFormat.parse(dateFin);
+			Timestamp dateFinPeriode = new Timestamp(parsedDate.getTime());
+			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM historiquereservation where date_debut > ? and date_fin < ?");
+			preparedStmt.setTimestamp(1, dateDebutPeriode);
+			preparedStmt.setTimestamp(2, dateFinPeriode);
+			ResultSet res = preparedStmt.executeQuery();
+			ArrayList<Reservation> listePlaques = new ArrayList<>();
+			while (res.next()) {
+				Reservation reservation = new Reservation(res.getInt("id"), res.getInt("id_client"),
+						res.getTimestamp("date_debut"), res.getTimestamp("date_fin"), res.getInt("duree"),
+						res.getTimestamp("date_arrive_reel"), res.getTimestamp("date_depart_reel"),
+						res.getInt("id_place"), res.getInt("delai_attente"));
+				listePlaques.add(reservation);
+			}
+			return listePlaques;
+		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
 		return new ArrayList<>();

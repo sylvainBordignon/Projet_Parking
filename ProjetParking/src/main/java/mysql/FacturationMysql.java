@@ -63,6 +63,25 @@ public class FacturationMysql {
 		return facturations;
 	}
 	
+	public ArrayList<Facturation> selectionnerFacturationsClientMois(int idClient) {
+		ArrayList<Facturation> facturations = new ArrayList<>();
+		try {
+			PreparedStatement ins = this.conn.prepareStatement("Select * from facturation f, historiquereservation r where f.id_historique_reservation = r.id and f.id_client = ? and MONTH(r.date_debut) = MONTH(now()) and YEAR(r.date_debut) = YEAR(now())");
+			ins.setInt(1, idClient);
+			ResultSet res = ins.executeQuery();
+			while (res.next()) {
+				facturations.add(new Facturation(res.getInt("id"), res.getInt("id_client"),
+						res.getInt("id_historique_reservation"), res.getFloat("cout_normal"),
+						res.getFloat("cout_depassement"), res.getFloat("cout_remboursement"),
+						res.getFloat("cout_prolongation_attente")));
+			}
+			return facturations;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return facturations;
+	}
+	
 	public ArrayList<Facturation> selectionnerToutesLesFacturations() {
 		ArrayList<Facturation> facturations = new ArrayList<>();
 		try {
