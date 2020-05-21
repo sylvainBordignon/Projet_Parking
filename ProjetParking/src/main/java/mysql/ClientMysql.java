@@ -246,7 +246,7 @@ public class ClientMysql {
 	public void ajouterUneReservationDansHistorique(Reservation reservation) {
 		try {
 			PreparedStatement preparedStmt = conn.prepareStatement(
-					"INSERT INTO historiquereservation (id_client, date_debut,id_place,duree,date_depart_reel,delai_attente,id) VALUES (?,?,?,?,?,?,?)");
+					"INSERT INTO historiquereservation (id_client, date_debut,id_place,duree,date_depart_reel,delai_attente,id,date_fin) VALUES (?,?,?,?,?,?,?,?)");
 			preparedStmt.setInt(1, reservation.getId_client());
 			preparedStmt.setTimestamp(2, reservation.getDate_debut());
 			preparedStmt.setInt(3, reservation.getId_place());
@@ -254,6 +254,7 @@ public class ClientMysql {
 			preparedStmt.setTimestamp(5,reservation.getDate_depart_reel());
 			preparedStmt.setInt(6, reservation.getDelai_attente());
 			preparedStmt.setInt(7, reservation.getId());
+			preparedStmt.setTimestamp(8,reservation.getDate_fin());
 			preparedStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
