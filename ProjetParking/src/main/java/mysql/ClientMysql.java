@@ -178,7 +178,15 @@ public class ClientMysql {
 			return listePlaques;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			}
 		return new ArrayList<>();
 	}
 	
@@ -198,7 +206,15 @@ public class ClientMysql {
 			return listePlaques;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			}
 		return new ArrayList<>();
 	}
 	
@@ -224,7 +240,15 @@ public class ClientMysql {
 			return listePlaques;
 		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
-		}
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			}
 		return new ArrayList<>();
 	}
 

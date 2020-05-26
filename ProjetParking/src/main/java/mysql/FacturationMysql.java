@@ -40,7 +40,15 @@ public class FacturationMysql {
 			return res;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			}
 		return 0;
 	}
 
@@ -59,7 +67,15 @@ public class FacturationMysql {
 			return facturations;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			}
 		return facturations;
 	}
 	
@@ -78,7 +94,15 @@ public class FacturationMysql {
 			return facturations;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			}
 		return facturations;
 	}
 	
@@ -96,7 +120,15 @@ public class FacturationMysql {
 			return facturations;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			}
 		return facturations;
 	}
 }
