@@ -3,6 +3,8 @@ package verificationsentreeclavier;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import mysql.ClientMysql;
+
 public class MethodesVerificationsAjoutClient {
 
 	private static Scanner sc = new Scanner(System.in);
@@ -88,7 +90,22 @@ public class MethodesVerificationsAjoutClient {
 	}
 
 	public static boolean formatMail(String mail) {
-		return Pattern.matches("^(.+)@(.+)$", mail);
+		if( Pattern.matches("^(.+)@(.+)$", mail) ==true) {
+			
+			// vérifier si l'adresse mail existe déjà 
+			Boolean b =ClientMysql.getInstance().adresseMailExisteDeja(mail);
+			 
+			if( b == true) {
+			
+			System.out.println("Désolé cette adresse mail est déjà associé à un compte client, veuillez en choisir une autre  !  ");
+			return false;
+			}else {
+				
+				return true;
+			}
+			
+		}
+	return false;	
 	}
 
 	public static String verifIban() {

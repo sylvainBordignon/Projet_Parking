@@ -148,7 +148,6 @@ public class InterfaceGerant {
 				int choixReservationEnCours;
 				do {
 					System.out.println("Saisissez -1 pour revenir en arrière \n"
-							+ "Actuellement, il y a XX places de prises sur XX places. \n"
 
 							+ "1 - Pour chaque place réservé, afficher le client et le créneau  \n"
 							+ "2 - Rafrichir la page " + "\n");
