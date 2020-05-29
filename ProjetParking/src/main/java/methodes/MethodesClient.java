@@ -27,7 +27,7 @@ public class MethodesClient {
 		nom = MethodesVerificationsAjoutClient.verifNomClient();
 		prenom = MethodesVerificationsAjoutClient.verifPrenomClient();
 		adresse = MethodesVerificationsAjoutClient.verifAdresse();
-		mail = MethodesVerificationsAjoutClient.verifMail();
+		mail = MethodesVerificationsAjoutClient.verifMailetExiste();
 		iban = MethodesVerificationsAjoutClient.verifIban();
 		mobile = MethodesVerificationsAjoutClient.verifMobile();
 
