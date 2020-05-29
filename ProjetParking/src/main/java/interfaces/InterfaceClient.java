@@ -349,7 +349,7 @@ public class InterfaceClient {
 						System.out.println(listeVehicules.get(i));
 					}
 					System.out.println(MESSAGE_QUE_FAIRE
-							+ "\n1 - Ajouter un véhicule\n2 - Supprimer un véhicule\n3 - Retour à l'accuei?\n4 - Se déconnecter");
+							+ "\n1 - Ajouter un véhicule\n2 - Supprimer un véhicule\n3 - Retour à l'accueil\n4 - Se déconnecter");
 					String choixVehicule = sc.nextLine();
 					switch (choixVehicule) {
 					case "1":
