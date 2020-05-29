@@ -1,5 +1,4 @@
 package methodes;
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,7 +6,6 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Logger;
-
 import mysql.ClientMysql;
 import mysql.GerantMysql;
 import mysql.PlaceParkingMysql;

@@ -15,10 +15,11 @@ public class MethodesGerant {
 		if (saisieGerant > nbPlaceParking || nbPlaceSurreservationEnCours > saisieGerant) {
 			System.out.println("Vous ne pouvez pas saisir cette valeur, veuillez essayer une autre valeur. ");
 		} else {
-			GerantMysql.getInstance().modifierNbPlaceSurreservation(nbPlaceSurreservation);
+			GerantMysql.getInstance().modifierNbPlaceSurreservation(saisieGerant);
+			 int nbPlaceSurreservationNouv = GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
 			GerantMysql.getInstance()
-					.modifierNbPlaceSurreservationEnCours(nbPlaceSurreservation - nbPlaceSurreservationEnCours);
-			System.out.println("Nouvelle valeur : " + nbPlaceSurreservation);
+					.modifierNbPlaceSurreservationEnCours(nbPlaceSurreservationNouv - nbPlaceSurreservation + nbPlaceSurreservationEnCours);
+			System.out.println("Nouvelle valeur : " +  nbPlaceSurreservationNouv);
 		}
 	}
 }
