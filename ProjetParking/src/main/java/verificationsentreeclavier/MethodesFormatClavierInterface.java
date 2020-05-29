@@ -13,7 +13,7 @@ public class MethodesFormatClavierInterface {
 		while (!fin) {
 			System.out.println(message);
 			entree = sc.nextLine();
-			if (entree.matches("\\d+")) {
+			if (entree.matches("^-?\\d+$")) {
 				res = Integer.parseInt(entree);
 				fin = true;
 			} else {

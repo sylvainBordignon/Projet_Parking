@@ -126,6 +126,48 @@ public class ClientMysql {
 			logger.severe(e.getMessage());
 		}
 	}
+	
+	
+	public int recupererNumeroClient(String adresseMail) {
+		int num=-1;
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("SELECT id FROM client WHERE mail = ?");
+			preparedStmt.setString(1, adresseMail);
+			ResultSet res = preparedStmt.executeQuery();
+			while (res.next()) {
+				num =	res.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num;
+	}
+	
+	public boolean adresseMailExisteDeja(String adresseMail) {
+		boolean  b = true;
+		int num = -1;
+		try {
+			PreparedStatement preparedStmt = conn
+					.prepareStatement("SELECT id FROM client WHERE mail = ?");
+			preparedStmt.setString(1, adresseMail);
+			ResultSet res = preparedStmt.executeQuery();
+			while (res.next()) {
+				num =	res.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(num == -1) {
+		 return false;	
+		}else {
+		 return true;
+		}
+		
+	}
 
 	public Client visualierInfoClient(int id) {
 		try (PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM client where id = ?")) {

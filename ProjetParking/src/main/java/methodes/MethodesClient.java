@@ -34,6 +34,8 @@ public class MethodesClient {
 		Client client = new Client(mobile, nom, prenom, adresse, mail, iban);
 		ClientMysql.getInstance().create(client);
 		System.out.println("Inscription terminée.");
+		int id =ClientMysql.getInstance().recupererNumeroClient(mail);
+		System.out.println("Votre numéro de client est : "+id+"\nVeuillez le garder précieusement ! ");
 	}
 
 	public static void modifierClient(Client client) {
