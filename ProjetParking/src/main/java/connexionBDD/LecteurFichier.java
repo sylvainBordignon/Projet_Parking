@@ -12,14 +12,11 @@ public class LecteurFichier {
 	
 		// TODO Auto-generated method stub
 
-		BufferedReader br = null;
+		BufferedReader br = null ;
 		try {
 			br = new BufferedReader(new FileReader(url));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			logger.severe(e.getMessage());
-		}
-		try {
+		
+	
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 			while (line != null) {
@@ -29,10 +26,14 @@ public class LecteurFichier {
 			}
 			String res = sb.toString();
 			return res.replaceAll("\\s+","");
-			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			logger.severe(e.getMessage());
+		
 		} finally {
 			br.close();
 		}
+		return "";
 
 	}
 }
