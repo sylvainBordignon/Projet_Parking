@@ -88,6 +88,22 @@ public class MethodesVerificationsAjoutClient {
 
 		return mail;
 	}
+	
+	public static String verifMailetExiste() {
+		String mail = null;
+		boolean estValide = false;
+		System.out.println("Veuillez rentrer votre mail \n mail : ");
+		while (!estValide) {
+			mail = sc.nextLine();
+			if (checkFormatEtExisteMail(mail)) {
+				estValide = true;
+			} else {
+				System.out.println("Veuillez rentrer une adresse mail valide ");
+			}
+		}
+
+		return mail;
+	}
 
 	public static boolean formatMail(String mail) {
 		return Pattern.matches("^(.+)@(.+)$", mail);
