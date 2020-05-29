@@ -191,7 +191,7 @@ public class InterfaceGerant {
 									+ "2 - Visualiser les transactions pour un client spécifique.  \n");
 					switch (choixTransaction) {
 					case 1:
-						int retourMenuTransaction;
+						int retourMenuTransaction = 0;
 						do {
 							System.out.println(
 									"Saisissez -1 pour revenir en arrière \n" + "Veuillez rentrer la période ...\n"
@@ -228,9 +228,6 @@ public class InterfaceGerant {
 								}
 
 							}
-							// a enlever après
-							retourMenuTransaction = 1;
-
 						} while (retourMenuTransaction != -1);
 						break;
 					case 2:
