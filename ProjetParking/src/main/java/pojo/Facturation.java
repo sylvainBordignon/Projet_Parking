@@ -4,12 +4,12 @@ import mysql.GerantMysql;
 
 public class Facturation {
 
-	public int id, idClient, idHistoriqueReservation;
+	private int id, idClient, idHistoriqueReservation;
 
-	public float coutNormal = 0, coutDepassement = 0, coutRemboursement = 0, coutProlongationAttente = 0;
+	private float coutNormal = 0, coutDepassement = 0, coutRemboursement = 0, coutProlongationAttente = 0;
 
 	public Facturation(Reservation reservation) {
-		setIdClient(reservation.getId_client());
+		setIdClient(reservation.getIdClient());
 		setIdHistoriqueReservation(reservation.getId());
 		setCoutNormal(calculerCoutNormal(reservation));
 		setCoutDepassement(calculerCoutDepassement(reservation));
@@ -18,7 +18,7 @@ public class Facturation {
 	
 	//a definir montant remboursement
 	public Facturation(Reservation reservation, boolean remboursement) {
-		setIdClient(reservation.getId_client());
+		setIdClient(reservation.getIdClient());
 		setIdHistoriqueReservation(reservation.getId());
 		setCoutRemboursement(555555);
 	}
@@ -56,7 +56,7 @@ public class Facturation {
 }
 	
 	public static float calculerCoutProlongationAttente(Reservation reservation) {
-		return (reservation.getDelai_attente()-30)*GerantMysql.getInstance().selectionnerTarifProlongationAttente()/60;
+		return (reservation.getDelaiAttente()-30)*GerantMysql.getInstance().selectionnerTarifProlongationAttente()/60;
 	}
 
 	public int getId() {

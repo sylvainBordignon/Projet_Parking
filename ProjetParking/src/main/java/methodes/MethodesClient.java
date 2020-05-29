@@ -1,12 +1,12 @@
 package methodes;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import mysql.ClientMysql;
 import mysql.GerantMysql;
@@ -17,6 +17,8 @@ import verificationsentreeclavier.MethodesFormatClavierInterface;
 import verificationsentreeclavier.MethodesVerificationsAjoutClient;
 
 public class MethodesClient {
+
+	private static final Logger logger = Logger.getLogger(MethodesClient.class.getName());
 
 	public static void ajouterUnClient() {
 		String nom, prenom, adresse, mail, iban, mobile;
@@ -35,12 +37,12 @@ public class MethodesClient {
 	}
 
 	public static void modifierClient(Client client) {
-		String nom, prenom, adresse, mail, IBAN, mobile;
+		String nom, prenom, adresse, mail, iban, mobile;
 		nom = client.getNom();
 		prenom = client.getPrenom();
 		adresse = client.getAdresse();
 		mail = client.getMail();
-		IBAN = client.getIban();
+		iban = client.getIban();
 		mobile = client.getNumeroMobile();
 
 		Scanner sc = new Scanner(System.in);
@@ -92,11 +94,11 @@ public class MethodesClient {
 				System.out.println("Nouveau prénom : " + prenom);
 				break;
 			case "6":
-				System.out.println("valeur actuelle : " + IBAN);
-				IBAN = MethodesVerificationsAjoutClient.verifIban();
-				client.setPrenom(IBAN);
+				System.out.println("valeur actuelle : " + iban);
+				iban = MethodesVerificationsAjoutClient.verifIban();
+				client.setPrenom(iban);
 				ClientMysql.getInstance().update(client);
-				System.out.println("Nouveau IBAN : " + IBAN);
+				System.out.println("Nouveau IBAN : " + iban);
 				break;
 			case "7":
 				System.out.println("Retour au menu ...");
@@ -143,7 +145,7 @@ public class MethodesClient {
 		String ouiOuNon = "Veuillez rentrez 'o' pour oui ou 'n' pour non ";
 		int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation,
 				dureeReserv);
-	
+
 		int duree = 0;
 		boolean reponse = MethodesFormatClavierInterface.validerUneReservation(ouiOuNon);
 
@@ -176,7 +178,7 @@ public class MethodesClient {
 				dureeReserv);
 		int placeClient = methodescalculs.numeroPlaceReservationClient(dateDebutReservation, dateFinReservation,
 				dureeReserv);
-			
+
 		System.out.println(
 				"Votre réservation a bien été modifié. \n" + "Récapitulatif :  \n" + "- début de la réservation : "
 						+ dateDebutReservation + " \n" + "- fin de la réservation : " + dateFinReservation + "\n"
@@ -192,8 +194,6 @@ public class MethodesClient {
 		String dateFinReservation = methodescalculs.conversionDateFinReservationEnFormatBdd(dateReserv, dureeReserv);
 		int placeClient = methodescalculs.numeroPlaceReservationClient(dateReserv, dateFinReservation, dureeReserv);
 
-	
-		
 		System.out.println(
 				"Votre réservation a bien été modifié. \n" + "Récapitulatif :  \n" + "- début de la réservation : "
 						+ dateReserv + " \n" + "- fin de la réservation : " + dateFinReservation + "\n"
@@ -203,44 +203,44 @@ public class MethodesClient {
 	}
 
 	public static boolean verifierProlongationPossible30Minutes(Reservation reservation) {
-		return (reservation.getDate_fin().getTime() - 1800000) < ZonedDateTime.now().toInstant().toEpochMilli();
+		return (reservation.getDateFin().getTime() - 1800000) < ZonedDateTime.now().toInstant().toEpochMilli();
 	}
+
 	public static boolean verifierProlongationDelaiDattentePossible(Reservation reservation) {
-		//si heure actuelle > heure debut et heure actuelle < heure debut + delai d'attente 
-		return (reservation.getDate_debut().getTime() < ZonedDateTime.now().toInstant().toEpochMilli()
-				&& ZonedDateTime.now().toInstant().toEpochMilli() < (reservation.getDate_debut().getTime() + (reservation.getDelai_attente() * 60000)));
+		// si heure actuelle > heure debut et heure actuelle < heure debut + delai
+		// d'attente
+		return (reservation.getDateDebut().getTime() < ZonedDateTime.now().toInstant().toEpochMilli() && ZonedDateTime
+				.now().toInstant()
+				.toEpochMilli() < (reservation.getDateDebut().getTime() + (reservation.getDelaiAttente() * 60000)));
 	}
-	
+
 	public static boolean verifierProlongationCorrecte(Reservation reservation, int prolongation) {
-		//si heure debut + delai d'attente + prolongation est < date de fin
-		return ((reservation.getDate_debut().getTime() + (reservation.getDelai_attente() * 60000) + (prolongation * 60000)) < reservation.getDate_fin().getTime());
+		// si heure debut + delai d'attente + prolongation est < date de fin
+		return ((reservation.getDateDebut().getTime() + (reservation.getDelaiAttente() * 60000)
+				+ (prolongation * 60000)) < reservation.getDateFin().getTime());
 	}
-	
-	public static void sortieParking(Reservation reservation) {		
-		String sDate; 
-		// Si oui , on UPDATE la date de fin de stationnement , on libère la place du parking, nb_surreservation en cours + 1 si < à nb_surreserrvation	
-		// enregistrement fin d'occupation de place 
-		sDate=ClientMysql.getInstance().editerDateDepartReel(reservation.getId());
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	public static void sortieParking(Reservation reservation) {
+		String sDate;
+		// Si oui , on UPDATE la date de fin de stationnement , on libère la place du
+		// parking, nb_surreservation en cours + 1 si < à nb_surreserrvation
+		// enregistrement fin d'occupation de place
+		sDate = ClientMysql.getInstance().editerDateDepartReel(reservation.getId());
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		    Date parsedDate = dateFormat.parse(sDate);
-		    reservation.setDate_depart_reel(new Timestamp(parsedDate.getTime()));
+			Date parsedDate = dateFormat.parse(sDate);
+			reservation.setDateDepartReel(new Timestamp(parsedDate.getTime()));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
-		// reservation.setDate_depart_reel(date_depart_reel);
 		int nbPlaceSurreservation, nbPlaceSurreservationEnCours;
-		nbPlaceSurreservation =GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
+		nbPlaceSurreservation = GerantMysql.getInstance().selectionnerNbPlaceSurreservation();
 		nbPlaceSurreservationEnCours = GerantMysql.getInstance().selectionnerNbPlaceSurreservationEnCours();
-		if (nbPlaceSurreservationEnCours<nbPlaceSurreservation) {	
-		GerantMysql.getInstance().modifierNbPlaceSurreservationEnCours(nbPlaceSurreservationEnCours+1);	
+		if (nbPlaceSurreservationEnCours < nbPlaceSurreservation) {
+			GerantMysql.getInstance().modifierNbPlaceSurreservationEnCours(nbPlaceSurreservationEnCours + 1);
 		}
 		ClientMysql.getInstance().ajouterUneReservationDansHistorique(reservation);
 		PlaceParkingMysql.getInstance().supprimerPlaceParking(reservation.getId());
 		System.out.println("Vous pouvez sortir, Bonne journée ! ");
-		
 	}
-		
 }

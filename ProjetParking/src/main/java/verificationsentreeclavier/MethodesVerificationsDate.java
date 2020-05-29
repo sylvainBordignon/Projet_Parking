@@ -38,7 +38,6 @@ public class MethodesVerificationsDate {
 	public static boolean estValideDateFormat(String dateUtilisateur) {
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		sdf.setLenient(false);
-		String date = sdf.format(new Date());
 		try {
 			sdf.parse(dateUtilisateur);
 		} catch (ParseException e) {
@@ -75,10 +74,7 @@ public class MethodesVerificationsDate {
 			return false;
 		}
 
-		if (dateUtilisateur.length() != 5) {
-			return false;
-		}
-		return true;
+		return dateUtilisateur.length() == 5;
 	}
 
 	public boolean estValideFormatReservation(String dureeReservationUtilisateur) {

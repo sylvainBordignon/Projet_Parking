@@ -52,7 +52,7 @@ public class TestReservationPermanente {
 	}
 	
 	@Test
-	public void testReservationPermanenteContigueFVrai(){
+	public void testReservationPermanenteContigueVrai(){
 		ReservationPermanenteMysql reserv = ReservationPermanenteMysql.getInstance();
 		ReservationPermanente reservPerma2 = new ReservationPermanente(3, "hebdomadaire", new Time(19,0,0), new Time(1,6,0), 2);
 		assertNotNull(reserv.reservationContigue(reservPerma2));

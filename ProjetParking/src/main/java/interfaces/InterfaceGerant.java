@@ -1,6 +1,6 @@
 package interfaces;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import methodes.MethodesGerant;
@@ -212,7 +212,8 @@ public class InterfaceGerant {
 									saisieDateFinEstValide = MethodesVerificationsDate.estValideDateFormat(dateFin);
 									if (saisieDateFinEstValide) {
 										System.out.println("Affichage des résultats .......");
-										ArrayList<Reservation> reservations = ClientMysql.getInstance().selectionnerListeReservationsPasseesPeriode(dateDebut, dateFin);
+										List<Reservation> reservations = ClientMysql.getInstance()
+												.selectionnerListeReservationsPasseesPeriode(dateDebut, dateFin);
 										for (int i = 0; i < reservations.size(); i++) {
 											System.out.println(reservations.get(i).afficherInfo());
 										}
@@ -241,7 +242,7 @@ public class InterfaceGerant {
 									"Veuillez rentrer le numéro du client afin de visualiser ses transactions.");
 							Client client = ClientMysql.getInstance().visualierInfoClient(numeroClientTransaction);
 							if (client != null) {
-								ArrayList<Reservation> reservations = ClientMysql.getInstance()
+								List<Reservation> reservations = ClientMysql.getInstance()
 										.selectionnerListeReservationsPassees(client.getId());
 								for (int i = 0; i < reservations.size(); i++) {
 									System.out.println(reservations.get(i).afficherInfo());

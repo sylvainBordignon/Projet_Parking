@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 import connexionBDD.Connexion;
 import pojo.Facturation;
@@ -14,6 +16,8 @@ public class FacturationMysql {
 	Connection conn;
 
 	private static FacturationMysql facturationmysql;
+
+	private static final Logger logger = Logger.getLogger(FacturationMysql.class.getName());
 
 	public FacturationMysql(Connection conn) {
 		super();
@@ -27,75 +31,74 @@ public class FacturationMysql {
 	}
 
 	public int genererFacturation(Facturation facturation) {
-		try {
-			PreparedStatement ins = this.conn.prepareStatement(
-					"INSERT INTO facturation (id_client, id_historique_reservation, cout_normal, cout_depassement, cout_remboursement, cout_prolongation_attente) VALUES (?,?,?,?,?,?)");
+		try (PreparedStatement ins = this.conn.prepareStatement(
+				"INSERT INTO facturation (id_client, id_historique_reservation, cout_normal, cout_depassement, cout_remboursement, cout_prolongation_attente) VALUES (?,?,?,?,?,?)")) {
 			ins.setInt(1, facturation.getIdClient());
 			ins.setInt(2, facturation.getIdHistoriqueReservation());
 			ins.setFloat(3, facturation.getCoutNormal());
 			ins.setFloat(4, facturation.getCoutDepassement());
 			ins.setFloat(5, facturation.getCoutRemboursement());
 			ins.setFloat(6, facturation.getCoutProlongationAttente());
-			int res = ins.executeUpdate();
-			return res;
+			return ins.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return 0;
 	}
 
-	public ArrayList<Facturation> selectionnerFacturationsClient(int idClient) {
+	public List<Facturation> selectionnerFacturationsClient(int idClient) {
 		ArrayList<Facturation> facturations = new ArrayList<>();
-		try {
-			PreparedStatement ins = this.conn.prepareStatement("Select * from facturation where id_client = ?");
+		try (PreparedStatement ins = this.conn.prepareStatement("Select * from facturation where id_client = ?")) {
 			ins.setInt(1, idClient);
-			ResultSet res = ins.executeQuery();
-			while (res.next()) {
-				facturations.add(new Facturation(res.getInt("id"), res.getInt("id_client"),
-						res.getInt("id_historique_reservation"), res.getFloat("cout_normal"),
-						res.getFloat("cout_depassement"), res.getFloat("cout_remboursement"),
-						res.getFloat("cout_prolongation_attente")));
+			try (ResultSet res = ins.executeQuery()) {
+				while (res.next()) {
+					facturations.add(new Facturation(res.getInt("id"), res.getInt("id_client"),
+							res.getInt("id_historique_reservation"), res.getFloat("cout_normal"),
+							res.getFloat("cout_depassement"), res.getFloat("cout_remboursement"),
+							res.getFloat("cout_prolongation_attente")));
+				}
+				return facturations;
 			}
-			return facturations;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return facturations;
 	}
-	
-	public ArrayList<Facturation> selectionnerFacturationsClientMois(int idClient) {
+
+	public List<Facturation> selectionnerFacturationsClientMois(int idClient) {
 		ArrayList<Facturation> facturations = new ArrayList<>();
-		try {
-			PreparedStatement ins = this.conn.prepareStatement("Select * from facturation f, historiquereservation r where f.id_historique_reservation = r.id and f.id_client = ? and MONTH(r.date_debut) = MONTH(now()) and YEAR(r.date_debut) = YEAR(now())");
+		try (PreparedStatement ins = this.conn.prepareStatement(
+				"Select * from facturation f, historiquereservation r where f.id_historique_reservation = r.id and f.id_client = ? and MONTH(r.date_debut) = MONTH(now()) and YEAR(r.date_debut) = YEAR(now())")) {
 			ins.setInt(1, idClient);
-			ResultSet res = ins.executeQuery();
-			while (res.next()) {
-				facturations.add(new Facturation(res.getInt("id"), res.getInt("id_client"),
-						res.getInt("id_historique_reservation"), res.getFloat("cout_normal"),
-						res.getFloat("cout_depassement"), res.getFloat("cout_remboursement"),
-						res.getFloat("cout_prolongation_attente")));
+			try (ResultSet res = ins.executeQuery()) {
+				while (res.next()) {
+					facturations.add(new Facturation(res.getInt("id"), res.getInt("id_client"),
+							res.getInt("id_historique_reservation"), res.getFloat("cout_normal"),
+							res.getFloat("cout_depassement"), res.getFloat("cout_remboursement"),
+							res.getFloat("cout_prolongation_attente")));
+				}
+				return facturations;
 			}
-			return facturations;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return facturations;
 	}
-	
-	public ArrayList<Facturation> selectionnerToutesLesFacturations() {
+
+	public List<Facturation> selectionnerToutesLesFacturations() {
 		ArrayList<Facturation> facturations = new ArrayList<>();
-		try {
-			PreparedStatement ins = this.conn.prepareStatement("Select * from  facturation");
-			ResultSet res = ins.executeQuery();
-			while (res.next()) {
-				facturations.add(new Facturation(res.getInt("id"), res.getInt("id_client"),
-						res.getInt("id_historique_reservation"), res.getFloat("cout_normal"),
-						res.getFloat("cout_depassement"), res.getFloat("cout_remboursement"),
-						res.getFloat("cout_prolongation_attente")));
+		try (PreparedStatement ins = this.conn.prepareStatement("Select * from  facturation")) {
+			try (ResultSet res = ins.executeQuery()) {
+				while (res.next()) {
+					facturations.add(new Facturation(res.getInt("id"), res.getInt("id_client"),
+							res.getInt("id_historique_reservation"), res.getFloat("cout_normal"),
+							res.getFloat("cout_depassement"), res.getFloat("cout_remboursement"),
+							res.getFloat("cout_prolongation_attente")));
+				}
+				return facturations;
 			}
-			return facturations;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return facturations;
 	}

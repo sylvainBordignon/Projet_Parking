@@ -1,7 +1,7 @@
 package interfaces;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import mysql.AssociationMysql;
@@ -16,7 +16,7 @@ public class InterfaceBorneEntree {
 	public static final String MESSAGE_ACCEPTATION = "Vous occupez la place ... pour une durée de ... Merci de votre visite.";
 	public static final String MESSAGE_DEDOMMAGEMENT = "Il n'y a pas de places disponibles. Vous recevrez un dédommagement. Veuillez nous excuser.";
 	public static final String MESSAGE_SANS_DEDOMMAGEMENT = "Il n'y a pas de places disponibles. Veuillez nous excuser.";
-	public static int PLACES_LIBRES;
+	private static int placesLibres;
 	public static final String RETOUR_MENU_PRINCIPAL = "\nTapez '0' pour retourner au menu principal";
 	public static final Scanner in = new Scanner(System.in);
 
@@ -54,23 +54,23 @@ public class InterfaceBorneEntree {
 		} else {
 			Reservation reservation = ClientMysql.getInstance().visualiserReservationMemeJour(numReservation);
 			if (reservation != null) {// v�rification que le num�ro reservation existe dans la base
-				PLACES_LIBRES = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
-				if (PLACES_LIBRES == 0)
+				placesLibres = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
+				if (placesLibres == 0)
 					System.out.println(MESSAGE_DEDOMMAGEMENT);// rajouter la facture ???
 				else {
-					if (PlaceParkingMysql.getInstance().verifierPlaceNonPrise(reservation.getId_place())) {
+					if (PlaceParkingMysql.getInstance().verifierPlaceNonPrise(reservation.getIdPlace())) {
 						// si la place n'est pas prise
-						PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(reservation.getId_place());
+						PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(reservation.getIdPlace());
 					} else {
 						System.out.println("Votre place réservée est encore occupée, veuillez aller à la place :");
 						int idPlace = PlaceParkingMysql.getInstance().trouverPlaceDisponible();
 						System.out.println("place " + idPlace);
 						PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(idPlace);
-						reservation.setId_place(idPlace);
+						reservation.setIdPlace(idPlace);
 					}
-					reservation.setDate_arrive_reel(new Timestamp(System.currentTimeMillis()));
+					reservation.setDateArriveReel(new Timestamp(System.currentTimeMillis()));
 					ClientMysql.getInstance().modifierReservation(reservation);
-					System.out.println("Vous occupez la place " + reservation.getId_place() + " pour une durée de "
+					System.out.println("Vous occupez la place " + reservation.getIdPlace() + " pour une durée de "
 							+ reservation.getDuree() + " minutes. Merci de votre visite.");
 				}
 			} else {// le num�ro n'existe pas dans la base
@@ -120,11 +120,11 @@ public class InterfaceBorneEntree {
 		if (reservation != null) {// v�rification qu'une reservation existe � cette date
 			clientAvecReservation(reservation);
 		} else {
-			PLACES_LIBRES = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
-			if (PLACES_LIBRES == 0)
+			placesLibres = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
+			if (placesLibres == 0)
 				System.out.println(MESSAGE_SANS_DEDOMMAGEMENT);
 			else {
-				ArrayList<Integer> liste = AssociationMysql.getInstance().clientsUtilisantCeVehicule(immatriculation);
+				List<Integer> liste = AssociationMysql.getInstance().clientsUtilisantCeVehicule(immatriculation);
 				if (liste.size() == 1) {
 					InterfaceBorneEntree.dureeSejour(liste.get(0));
 				} else {
@@ -141,8 +141,8 @@ public class InterfaceBorneEntree {
 		if (reservation != null) {// v�rification qu'une reservation existe � cette date
 			clientAvecReservation(reservation);
 		} else {
-			PLACES_LIBRES = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
-			if (PLACES_LIBRES == 0)
+			placesLibres = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo();
+			if (placesLibres == 0)
 				System.out.println(MESSAGE_SANS_DEDOMMAGEMENT);
 			else {
 				System.out.println(
@@ -162,7 +162,7 @@ public class InterfaceBorneEntree {
 			Reservation reservation = new Reservation(idClient, new Timestamp(System.currentTimeMillis()), duree, place,
 					new Timestamp(System.currentTimeMillis()));
 			ClientMysql.getInstance().ajouterUneReservationBorne(reservation);
-			System.out.println("Vous occupez la place " + reservation.getId_place() + " pour une durée de "
+			System.out.println("Vous occupez la place " + reservation.getIdPlace() + " pour une durée de "
 					+ reservation.getDuree() + " minutes.  Merci de votre visite.");
 		}
 	}
@@ -172,23 +172,23 @@ public class InterfaceBorneEntree {
 	}
 
 	public static void clientAvecReservation(Reservation reservation) {
-		PLACES_LIBRES = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo(); // Module *2
-		if (PLACES_LIBRES == 0)
+		placesLibres = PlaceParkingMysql.getInstance().verifierNombrePlaceDispo(); // Module *2
+		if (placesLibres == 0)
 			System.out.println(MESSAGE_DEDOMMAGEMENT);// rajouter la facture ???
 		else {
-			if (PlaceParkingMysql.getInstance().verifierPlaceNonPrise(reservation.getId_place())) {
+			if (PlaceParkingMysql.getInstance().verifierPlaceNonPrise(reservation.getIdPlace())) {
 				// si la place n'est pas prise
-				PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(reservation.getId_place());
+				PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(reservation.getIdPlace());
 			} else {
 				System.out.println("Votre place réservée est encore occupée, veuillez aller à la place :");
 				int idPlace = PlaceParkingMysql.getInstance().trouverPlaceDisponible();
 				System.out.println("place " + idPlace);
 				PlaceParkingMysql.getInstance().changerEtatPlaceOccupee(idPlace);
-				reservation.setId_place(idPlace);
+				reservation.setIdPlace(idPlace);
 			}
-			reservation.setDate_arrive_reel(new Timestamp(System.currentTimeMillis()));
+			reservation.setDateArriveReel(new Timestamp(System.currentTimeMillis()));
 			ClientMysql.getInstance().modifierReservation(reservation);
-			System.out.println("Vous occupez la place " + reservation.getId_place() + " pour une durée de "
+			System.out.println("Vous occupez la place " + reservation.getIdPlace() + " pour une durée de "
 					+ reservation.getDuree() + " minutes.  Merci de votre visite.");
 		}
 	}

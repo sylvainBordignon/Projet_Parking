@@ -5,75 +5,77 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import methodes.MethodesCalculs;
 
 public class Reservation {
-	private int id, id_client, id_place, delai_attente, duree;
+	private int id, idClient, idPlace, delaiAttente, duree;
 
-	private Timestamp date_debut, date_fin, date_arrive_reel, date_depart_reel;
+	private Timestamp dateDebut, dateFin, dateArriveReel, dateDepartReel;
+	
+	private static final Logger logger = Logger.getLogger(Reservation.class.getName());
 
 	public Reservation(int id, int idCli, Timestamp dateDebut, Timestamp dateFin, int duree, Timestamp dateArriveReel,
 			Timestamp dateDepartReel, int idPlace, int delaiAttente) {
 		setId(id);
-		setId_client(idCli);
-		setDate_debut(dateDebut);
-		setDate_fin(dateFin);
+		setIdClient(idCli);
+		setDateDebut(dateDebut);
+		setDateFin(dateFin);
 		setDuree(duree);
-		setDate_arrive_reel(dateArriveReel);
-		setDate_depart_reel(dateDepartReel);
-		setId_place(idPlace);
-		setDelai_attente(delaiAttente);
+		setDateArriveReel(dateArriveReel);
+		setDateDepartReel(dateDepartReel);
+		setIdPlace(idPlace);
+		setDelaiAttente(delaiAttente);
 	}
 
 	public Reservation(int idCli, String dateDebut, int heures, int minutes) {
 		try {
-			setId_client(idCli);
+			setIdClient(idCli);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 			Date parsedDate = dateFormat.parse(dateDebut);
-			setDate_debut(new Timestamp(parsedDate.getTime()));
+			setDateDebut(new Timestamp(parsedDate.getTime()));
 			setDuree(heures * 60 + minutes);
 			long millis = parsedDate.getTime() + (getDuree() * 60000);
-			setDate_fin(new Timestamp(millis));
+			setDateFin(new Timestamp(millis));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 
 	}
 
 	public Reservation(int idCli, String dateDebut, String dateFin, int duree, int place) {
 		try {
-			setId_client(idCli);
+			setIdClient(idCli);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date parsedDate = dateFormat.parse(dateDebut);
-			setDate_debut(new Timestamp(parsedDate.getTime()));
+			setDateDebut(new Timestamp(parsedDate.getTime()));
 			parsedDate = dateFormat.parse(dateFin);
-			setDate_fin(new Timestamp(parsedDate.getTime()));
+			setDateFin(new Timestamp(parsedDate.getTime()));
 			setDuree(duree);
-			setId_place(place);
+			setIdPlace(place);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 
 	}
 
 	public Reservation(int idCli, Timestamp dateDebut, int duree, int place, Timestamp dateArriveReel) {
-		setId_client(idCli);
-		setDate_debut(dateDebut);
-		setDate_fin(new Timestamp(dateDebut.getTime() + TimeUnit.MINUTES.toMillis(duree)));
+		setIdClient(idCli);
+		setDateDebut(dateDebut);
+		setDateFin(new Timestamp(dateDebut.getTime() + TimeUnit.MINUTES.toMillis(duree)));
 		setDuree(duree);
-		setId_place(place);
-		setDate_arrive_reel(dateArriveReel);
+		setIdPlace(place);
+		setDateArriveReel(dateArriveReel);
 	}
 
 	public void modifierDuree(String duree) {
 		MethodesCalculs methodescalculs = new MethodesCalculs();
 		int dureeMinute = methodescalculs.conversionHeureMinuteEnMinute(duree);
-		Date dateDebut = this.getDate_debut();
 		long millis = dateDebut.getTime() + ((dureeMinute) * 60000);
 		Timestamp nouvelledateFin = new Timestamp(millis);
 		int nouvelleDuree = dureeMinute;
-		this.setDate_fin(nouvelledateFin);
+		this.setDateFin(nouvelledateFin);
 		this.setDuree(nouvelleDuree);
 	}
 
@@ -84,15 +86,15 @@ public class Reservation {
 			Date parsedDate = dateFormat.parse(dateDebut);
 			Timestamp nouvelleDateDebut = new Timestamp(parsedDate.getTime());
 			Timestamp nouvelleDateFin = new Timestamp(parsedDate.getTime() + dureeCourante);
-			this.setDate_debut(nouvelleDateDebut);
-			this.setDate_fin(nouvelleDateFin);
+			this.setDateDebut(nouvelleDateDebut);
+			this.setDateFin(nouvelleDateFin);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 	}
 
 	public int calculerTempsDepassement() {
-		int res = (int) ((date_depart_reel.getTime() - date_fin.getTime()) / 1000 / 60);
+		int res = (int) ((dateDepartReel.getTime() - dateFin.getTime()) / 1000 / 60);
 		if (res > 0) {
 			return res;
 		}
@@ -115,81 +117,77 @@ public class Reservation {
 		this.id = id;
 	}
 
-	public int getId_client() {
-		return id_client;
+	public int getIdClient() {
+		return idClient;
 	}
 
-	public void setId_client(int id_client) {
-		this.id_client = id_client;
+	public void setIdClient(int idClient) {
+		this.idClient = idClient;
 	}
 
-	public int getId_place() {
-		return id_place;
+	public int getIdPlace() {
+		return idPlace;
 	}
 
-	public void setId_place(int id_place) {
-		this.id_place = id_place;
+	public void setIdPlace(int idPlace) {
+		this.idPlace = idPlace;
 	}
 
-	public int getDelai_attente() {
-		return delai_attente;
+	public int getDelaiAttente() {
+		return delaiAttente;
 	}
 
-	public void setDelai_attente(int delai_attente) {
-		this.delai_attente = delai_attente;
+	public void setDelaiAttente(int delaiAttente) {
+		this.delaiAttente = delaiAttente;
 	}
 
-	public Timestamp getDate_debut() {
-		return date_debut;
+	public Timestamp getDateDebut() {
+		return dateDebut;
 	}
 
-	public void setDate_debut(Timestamp date_debut) {
-		this.date_debut = date_debut;
+	public void setDateDebut(Timestamp dateDebut) {
+		this.dateDebut = dateDebut;
 	}
 
-	public Timestamp getDate_fin() {
-		return date_fin;
+	public Timestamp getDateFin() {
+		return dateFin;
 	}
 
-	public void setDate_fin(Timestamp date_fin) {
-		this.date_fin = date_fin;
+	public void setDateFin(Timestamp dateFin) {
+		this.dateFin = dateFin;
 	}
 
-	public Timestamp getDate_arrive_reel() {
-		return date_arrive_reel;
+	public Timestamp getDateArriveReel() {
+		return dateArriveReel;
 	}
 
-	public void setDate_arrive_reel(Timestamp date_arrive_reel) {
-		this.date_arrive_reel = date_arrive_reel;
+	public void setDateArriveReel(Timestamp dateArriveReel) {
+		this.dateArriveReel = dateArriveReel;
 	}
 
-	public Timestamp getDate_depart_reel() {
-		return date_depart_reel;
+	public Timestamp getDateDepartReel() {
+		return dateDepartReel;
 	}
 
-	public void setDate_depart_reel(Timestamp date_depart_reel) {
-		this.date_depart_reel = date_depart_reel;
+	public void setDateDepartReel(Timestamp dateDepartReel) {
+		this.dateDepartReel = dateDepartReel;
 	}
 
 	public String afficherInfo() {
-		Date dateDebut = date_debut;
-		Date dateFin = date_fin;
 		long dureeMillis = dateFin.getTime() - dateDebut.getTime();
 		long minutes = dureeMillis / (60 * 1000) % 60;
 		long heures = dureeMillis / (60 * 60 * 1000);
-		return "ID: " + id + ", ID client : "+id_client+", ID place : "+id_place+", Date début: " + date_debut + ", Duree: " + heures + " heures et " + minutes
-				+ " minutes, date arrivé réél : " + date_arrive_reel + ", date départ réel : " + date_depart_reel
-				+ ", délai attente : " + delai_attente;
+		return "ID: " + id + ", ID client : "+idClient+", ID place : "+idPlace+", Date début: " + dateDebut + ", Duree: " + heures + " heures et " + minutes
+				+ " minutes, date arrivé réél : " + dateArriveReel + ", date départ réel : " + dateDepartReel
+				+ ", délai attente : " + delaiAttente;
 	}
 
 	@Override
 	public String toString() {
-		Date dateDebut = date_debut;
-		Date dateFin = date_fin;
 		long dureeMillis = dateFin.getTime() - dateDebut.getTime();
 		long minutes = dureeMillis / (60 * 1000) % 60;
 		long heures = dureeMillis / (60 * 60 * 1000);
-		return "ID: " + id + ", Date début: " + date_debut + ", Duree: " + heures + " heures et " + minutes
+		return "ID: " + id + ", Date début: " + dateDebut + ", Duree: " + heures + " heures et " + minutes
 				+ " minutes";
 	}
 }

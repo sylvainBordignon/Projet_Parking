@@ -123,7 +123,7 @@ public class InterfaceClient {
 				boolean finReservation = false, reservationEnCours = false, reservationAVenir = false;
 				while (!finReservation) {
 					System.out.println("Liste des réservations : ");
-					ArrayList<Reservation> listeReservations = ClientMysql.getInstance()
+					List<Reservation> listeReservations = ClientMysql.getInstance()
 							.selectionnerListeReservations(client.getId());
 					Reservation reservationCourante = ClientMysql.getInstance()
 							.verifierReservationCorrespondanteClientMemeJour(client.getId());
@@ -161,7 +161,7 @@ public class InterfaceClient {
 							switch (choixReservEnCours) {
 							case "1":
 								if (MethodesClient.verifierProlongationPossible30Minutes(reservationCourante)) {
-									String dateDebut = reservationCourante.getDate_debut().toString();
+									String dateDebut = reservationCourante.getDateDebut().toString();
 									dateDebut = dateDebut.substring(0, 19);
 									MethodesCalculs methodesCalculs = new MethodesCalculs();
 									String sduree = methodesCalculs
@@ -180,7 +180,7 @@ public class InterfaceClient {
 										System.out.println("Le delai d'attente ne peut pas excéder l'heure de fin de la réservation.");
 										prolongation = MethodesFormatClavierInterface.entreeEntier("Veuillez entrer une nouvelle valeur : ");
 									}
-									reservationCourante.setDelai_attente(reservationCourante.getDelai_attente()+prolongation);
+									reservationCourante.setDelaiAttente(reservationCourante.getDelaiAttente()+prolongation);
 									ClientMysql.getInstance().modifierReservation(reservationCourante);
 									System.out.println("Le délai d'attente a bien été prolongé.");
 								}
@@ -251,7 +251,7 @@ public class InterfaceClient {
 								case "2":
 									String dureeReserv = MethodesFormatClavierInterface
 											.entreeHeure(MESSAGE_CHOIX_DUREE);
-									String debutReserv = reservation.getDate_debut().toString();
+									String debutReserv = reservation.getDateDebut().toString();
 									debutReserv = debutReserv.substring(0, 19);
 									System.out.println(debutReserv);
 									MethodesClient.modifierDureeReservation(debutReserv, dureeReserv, client.getId(),
@@ -397,7 +397,7 @@ public class InterfaceClient {
 					System.out.println(
 							"Quelles factures voulez-vous consulter ?\n1 - Les factures du mois-ci\n2 - Toutes les factures\n3 - Retour à l'accueil\n4 - Se déconnecter");
 					String choixFacture = sc.nextLine();
-					ArrayList<Facturation> facturations;
+					List<Facturation> facturations;
 					switch (choixFacture) {
 					case "1":
 						System.out.println("Affichage des factures du mois");

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,7 @@ public class TestAssociationMySQL {
     @Test
     public void testClientsMemeVehicule() {
     	AssociationMysql association = AssociationMysql.getInstance();
-    	ArrayList<Integer> liste = association.clientsUtilisantCeVehicule("AA-000-AA");
+    	List<Integer> liste = association.clientsUtilisantCeVehicule("AA-000-AA");
         assertTrue(liste.size()==2);
     }
 }

@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import connexionBDD.Connexion;
 import pojo.ReservationPermanente;
@@ -18,6 +19,8 @@ public class ReservationPermanenteMysql {
 	Connection conn;
 
 	private static ReservationPermanenteMysql reservPermamysql;
+	
+	private static final Logger logger = Logger.getLogger(ReservationPermanenteMysql.class.getName());
 
 	public ReservationPermanenteMysql(Connection conn) {
 		super();
@@ -32,44 +35,45 @@ public class ReservationPermanenteMysql {
 
 	public List<ReservationPermanente> selectionnerReservationsPermanentesClient(int id) {
 		List<ReservationPermanente> liste = new ArrayList<>();
-		try {
-			
+		try (		
 			PreparedStatement preparedStmt = conn
-					.prepareStatement("SELECT * FROM reservationpermanente where id_client = ?");
+					.prepareStatement("SELECT * FROM reservationpermanente where id_client = ?")){
 			preparedStmt.setInt(1, id);
-			ResultSet res = preparedStmt.executeQuery();
+			try(ResultSet res = preparedStmt.executeQuery()){
 			while (res.next()) {
 				liste.add(new ReservationPermanente(res.getInt("id"), res.getInt("id_client"), res.getString("type"),
 						res.getTime("heure_debut"), res.getTime("duree"), res.getInt("jour_semaine"),
 						res.getInt("jour_mois")));
 			}
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return liste;
 	}
 
 	public ReservationPermanente selectionnerReservationPermanente(int id) {
-		try {
-			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM reservationpermanente where id = ?");
+		try (
+			PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM reservationpermanente where id = ?")){
 			preparedStmt.setInt(1, id);
-			ResultSet res = preparedStmt.executeQuery();
+			try(ResultSet res = preparedStmt.executeQuery()){
 			if (res.next()) {
 				return new ReservationPermanente(res.getInt("id"), res.getInt("id_client"), res.getString("type"),
 						res.getTime("heure_debut"), res.getTime("duree"), res.getInt("jour_semaine"),
 						res.getInt("jour_mois"));
 			}
 			return null;
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return null;
 	}
 
 	public boolean ajoutReservationPermanenteAuto(ReservationPermanente reserv) {
-		try {
+		try (
 			PreparedStatement preparedStmt = conn.prepareStatement(
-					"INSERT into reservationpermanente (id_client, type, heure_debut, duree, jour_semaine, jour_mois) values (?,?,?,?,?,?)");
+					"INSERT into reservationpermanente (id_client, type, heure_debut, duree, jour_semaine, jour_mois) values (?,?,?,?,?,?)")){
 			preparedStmt.setInt(1, reserv.getIdClient());
 			preparedStmt.setString(2, reserv.getType());
 			preparedStmt.setTime(3, reserv.getHeureDebut());
@@ -87,15 +91,15 @@ public class ReservationPermanenteMysql {
 			preparedStmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return false;
 	}
 
 	public boolean ajoutReservationPermanente(ReservationPermanente reserv) {
-		try {
+		try (
 			PreparedStatement preparedStmt = conn.prepareStatement(
-					"INSERT into reservationpermanente (id, id_client, type, heure_debut, duree, jour_semaine, jour_mois) values (?,?,?,?,?,?,?)");
+					"INSERT into reservationpermanente (id, id_client, type, heure_debut, duree, jour_semaine, jour_mois) values (?,?,?,?,?,?,?)")){
 			preparedStmt.setInt(1, reserv.getId());
 			preparedStmt.setInt(2, reserv.getIdClient());
 			preparedStmt.setString(3, reserv.getType());
@@ -114,19 +118,18 @@ public class ReservationPermanenteMysql {
 			preparedStmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return false;
 	}
 
 	public int suppressionReservationPermanente(int id) {
-		try {
-			PreparedStatement preparedStmt = conn.prepareStatement("DELETE from reservationpermanente where id = ?");
+		try (
+			PreparedStatement preparedStmt = conn.prepareStatement("DELETE from reservationpermanente where id = ?")){
 			preparedStmt.setInt(1, id);
-			int res = preparedStmt.executeUpdate();
-			return res;
+			return preparedStmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return -1;
 	}
@@ -154,12 +157,12 @@ public class ReservationPermanenteMysql {
 	}
 
 	public boolean fusionDeuxReservationsContigue(ReservationPermanente r1, ReservationPermanente r2) {
-		try {
+		try (PreparedStatement preparedStmt = conn
+					.prepareStatement("UPDATE reservationpermanente set heure_debut = ?, duree = ? where id = ?")){
 			int intervalle;
 			LocalTime time1 = r1.getHeureDebut().toLocalTime();
 			LocalTime time2 = r2.getHeureDebut().toLocalTime();
-			PreparedStatement preparedStmt = conn
-					.prepareStatement("UPDATE reservationpermanente set heure_debut = ?, duree = ? where id = ?");
+			
 			if (r1.getHeureDebut().before(r2.getHeureDebut())) {
 				preparedStmt.setTime(1, r1.getHeureDebut());
 				time2 = time2.plusHours(r2.getDuree().getHours()).plusMinutes(r2.getDuree().getMinutes());
@@ -174,7 +177,7 @@ public class ReservationPermanenteMysql {
 			preparedStmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return false;
 	}
