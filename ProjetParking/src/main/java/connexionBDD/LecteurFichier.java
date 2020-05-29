@@ -17,7 +17,6 @@ public class LecteurFichier {
 			br = new BufferedReader(new FileReader(url));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 			logger.severe(e.getMessage());
 		}
 		try {
