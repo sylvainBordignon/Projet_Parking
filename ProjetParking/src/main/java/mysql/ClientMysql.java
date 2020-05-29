@@ -130,17 +130,19 @@ public class ClientMysql {
 	
 	public int recupererNumeroClient(String adresseMail) {
 		int num=-1;
-		try {
-			PreparedStatement preparedStmt = conn
-					.prepareStatement("SELECT id FROM client WHERE mail = ?");
+		try (PreparedStatement preparedStmt = conn
+				.prepareStatement("SELECT id FROM client WHERE mail = ?")){
+			
 			preparedStmt.setString(1, adresseMail);
-			ResultSet res = preparedStmt.executeQuery();
+			
+			try(ResultSet res = preparedStmt.executeQuery()){
+			
 			while (res.next()) {
 				num =	res.getInt(1);
 			}
-			
+			}	
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		return num;
 	}
@@ -148,17 +150,18 @@ public class ClientMysql {
 	public boolean adresseMailExisteDeja(String adresseMail) {
 		boolean  b = true;
 		int num = -1;
-		try {
-			PreparedStatement preparedStmt = conn
-					.prepareStatement("SELECT id FROM client WHERE mail = ?");
+		try(PreparedStatement preparedStmt = conn
+				.prepareStatement("SELECT id FROM client WHERE mail = ?")) {
 			preparedStmt.setString(1, adresseMail);
-			ResultSet res = preparedStmt.executeQuery();
+			try(ResultSet res = preparedStmt.executeQuery()){
+
 			while (res.next()) {
 				num =	res.getInt(1);
 			}
+			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+		logger.severe(e.getMessage());
 		}
 		
 		if(num == -1) {
@@ -197,7 +200,6 @@ public class ClientMysql {
 				}
 			}
 		} catch (SQLException e) {
-			logger.severe(e.getMessage());
 		}
 		return null;
 	}

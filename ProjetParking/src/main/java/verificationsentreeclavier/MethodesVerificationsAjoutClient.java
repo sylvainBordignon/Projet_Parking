@@ -90,22 +90,32 @@ public class MethodesVerificationsAjoutClient {
 	}
 
 	public static boolean formatMail(String mail) {
-		if( Pattern.matches("^(.+)@(.+)$", mail) ==true) {
+		return Pattern.matches("^(.+)@(.+)$", mail);
 			
-			// vérifier si l'adresse mail existe déjà 
-			Boolean b =ClientMysql.getInstance().adresseMailExisteDeja(mail);
-			 
-			if( b == true) {
+		
+		
+	
+	}
+	
+	public static boolean checkFormatEtExisteMail(String mail) {
+		
+	
+		if(Pattern.matches("^(.+)@(.+)$", mail) == true) {
 			
-			System.out.println("Désolé cette adresse mail est déjà associé à un compte client, veuillez en choisir une autre  !  ");
-			return false;
-			}else {
-				
-				return true;
-			}
+		Boolean b =ClientMysql.getInstance().adresseMailExisteDeja(mail);
+		 
+		if( b == true) {
+		System.out.println("Désolé cette adresse mail est déjà associé à un compte client, veuillez en choisir une autre  !  ");
+		return false;
+		}else {
 			
+			return true;
 		}
-	return false;	
+		
+		}else {
+			return false;
+		}
+		
 	}
 
 	public static String verifIban() {
